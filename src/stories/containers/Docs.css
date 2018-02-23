@@ -1,0 +1,120 @@
+.Storybook-Docs {
+  display: flex;
+  place-content: center;
+  padding: 3% 7%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.Storybook-Docs__inner {
+  width: 100%;
+  background: white;
+  padding: 3%;
+  border-radius: 0.3em;
+}
+
+.Storybook-Docs__inner,
+.Storybook-Docs__inner p,
+.Storybook-Docs__inner a {
+  color: black;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.Storybook-Docs__inner p {
+  margin: 0 0 0.7em;
+}
+
+.Storybook-Docs__inner a {
+  font-weight: 600;
+}
+
+.Storybook-Docs__inner a:hover {
+  text-decoration: underline;
+}
+
+.Storybook-Docs__inner pre {
+  background: #eee;
+  padding: 1em;
+  margin: 0.5em 0 1.2em;
+  line-height: 1;
+  overflow-x: auto;
+}
+
+.Storybook-Docs__inner code {
+  background: #eee;
+  padding: 0 0.3em;
+}
+
+.Storybook-Docs__inner pre code {
+  padding: 0;
+  font-size: 0.9em;
+  white-space: pre;
+}
+
+.Storybook-Docs__inner h1 {
+  font-size: 2em;
+  margin: 1em 0 0.7em;
+}
+
+.Storybook-Docs__inner h2 {
+  font-size: 1.5em;
+  padding: 0 0 0.3em;
+  margin: 1em 0 0.7em;
+  border-bottom: 1px solid #ddd;
+}
+
+.Storybook-Docs__inner h3 {
+  font-size: 1.2em;
+  margin: 1em 0 0.7em;
+}
+
+.Storybook-Docs__inner ul {
+  margin: 0.5em 0 1.2em 10px;
+  padding: 0 0 0 20px;
+}
+
+.Storybook-Docs__inner li {
+  margin: 0;
+  list-style: initial;
+}
+
+.Storybook-Docs__inner table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+}
+
+.Storybook-Docs__inner table tr {
+  background-color: #fff;
+  border-top: 1px solid #ccc;
+}
+
+.Storybook-Docs__inner table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+.Storybook-Docs__inner table th {
+  font-weight: 600;
+}
+
+.Storybook-Docs__inner table th,
+.Storybook-Docs__inner table td {
+  padding: 6px 13px;
+  border: 1px solid #ddd;
+}
+
+.Storybook-Docs__inner hr {
+  margin: 3rem 0;
+  height: 1px;
+  border: none;
+  border-bottom: 1px solid #ccc;
+}
+
+.Storybook-Docs__inner :first-child {
+  margin-top: 0;
+}
+
+.Storybook-Docs__inner :last-child {
+  margin-bottom: 0;
+}
