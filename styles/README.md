@@ -6,10 +6,6 @@ Low specificity selectors named with BEM pattern.
 
 ## Bundler
 
-Use `npm run bundle-css` to bundle minified.
-
-> This will not publish new changes, for that you need to run `npm run copy-statics` after the bundle. Or just use `npm run build-statics` instead.
-
 - https://github.com/postcss/postcss
 - https://www.npmjs.com/package/postcss-cli
 - https://github.com/stylelint/stylelint

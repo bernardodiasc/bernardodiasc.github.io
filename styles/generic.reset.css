@@ -80,7 +80,6 @@ video {
   margin: 0;
   padding: 0;
   border: 0;
-  font-size: 100%;
   vertical-align: baseline;
 }
 
@@ -98,29 +97,22 @@ section {
   display: block;
 }
 
-html {
-  box-sizing: border-box;
+html,
+body {
   width: 100%;
+  font-size: 100%;
 }
 
 *,
 *::before,
 *::after {
-  box-sizing: inherit;
-}
-
-body {
-  margin: 0;
-  width: 100%;
-  line-height: 1;
+  box-sizing: border-box;
 }
 
 ol,
 ul {
-  list-style: none;
   display: block;
-  margin: 0;
-  padding: 0;
+  list-style: none;
 }
 
 blockquote,
@@ -158,11 +150,9 @@ h3,
 h4,
 h5,
 h6 {
-  font-size: initial;
+  font-size: 1rem;
   font-weight: normal;
   line-height: 1;
-  margin: 0;
-  padding: 0;
 }
 
 a,

@@ -1,7 +1,8 @@
 @charset "UTF-8";
 
-/*@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,800');*/
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,800');
 
+@import "settings.variables.css";
 @import "generic.normalize.css";
 @import "generic.reset.css";
 @import "base.html.css";
