@@ -1,7 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders without crashing 1`] = `
-<div>
-  PostPage
-</div>
+<Layout
+  breadcrumbs={
+    Array [
+      Object {},
+    ]
+  }
+>
+  <Meta />
+  <PostDetails
+    post={Object {}}
+  />
+</Layout>
 `;

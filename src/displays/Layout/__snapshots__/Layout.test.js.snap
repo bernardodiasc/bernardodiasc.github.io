@@ -1,9 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders without crashing 1`] = `
-<div
+<main
   className="Layout"
 >
-  Layout
-</div>
+  <HeaderBar />
+  <BreadCrumbs
+    items={Array []}
+  />
+</main>
 `;

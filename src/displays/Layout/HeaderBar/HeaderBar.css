@@ -1,0 +1,20 @@
+.Layout-HeaderBar {
+  display: flex;
+  font-size: 1rem;
+  align-items: baseline;
+  padding: 1em 0;
+}
+
+.Layout-HeaderBar__title {
+  flex: 1;
+}
+
+.Layout-HeaderBar__social {
+  font-size: 0.6em;
+  padding: 0 0 0 2em;
+}
+
+.Layout-HeaderBar__social:hover::after {
+  content: '⤴';
+  position: absolute;
+}

@@ -1,13 +1,18 @@
 import React, { Component } from 'react'
 
+import Layout from 'displays/Layout'
+import PostsListing from 'displays/PostsListing'
+
 class HomePage extends Component {
-  static defaultProps = {}
+  static defaultProps = {
+    posts: [],
+  }
 
   render() {
     return (
-      <div>
-        HomePage
-      </div>
+      <Layout>
+        <PostsListing items={this.props.posts} />
+      </Layout>
     )
   }
 }

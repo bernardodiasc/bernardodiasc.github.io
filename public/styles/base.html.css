@@ -1,42 +1,16 @@
 ::selection {
-  /*background: rgba(55, 55, 55, 0.55);*/
-  /*color: #F63A55;*/
+  background-color: #2f2f2f;
+  color: #eee;
 }
 
-body {
-  /*background-color: #111014;*/
-  overflow-x: hidden;
-}
-
-/**
- * Typography
- */
 * {
   font-family: 'Open Sans', 'Helvetica', sans-serif;
-}
-
-body,
-p {
-  /*color: rgba(255, 255, 255, 0.6);*/
-  font-weight: 300;
-  font-size: 14px;
-  line-height: 1.75;
-}
-
-a {
-  /*color: white;*/
-}
-
-@media only screen and (min-width: 768px) {
-  body,
-  p {
-    font-size: 18px;
-    line-height: 1.9;
-  }
 }
 
 html,
 body,
 #root {
   min-height: 100%;
+  color: var(--text-color);
+  font-size: var(--text-size);
 }

@@ -1,0 +1,28 @@
+.Layout-BreadCrumbs {
+  display: block;
+  font-size: 1rem;
+  border-bottom: 1px solid silver;
+  padding: 0 0 0.3em;
+  margin: 0 0 1em;
+}
+
+.Layout-BreadCrumbs__item {
+  display: inline-block;
+  font-size: 0.8em;
+  vertical-align: bottom;
+}
+
+.Layout-BreadCrumbs__item::after {
+  content: '﹥';
+  color: silver;
+  font-size: 0.6em;
+  margin: 0 0.3em;
+}
+
+.Layout-BreadCrumbs__item:last-of-type {
+  color: grey;
+}
+
+.Layout-BreadCrumbs__item:last-of-type::after {
+  content: '';
+}

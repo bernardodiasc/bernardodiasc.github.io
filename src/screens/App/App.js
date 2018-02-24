@@ -16,10 +16,18 @@ class App extends Component {
         />
         <Route
           exact={true}
-          path={`${config.PUBLIC_URL}/:post`}
-          render={({ match }) => (
-            <PostPage post={match.params.post} />
-          )}
+          path={`${config.PUBLIC_URL}/:year/:month/:day/:title`}
+          render={({ match }) => {
+            const post = [
+              match.params.year,
+              match.params.month,
+              match.params.day,
+              match.params.title,
+            ].join('-')
+            return (
+              <PostPage post={post} />
+            )
+          }}
         />
         <Route component={HomePage} />
       </Switch>

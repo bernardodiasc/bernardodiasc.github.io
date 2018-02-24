@@ -1,13 +1,20 @@
 import React, { Component } from 'react'
 
+import Meta from 'components/Meta'
+import Layout from 'displays/Layout'
+import PostDetails from 'displays/PostDetails'
+
 class PostPage extends Component {
-  static defaultProps = {}
+  static defaultProps = {
+    post: {},
+  }
 
   render() {
     return (
-      <div>
-        PostPage
-      </div>
+      <Layout breadcrumbs={[this.props.post]}>
+        <Meta title={this.props.post.title} />
+        <PostDetails post={this.props.post} />
+      </Layout>
     )
   }
 }

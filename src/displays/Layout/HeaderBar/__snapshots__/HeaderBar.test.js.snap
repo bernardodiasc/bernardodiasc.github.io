@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders without crashing 1`] = `
+<header
+  className="Layout-HeaderBar"
+>
+  <h1
+    className="Layout-HeaderBar__title"
+  >
+    <AppLink
+      to=""
+    >
+      Random Thoughts
+    </AppLink>
+  </h1>
+  <a
+    className="Layout-HeaderBar__social"
+    href="https://twitter.com/bernardodiasc"
+    rel="noopener noreferrer"
+    target="_blank"
+  >
+    Twitter
+  </a>
+  <a
+    className="Layout-HeaderBar__social"
+    href="https://github.com/bernardodiasc"
+    rel="noopener noreferrer"
+    target="_blank"
+  >
+    GitHub
+  </a>
+</header>
+`;

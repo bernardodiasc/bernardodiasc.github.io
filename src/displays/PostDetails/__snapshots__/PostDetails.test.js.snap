@@ -1,11 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders without crashing 1`] = `
-<Layout
-  breadcrumbs={Array []}
+<div
+  className="PostDetails"
 >
-  <PostsListing
-    items={Array []}
-  />
-</Layout>
+  <h1 />
+  <p />
+</div>
 `;
