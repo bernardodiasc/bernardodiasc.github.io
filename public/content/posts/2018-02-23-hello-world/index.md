@@ -37,14 +37,14 @@ Most problems I found in the second version was basicaly related to make a singl
 For the workflow I prepared a whole bunch of cool tooling, patterns and procedures. I enjoy to work for large scale project, so in this framework I used the entire arsenal recommended for big apps. You can see it in the main README of this site or check with even further details in the docs at [bernardodiasc.github.io/docs/](https://bernardodiasc.github.io/docs/), but let me briefly mention here:
 
 - Setup: `yarn install`
-- Development: `yarn start` then open http://localhost:3000/
-- Documentation with Storybook: `yarn docs` then open http://localhost:9009/
+- Development: `yarn start`
+- Documentation with Storybook: `yarn docs`
 - Content generator: `yarn content`
 - Component generator: `yarn component`
 - ESLint and StyleLint: `yarn lint`
 - Tests with Jest: `yarn test`
 - Build static files: `yarn build`
-- Static server: `yarn serve` then open http://localhost:5000/
+- Static server: `yarn serve`
 - Deploy project: `yarn deploy` then run `npm docs`
 
 😆
