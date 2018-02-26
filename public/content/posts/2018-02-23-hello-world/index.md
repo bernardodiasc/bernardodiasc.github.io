@@ -41,8 +41,9 @@ For the workflow I prepared a whole bunch of cool tooling, patterns and procedur
 - Setup: `yarn install`
 - Development: `yarn start`
 - Documentation with Storybook: `yarn docs`
+- Component scaffolding: `yarn new:component`
+- Content scaffolding: `yarn new:content`
 - Content generator: `yarn content`
-- Component generator: `yarn component`
 - ESLint and StyleLint: `yarn lint`
 - Tests with Jest: `yarn test`
 - Build static files: `yarn build`

@@ -27,11 +27,11 @@ I'll repeat this a little often, this project is in progress, this is second day
 
 Alright, my generator scripts are not optimized, there are a lot redundant code and things that is far from perfect. But hey, it works. That's not ideal I know but I'm already using it for myself and as much as my available time allows me, I'll make it better.
 
-Here, my goal for a near future is to abstract away the generator script into a NPM package [github.com/bernardodiasc/generator](https://github.com/bernardodiasc/generator), I'll even include a boilerplate of this entire framework and more advanced CLI.
+Here, my goal for a near future is to abstract away the generator script into a NPM package [github.com/bernardodiasc/generator](https://github.com/bernardodiasc/generator) (pleae note that this package is still not ready at the time I write this post), I'll even include a boilerplate of this entire framework and more advanced CLI.
 
 If you want to take a look at the source code of the existing generators, here it goes:
 
-- https://github.com/bernardodiasc/bernardodiasc.github.io/blob/develop/src/config/componentGenerator.js
-- https://github.com/bernardodiasc/bernardodiasc.github.io/blob/develop/src/config/contentGenerator.js
+- [src/config/componentGenerator.js](https://github.com/bernardodiasc/bernardodiasc.github.io/blob/develop/src/config/componentGenerator.js)
+- [src/config/contentGenerator.js](https://github.com/bernardodiasc/bernardodiasc.github.io/blob/develop/src/config/contentGenerator.js)
 
 Pull requests are welcomed! Cheers!

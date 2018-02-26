@@ -3,9 +3,9 @@ Requirement: Node.js v8.6.0 _(use [nvm](https://github.com/creationix/nvm) to ma
 - Setup: `yarn install`
 - Development: `yarn start` then open http://localhost:3000/
 - Documentation with Storybook: `yarn docs` then open http://localhost:9009/
-- Component generator: `yarn new:component`
-- Content generator: `yarn new:content`
-- Content JSON generator: `yarn content`
+- Component scaffolding: `yarn new:component`
+- Content scaffolding: `yarn new:content`
+- Content generator: `yarn content`
 - ESLint and StyleLint: `yarn lint`
 - Tests with Jest: `yarn test`
 - Build static files: `yarn build`
