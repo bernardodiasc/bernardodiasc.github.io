@@ -4,6 +4,7 @@ exports[`renders without crashing 1`] = `
 <Layout
   breadcrumbs={Array []}
 >
+  <Meta />
   <PostsListing
     items={Array []}
   />

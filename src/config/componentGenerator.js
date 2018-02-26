@@ -3,7 +3,7 @@ const fs = require('fs')
 const path = require('path')
 const ejs = require('ejs')
 
-const CHOICES = fs.readdirSync(`${__dirname}/templates`)
+const CHOICES = fs.readdirSync(`${__dirname}/components`)
 const OUTPUT_DIR = path.resolve(__dirname, '..')
 
 inquirer
@@ -46,7 +46,7 @@ inquirer
     const componentType = answers.componentType
     const componentName = answers.componentName
     const parentComponent = answers.parentComponent
-    const templatePath = `${__dirname}/templates/${componentType}`
+    const templatePath = `${__dirname}/components/${componentType}`
     const componentPath = `${parentComponent ? `${parentComponent}/` : ''}${componentName}`
     const componentClass = `${parentComponent ? `${parentComponent}-` : ''}${componentName}`
     const componentFullPath = `${OUTPUT_DIR}/${componentType}/${componentPath}`

@@ -12,7 +12,8 @@
   "homepage": "https://bernardodiasc.github.io/",
   "sourcecode": "https://github.com/bernardodiasc/bernardodiasc.github.io/tree/master",
   "scripts": {
-    "component": "node src/config/componentGenerator.js",
+    "new:component": "node src/config/componentGenerator.js",
+    "new:content": "node src/config/contentGenerator.js",
     "content": "./node_modules/.bin/filestojson src/config/filestojson.js",
     "precommit": "lint-staged",
     "prestart": "npm run content",
