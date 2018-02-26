@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
 import Meta from 'components/Meta'
-import Layout from 'displays/Layout'
+import LayoutContainer from 'containers/LayoutContainer'
 import PostsListing from 'displays/PostsListing'
 
 class HomePage extends Component {
@@ -11,10 +11,10 @@ class HomePage extends Component {
 
   render() {
     return (
-      <Layout>
+      <LayoutContainer>
         <Meta />
         <PostsListing items={this.props.posts} />
-      </Layout>
+      </LayoutContainer>
     )
   }
 }

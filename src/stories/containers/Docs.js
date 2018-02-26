@@ -3,9 +3,7 @@ import ReactDOMServer from 'react-dom/server'
 import renderHTML from 'react-render-html'
 import converter from 'rel-to-abs'
 import './Docs.css'
-import pkg from '../../../package.json'
-
-const URL = pkg.sourcecode
+import config from 'config'
 
 class Docs extends PureComponent {
   static defaultProps = {
@@ -18,7 +16,7 @@ class Docs extends PureComponent {
       content = ReactDOMServer.renderToStaticMarkup(content)
     }
     content = content.replace(/>\s+</g,'><')
-    content = converter.convert(content, URL)
+    content = converter.convert(content, config.sourcecode)
     content = renderHTML(content)
     return (
       <div className="Storybook-Docs">

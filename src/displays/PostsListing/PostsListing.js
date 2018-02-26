@@ -19,7 +19,7 @@ class PostsListing extends PureComponent {
             item.handle.substring(11),
           ].join('/')
           return (
-            <section key={item} className="PostsListing__each">
+            <section key={handle} className="PostsListing__each">
               <AppLink to={handle} className="PostsListing__link">
                 <h1 className="PostsListing__title">{item.title}</h1>
                 <p className="PostsListing__date">{item.date}</p>

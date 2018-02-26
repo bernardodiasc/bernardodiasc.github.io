@@ -4,7 +4,15 @@ exports[`renders without crashing 1`] = `
 <main
   className="Layout"
 >
-  <HeaderBar />
+  <HeaderBar
+    languages={
+      <Languages
+        activeLanguage={Array []}
+        availableLanguages=""
+        selectLanguage={[Function]}
+      />
+    }
+  />
   <BreadCrumbs
     items={Array []}
   />

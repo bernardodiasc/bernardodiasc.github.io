@@ -3,6 +3,7 @@
   font-size: 1rem;
   align-items: baseline;
   padding: 1em 0;
+  position: relative;
 }
 
 .Layout-HeaderBar a,
@@ -24,4 +25,10 @@
 .Layout-HeaderBar__social:hover::after {
   content: '⤴';
   position: absolute;
+}
+
+.Layout-HeaderBar__languages {
+  position: absolute;
+  top: 0;
+  right: 0;
 }

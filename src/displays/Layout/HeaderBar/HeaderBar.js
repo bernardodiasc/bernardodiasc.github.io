@@ -4,6 +4,10 @@ import './HeaderBar.css'
 import AppLink from 'displays/AppLink'
 
 class HeaderBar extends PureComponent {
+  static defaultProps = {
+    languages: null,
+  }
+
   render() {
     return (
       <header className="Layout-HeaderBar">
@@ -26,6 +30,11 @@ class HeaderBar extends PureComponent {
         >
           GitHub
         </a>
+        {this.props.languages && (
+          <div className="Layout-HeaderBar__languages">
+            {this.props.languages}
+          </div>
+        )}
       </header>
     )
   }

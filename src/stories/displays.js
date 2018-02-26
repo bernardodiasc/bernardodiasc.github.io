@@ -9,6 +9,7 @@ storiesOf('Displays', module)
 
 import 'displays/Layout/Layout.story.js'
 import 'displays/Layout/HeaderBar/HeaderBar.story.js'
+import 'displays/Layout/Languages/Languages.story.js'
 import 'displays/Layout/BreadCrumbs/BreadCrumbs.story.js'
 import 'displays/PostsListing/PostsListing.story.js'
 import 'displays/PostDetails/PostDetails.story.js'
