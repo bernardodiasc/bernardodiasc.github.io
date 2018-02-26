@@ -14,11 +14,11 @@ Hello again!
 
 If you are checking this blog at the date of this post, you may still be thinking: "meh..."
 
-C'mon, take some faith on me! So far I spent 6h building this blog, it's based on some existing boileplated as mentioned in previous post. But I'm not using any open source CMS, I'had built my own CMS! I want to show you my craft, but this craft takes time, much more time. Let's keep all the fun. 🤓
+C'mon, take some faith on me! So far I spent 6h building this blog, it's based on some existing boileplated as mentioned in previous post. But I'm not using any open source CMS, I built my own CMS! I want to show you my craft, but this craft takes time, much more time. Let's keep all the fun rolling. 🤓
 
-I have a roadmap of upgrades that I want to include and they will be made progressively. The cool thing is that the project is already usable, the MVP was put alive on it's first day. Yeah yeah, quite crude, but hey, take a look at the source code, it's pretty awesome already.
+I have a roadmap of upgrades that I want to include and they will be made progressively. The cool thing is that the project is already usable, the MVP was put alive on it's first day. Yeah yeah, quite crude, but hey, take a look at the [source code](https://github.com/bernardodiasc/bernardodiasc.github.io), it's pretty awesome already.
 
-For future efforts, there's a ton of things in my backlog that I want to include here.
+For future efforts, there's a lot of things in my backlog that I want to work in.
 
 ## Future features:
 
