@@ -12,7 +12,11 @@ class AppLink extends PureComponent {
   render() {
     const to = `${config.PUBLIC_URL}/${this.props.to}`
     return this.props.children && (
-      <Link {...this.props} to={to} className="AppLink" />
+      <Link
+        {...this.props}
+        to={to}
+        className={`AppLink ${this.props.className}`}
+      />
     )
   }
 }

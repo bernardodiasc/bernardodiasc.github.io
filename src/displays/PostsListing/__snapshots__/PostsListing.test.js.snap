@@ -3,7 +3,5 @@
 exports[`renders without crashing 1`] = `
 <div
   className="PostsListing"
->
-  <ul />
-</div>
+/>
 `;

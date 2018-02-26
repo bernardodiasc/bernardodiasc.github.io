@@ -2,11 +2,6 @@
 
 exports[`renders without crashing 1`] = `
 <div
-  className="PostDetails"
->
-  <TextBlock>
-    <h1 />
-    <p />
-  </TextBlock>
-</div>
+  className="TextBlock"
+/>
 `;

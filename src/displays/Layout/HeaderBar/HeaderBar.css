@@ -5,13 +5,20 @@
   padding: 1em 0;
 }
 
+.Layout-HeaderBar a,
+.Layout-HeaderBar a:visited {
+  color: var(--heading-color);
+}
+
 .Layout-HeaderBar__title {
   flex: 1;
+  color: var(--heading-color);
+  font-size: var(--heading-size);
 }
 
 .Layout-HeaderBar__social {
-  font-size: 0.6em;
-  padding: 0 0 0 2em;
+  font-size: 0.7em;
+  padding: 0 0 0 1.5em;
 }
 
 .Layout-HeaderBar__social:hover::after {

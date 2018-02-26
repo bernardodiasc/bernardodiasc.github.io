@@ -6,13 +6,19 @@ import PostDetails from 'displays/PostDetails'
 
 class PostPage extends Component {
   static defaultProps = {
-    post: {},
+    post: {
+      title: '',
+      excerpt: '',
+    },
   }
 
   render() {
     return (
       <Layout breadcrumbs={[this.props.post]}>
-        <Meta title={this.props.post.title} />
+        <Meta
+          title={this.props.post.title}
+          description={this.props.post.excerpt}
+        />
         <PostDetails post={this.props.post} />
       </Layout>
     )

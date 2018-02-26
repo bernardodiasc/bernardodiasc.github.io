@@ -4,13 +4,24 @@ exports[`renders without crashing 1`] = `
 <Layout
   breadcrumbs={
     Array [
-      Object {},
+      Object {
+        "excerpt": "",
+        "title": "",
+      },
     ]
   }
 >
-  <Meta />
+  <Meta
+    description=""
+    title=""
+  />
   <PostDetails
-    post={Object {}}
+    post={
+      Object {
+        "excerpt": "",
+        "title": "",
+      }
+    }
   />
 </Layout>
 `;

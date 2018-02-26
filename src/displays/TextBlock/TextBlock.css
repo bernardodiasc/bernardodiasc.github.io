@@ -1,0 +1,113 @@
+.TextBlock,
+.TextBlock p,
+.TextBlock a {
+  color: black;
+  font-size: 1.2rem;
+  line-height: 1.8;
+}
+
+.TextBlock p {
+  margin: 0 0 0.8em;
+}
+
+.TextBlock a {
+  font-weight: 600;
+}
+
+.TextBlock a:hover {
+  text-decoration: underline;
+}
+
+.TextBlock pre {
+  background: #eee;
+  padding: 1em;
+  margin: 0.5em 0 1.2em;
+  line-height: 1;
+  overflow-x: auto;
+}
+
+.TextBlock code {
+  background: #eee;
+  padding: 0 0.3em;
+}
+
+.TextBlock pre code {
+  padding: 0;
+  font-size: 0.9em;
+  white-space: pre;
+}
+
+.TextBlock h1 {
+  font-size: 2em;
+  margin: 1em 0 0.7em;
+}
+
+.TextBlock h2 {
+  font-size: 1.5em;
+  padding: 0 0 0.3em;
+  margin: 1em 0 0.7em;
+  border-bottom: 1px solid #ddd;
+}
+
+.TextBlock h3 {
+  font-size: 1.2em;
+  margin: 1em 0 0.7em;
+}
+
+.TextBlock ul {
+  margin: 0.5em 0 1.2em 10px;
+  padding: 0 0 0 20px;
+}
+
+.TextBlock li {
+  margin: 0;
+  list-style: initial;
+}
+
+.TextBlock ul ul {
+  padding-bottom: 10px;
+}
+
+.TextBlock ul ul li {
+  list-style: square;
+}
+
+.TextBlock table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+}
+
+.TextBlock table tr {
+  background-color: #fff;
+  border-top: 1px solid #ccc;
+}
+
+.TextBlock table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+.TextBlock table th {
+  font-weight: 600;
+}
+
+.TextBlock table th,
+.TextBlock table td {
+  padding: 6px 13px;
+  border: 1px solid #ddd;
+}
+
+.TextBlock hr {
+  margin: 3rem 0;
+  height: 1px;
+  border: none;
+  border-bottom: 1px solid #ccc;
+}
+
+.TextBlock :first-child {
+  margin-top: 0;
+}
+
+.TextBlock :last-child {
+  margin-bottom: 0;
+}
