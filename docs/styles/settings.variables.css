@@ -1,13 +1,15 @@
 :root {
-  --text-color: #333;
-  --text-size: 16px;
+  --text-color: #1d292d;
+  --text-size: 1.1rem;
+  --heading-family: 'Playfair Display', serif;
 
   --heading-color: #111;
-  --heading-size: 24px;
+  --heading-size: 2.6rem;
+  --text-family: 'Libre Baskerville', serif;
 
-  --subheading-size: 20px;
+  --subheading-size: 0.8rem;
   --subheading-color: #bbb;
 
-  --meta-size: 14px;
+  --meta-size: 1rem;
   --meta-color: #bbb;
 }

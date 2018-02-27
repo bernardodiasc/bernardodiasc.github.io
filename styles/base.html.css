@@ -4,7 +4,6 @@
 }
 
 * {
-  font-family: 'Open Sans', 'Helvetica', sans-serif;
 }
 
 html,
@@ -13,4 +12,22 @@ body,
   min-height: 100%;
   color: var(--text-color);
   font-size: var(--text-size);
+}
+
+body {
+  font-family: var(--text-family);
+  background-image: url(../images/background.png);
+  background-color: #fdfdfd;
+  background-size: cover;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--heading-family);
 }

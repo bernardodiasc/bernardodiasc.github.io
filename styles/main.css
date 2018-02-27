@@ -1,6 +1,8 @@
 @charset "UTF-8";
 
-@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,800');
+/*@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,800');*/
+/*@import url('https://fonts.googleapis.com/css?family=Libre+Baskerville|Roboto');*/
+@import url('https://fonts.googleapis.com/css?family=Libre+Baskerville|Playfair+Display');
 
 @import "settings.variables.css";
 @import "generic.normalize.css";
