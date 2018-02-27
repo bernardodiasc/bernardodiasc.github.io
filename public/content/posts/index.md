@@ -1,5 +1,6 @@
 ---
-- 2018-02-26-boilerplate-generators: Boilerplate Generators
-- 2018-02-26-blog-progress: Blog Progress
+- 2018-02-27-comments-section: Comments section
+- 2018-02-26-boilerplate-generators: Boilerplate generators
+- 2018-02-26-blog-progress: Blog progress
 - 2018-02-23-hello-world: Hello World
 ---
