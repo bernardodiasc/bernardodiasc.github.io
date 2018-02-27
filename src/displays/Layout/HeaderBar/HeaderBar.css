@@ -1,8 +1,8 @@
 .Layout-HeaderBar {
   display: flex;
+  flex-direction: column;
   font-size: 1rem;
   align-items: baseline;
-  padding: 1em 0;
   position: relative;
 }
 
@@ -12,14 +12,12 @@
 }
 
 .Layout-HeaderBar__title {
-  flex: 1;
   color: var(--heading-color);
   font-size: var(--heading-size);
 }
 
 .Layout-HeaderBar__social {
   font-size: 0.7em;
-  padding: 0 0 0 1.5em;
 }
 
 .Layout-HeaderBar__social:hover::after {
@@ -28,7 +26,5 @@
 }
 
 .Layout-HeaderBar__languages {
-  position: absolute;
-  top: 0;
-  right: 0;
+  margin: 0.5em 0 1em;
 }

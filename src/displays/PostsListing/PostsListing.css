@@ -2,18 +2,23 @@
   font-size: 1rem;
 }
 
-.PostsListing__each {}
+.PostsListing__each {
+  margin: 0 0 3em;
+}
+
+.PostsListing__each:last-of-type {
+  margin: 0;
+}
 
 .PostsListing__link {
   display: block;
   position: relative;
-  margin: 1.5rem 0;
 }
 
 .PostsListing__title {
   color: var(--heading-color);
   font-size: var(--heading-size);
-  margin-bottom: 0.5em;
+  margin-bottom: 0.3em;
 }
 
 .PostsListing__link:hover .PostsListing__title {

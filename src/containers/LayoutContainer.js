@@ -24,6 +24,7 @@ class LayoutContainer extends Component {
           availableLanguages,
           selectLanguage,
         }}
+        {...this.props}
       >
         {this.props.children}
       </Layout>

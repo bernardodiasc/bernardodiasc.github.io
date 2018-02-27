@@ -1,3 +1,15 @@
 .PostDetails {
-  padding: 0 0 5rem;
+  font-size: 1rem;
+}
+
+.PostDetails__title {
+  color: var(--heading-color);
+  font-size: var(--heading-size);
+  margin: 0 0 0.5em;
+}
+
+.PostDetails__meta {
+  color: var(--meta-color);
+  font-size: var(--meta-size);
+  margin: 0 0 1em;
 }

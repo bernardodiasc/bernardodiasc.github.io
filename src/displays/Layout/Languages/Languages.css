@@ -1,10 +1,11 @@
 .Layout-Languages {
   display: flex;
-  font-size: 0.7rem;
+  font-size: 1rem;
 }
 
 .Layout-Languages__each {
-  margin-left: 5px;
+  font-size: 0.7em;
+  margin-right: 5px;
   cursor: pointer;
 }
 

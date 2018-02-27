@@ -18,9 +18,9 @@ class PostDetails extends PureComponent {
     const { body } = this.props.post
     return (
       <div className="PostDetails">
+        <h1 className="PostDetails__title">{this.props.post.title}</h1>
+        <p className="PostDetails__meta">{this.props.post.date}</p>
         <TextBlock>
-          <h1>{this.props.post.title}</h1>
-          <p>{this.props.post.date}</p>
           {body && renderHTML(marked(body))}
         </TextBlock>
       </div>

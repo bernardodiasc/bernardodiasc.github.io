@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
 import Meta from 'components/Meta'
-import Layout from 'displays/Layout'
+import LayoutContainer from 'containers/LayoutContainer'
 import PostDetails from 'displays/PostDetails'
 
 class PostPage extends Component {
@@ -14,13 +14,13 @@ class PostPage extends Component {
 
   render() {
     return (
-      <Layout breadcrumbs={[this.props.post]}>
+      <LayoutContainer>
         <Meta
           title={this.props.post.title}
           description={this.props.post.excerpt}
         />
         <PostDetails post={this.props.post} />
-      </Layout>
+      </LayoutContainer>
     )
   }
 }

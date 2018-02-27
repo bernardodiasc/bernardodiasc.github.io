@@ -14,6 +14,11 @@ class HeaderBar extends PureComponent {
         <h1 className="Layout-HeaderBar__title">
           <AppLink>Random Thoughts</AppLink>
         </h1>
+        {this.props.languages && (
+          <div className="Layout-HeaderBar__languages">
+            {this.props.languages}
+          </div>
+        )}
         <a
           className="Layout-HeaderBar__social"
           href="https://twitter.com/bernardodiasc"
@@ -30,11 +35,6 @@ class HeaderBar extends PureComponent {
         >
           GitHub
         </a>
-        {this.props.languages && (
-          <div className="Layout-HeaderBar__languages">
-            {this.props.languages}
-          </div>
-        )}
       </header>
     )
   }

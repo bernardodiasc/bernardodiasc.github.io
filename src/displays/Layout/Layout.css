@@ -1,7 +1,22 @@
 .Layout {
-  all: initial;
-  display: block;
-  width: 90%;
-  max-width: 900px;
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
   margin: 0 auto;
+  font-size: 1rem;
+}
+
+.Layout__content {
+  flex: 1;
+  max-width: 800px;
+  background: rgba(245, 245, 245, 0.7);
+  padding: 2em 2em 3em;
+  margin: 1em 0 8em;
+  border-radius: 10px;
+  box-shadow: 0 0 100px rgba(45, 45, 45, 0.3);
+}
+
+.Layout__headerbar {
+  width: 300px;
+  padding: 3em 1em;
 }

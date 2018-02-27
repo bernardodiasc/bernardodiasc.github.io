@@ -4,17 +4,21 @@ exports[`renders without crashing 1`] = `
 <main
   className="Layout"
 >
-  <HeaderBar
-    languages={
-      <Languages
-        activeLanguage={Array []}
-        availableLanguages=""
-        selectLanguage={[Function]}
-      />
-    }
-  />
-  <BreadCrumbs
-    items={Array []}
+  <div
+    className="Layout__headerbar"
+  >
+    <HeaderBar
+      languages={
+        <Languages
+          activeLanguage={Array []}
+          availableLanguages=""
+          selectLanguage={[Function]}
+        />
+      }
+    />
+  </div>
+  <article
+    className="Layout__content"
   />
 </main>
 `;
