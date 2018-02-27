@@ -1,5 +1,5 @@
 ---
-title: Boilerplate Generators
+title: Boilerplate generators
 date: 2018-02-26
 category: This Blog
 tags:
