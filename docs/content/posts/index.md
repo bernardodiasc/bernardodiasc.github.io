@@ -1,4 +1,5 @@
 ---
+- 2018-02-27-opportunity-cost: Opportunity cost
 - 2018-02-27-comments-section: Comments section
 - 2018-02-26-boilerplate-generators: Boilerplate generators
 - 2018-02-26-blog-progress: Blog progress
