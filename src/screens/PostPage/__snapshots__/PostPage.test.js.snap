@@ -14,5 +14,10 @@ exports[`renders without crashing 1`] = `
       }
     }
   />
+  <Disqus
+    identifier=""
+    title=""
+    url=""
+  />
 </Connect(LayoutContainer)>
 `;

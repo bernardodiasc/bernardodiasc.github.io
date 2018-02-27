@@ -9,10 +9,10 @@
 .Layout__content {
   flex: 1;
   max-width: 800px;
-  background: rgba(245, 245, 245, 0.7);
+  background: rgba(245, 245, 245, 0.9);
   padding: 2em 2em 3em;
   margin: 1em 0 8em;
-  border-radius: 10px;
+  border-radius: 8px;
   box-shadow: 0 0 100px rgba(45, 45, 45, 0.3);
 }
 

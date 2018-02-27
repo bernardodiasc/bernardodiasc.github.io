@@ -11,5 +11,5 @@
 .PostDetails__meta {
   color: var(--meta-color);
   font-size: var(--meta-size);
-  margin: 0 0 1em;
+  margin: 0 0 2.5em;
 }
