@@ -1,8 +1,8 @@
 .Layout {
   font-size: var(--text-size);
   display: flex;
+  justify-content: center;
   width: 100%;
-  max-width: 1200px;
   min-height: 100vh;
   margin: 0 auto;
   background-image: url(/images/blueprint.jpg);
