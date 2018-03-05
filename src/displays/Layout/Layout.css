@@ -1,19 +1,26 @@
 .Layout {
+  font-size: var(--text-size);
   display: flex;
   width: 100%;
   max-width: 1200px;
+  min-height: 100vh;
   margin: 0 auto;
-  font-size: 1rem;
+  background-image: url(/images/blueprint.jpg);
+  background-color: var(--main-background);
+  background-size: cover;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
 }
 
 .Layout__content {
   flex: 1;
+  width: 100%;
   max-width: 800px;
-  background: rgba(245, 245, 245, 0.9);
+  margin: 1em 1em 8em;
+  background: var(--content-background);
+  box-shadow: 6px 5px 3px 0 rgba(45, 45, 45, 0.4);
   padding: 2em 2em 3em;
-  margin: 1em 0 8em;
-  border-radius: 8px;
-  box-shadow: 0 0 100px rgba(45, 45, 45, 0.3);
+  border-radius: 4px;
 }
 
 .Layout__headerbar {

@@ -8,13 +8,7 @@ exports[`renders without crashing 1`] = `
     className="Layout__headerbar"
   >
     <HeaderBar
-      languages={
-        <Languages
-          activeLanguage={Array []}
-          availableLanguages=""
-          selectLanguage={[Function]}
-        />
-      }
+      languages={null}
     />
   </div>
   <article

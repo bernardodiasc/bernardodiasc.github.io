@@ -5,6 +5,8 @@ import converter from 'rel-to-abs'
 import './Docs.css'
 import config from 'config'
 
+import TextBlock from 'displays/TextBlock'
+
 class Docs extends PureComponent {
   static defaultProps = {
     children: ''
@@ -20,7 +22,9 @@ class Docs extends PureComponent {
     content = renderHTML(content)
     return (
       <div className="Storybook-Docs">
-        <div className="Storybook-Docs__inner">{content}</div>
+        <TextBlock>
+          {content}
+        </TextBlock>
       </div>
     )
   }

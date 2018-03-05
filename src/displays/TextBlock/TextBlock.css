@@ -1,23 +1,97 @@
-.TextBlock,
-.TextBlock p,
-.TextBlock a {
-  color: var(--text-color);
-  font-size: 1rem;
-  line-height: 1.6;
-  word-wrap: break-word;
+.TextBlock {
+  font-size: var(--text-size);
+  width: 100%;
 }
 
+/**
+ * Headers
+ */
+
+.TextBlock h1,
+.TextBlock h2,
+.TextBlock h3,
+.TextBlock h4,
+.TextBlock h5,
+.TextBlock h6 {
+  font-family: var(--heading-family);
+  color: var(--heading-color);
+  font-size: var(--heading-size);
+  font-weight: var(--heading-weight);
+  line-height: var(--heading-line);
+}
+
+.TextBlock h1 {
+  font-size: var(--heading-level1-size);
+  margin: var(--heading-level1-margins);
+}
+
+.TextBlock h2 {
+  font-size: var(--heading-level2-size);
+  margin: var(--heading-level2-margins);
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--line-light);
+}
+
+.TextBlock h3 {
+  font-size: var(--heading-level3-size);
+  margin: var(--heading-level3-margins);
+}
+
+.TextBlock h4 {
+  font-size: var(--heading-level4-size);
+  margin: var(--heading-level4-margins);
+}
+
+.TextBlock h5 {
+  font-size: var(--heading-level5-size);
+  margin: var(--heading-level5-margins);
+}
+
+.TextBlock h6 {
+  font-size: var(--heading-level6-size);
+  margin: var(--heading-level6-margins);
+}
+
+/**
+ * Textual
+ */
+
 .TextBlock p {
+  font-family: var(--text-family);
+  color: var(--text-color);
+  font-size: var(--text-size);
+  font-weight: var(--text-weight);
+  line-height: var(--text-line);
+  word-wrap: break-word;
   margin: 0 0 0.8em;
 }
 
 .TextBlock a {
-  font-weight: 600;
+  color: inherit;
+  position: relative;
+  z-index: 1;
 }
 
-.TextBlock a:hover {
-  text-decoration: underline;
+.TextBlock a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 30%;
+  background: var(--link-background);
+  z-index: -1;
+  transition: height 0.08s ease-in;
 }
+
+.TextBlock a:hover::after {
+  height: 100%;
+  transition: height 0.1s ease-in;
+}
+
+/**
+ * Code
+ */
 
 .TextBlock pre {
   background: #eee;
@@ -38,40 +112,64 @@
   white-space: pre;
 }
 
-.TextBlock h1 {
-  font-size: 2em;
-  margin: 1em 0 0.7em;
-}
+/**
+ * Listings
+ */
 
-.TextBlock h2 {
-  font-size: 1.5em;
-  padding: 0 0 0.3em;
-  margin: 1em 0 0.7em;
-  border-bottom: 1px solid #ddd;
-}
-
-.TextBlock h3 {
-  font-size: 1.2em;
-  margin: 1em 0 0.7em;
+.TextBlock ul,
+.TextBlock ol {
+  font-family: var(--text-family);
+  color: var(--text-color);
+  font-size: var(--text-size);
+  font-weight: var(--text-weight);
+  line-height: var(--text-line);
+  margin: 0.5em 0 1.2em 1em;
+  padding: 0 0 0 1em;
 }
 
 .TextBlock ul {
-  margin: 0.5em 0 1.2em 10px;
-  padding: 0 0 0 20px;
+  list-style: initial;
+}
+
+.TextBlock ol {
+  list-style: decimal;
+}
+
+.TextBlock ul ul,
+.TextBlock ol ol {
+  margin-bottom: 0.5em;
 }
 
 .TextBlock li {
   margin: 0;
-  list-style: initial;
-}
-
-.TextBlock ul ul {
-  padding-bottom: 10px;
 }
 
 .TextBlock ul ul li {
+  list-style: circle;
+}
+
+.TextBlock ul ul ul li {
   list-style: square;
 }
+
+.TextBlock ul ul ul ul li {
+  list-style: initial;
+}
+
+/**
+ * Misc
+ */
+
+.TextBlock hr {
+  margin: 3rem 0;
+  height: 1px;
+  border: none;
+  border-bottom: 1px solid var(--line-heavy);
+}
+
+/**
+ * Tables
+ */
 
 .TextBlock table {
   display: block;
@@ -81,7 +179,7 @@
 
 .TextBlock table tr {
   background-color: #fff;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid var(--line-heavy);
 }
 
 .TextBlock table tr:nth-child(2n) {
@@ -94,21 +192,22 @@
 
 .TextBlock table th,
 .TextBlock table td {
-  padding: 6px 13px;
-  border: 1px solid #ddd;
+  padding: 0.5em 1em;
+  border: 1px solid var(--line-light);
 }
 
-.TextBlock hr {
-  margin: 3rem 0;
-  height: 1px;
-  border: none;
-  border-bottom: 1px solid #ccc;
+.TextBlock table td {
+  font-weight: var(--text-weight);
 }
 
-.TextBlock :first-child {
+/**
+ * TextBlock quirks
+ */
+
+.TextBlock > :first-child {
   margin-top: 0;
 }
 
-.TextBlock :last-child {
+.TextBlock > :last-child {
   margin-bottom: 0;
 }

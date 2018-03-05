@@ -1,9 +1,9 @@
 .PostsListing {
-  font-size: 1rem;
+  font-size: var(--text-size);
 }
 
 .PostsListing__each {
-  margin: 0 0 3em;
+  margin: 0 0 2em;
 }
 
 .PostsListing__each:last-of-type {
@@ -18,7 +18,7 @@
 .PostsListing__title {
   color: var(--heading-color);
   font-size: var(--heading-size);
-  margin-bottom: 0.3em;
+  margin: 0 0 0.3em;
 }
 
 .PostsListing__link:hover .PostsListing__title {
@@ -33,5 +33,4 @@
 
 .PostsListing__excerpt {
   color: var(--text-color);
-  font-size: var(--text-size);
 }

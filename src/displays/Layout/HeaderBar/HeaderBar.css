@@ -1,19 +1,21 @@
 .Layout-HeaderBar {
   display: flex;
   flex-direction: column;
-  font-size: 1rem;
+  font-size: var(--text-size);
   align-items: baseline;
   position: relative;
+  color: white;
 }
 
 .Layout-HeaderBar a,
 .Layout-HeaderBar a:visited {
-  color: var(--heading-color);
+  color: inherit;
 }
 
 .Layout-HeaderBar__title {
-  color: var(--heading-color);
+  color: inherit;
   font-size: var(--heading-size);
+  margin: 0;
 }
 
 .Layout-HeaderBar__social {

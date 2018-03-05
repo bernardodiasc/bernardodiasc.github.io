@@ -1,6 +1,6 @@
 .Layout-BreadCrumbs {
   display: block;
-  font-size: 1rem;
+  font-size: var(--text-size);
   border-bottom: 1px solid silver;
   padding: 0 0 0.3em;
   margin: 0 0 1em;
