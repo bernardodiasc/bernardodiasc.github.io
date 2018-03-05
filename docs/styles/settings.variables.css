@@ -40,4 +40,6 @@
   --line-light: #ddd;
 
   --link-background: #fdef00c4;
+
+  --box-shadow: 6px 5px 3px 0 rgba(45, 45, 45, 0.4);
 }

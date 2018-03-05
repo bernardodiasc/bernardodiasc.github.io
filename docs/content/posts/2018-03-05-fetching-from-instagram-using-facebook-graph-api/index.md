@@ -33,7 +33,7 @@ To put simple, the Instagram API works this way:
 2. Then you need to register a new **Facebook App** with a developer account (see https://developers.facebook.com/docs/apps/register);
 3. Then you need get an access token for your user and figure out your new **App ID** using their tool https://developers.facebook.com/tools/explorer/;
 
-Now the pitfalls:
+Now, the pitfalls:
 
 - If you plan to make a feching script on client-side, forget about it, because you'll expose you access token, and that's not good idea, you might better to have a backend to fetch the API and safe ways to store your access token;
 - If you have an user accound that manages many pages, it's better to not use that too, because the access token generated gives grant to all your managed pages;
