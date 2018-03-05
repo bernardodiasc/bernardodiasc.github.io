@@ -1,26 +1,21 @@
 ::selection {
-  background-color: #2f2f2f;
-  color: #eee;
-}
-
-* {
+  background-color: var(--text-color);
+  color: var(--content-background);
 }
 
 html,
 body,
 #root {
-  min-height: 100%;
-  color: var(--text-color);
-  font-size: var(--text-size);
+  min-height: 100vh;
 }
+
 
 body {
   font-family: var(--text-family);
-  background-image: url(../images/background.png);
-  background-color: #fdfdfd;
-  background-size: cover;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
+  color: var(--text-color);
+  font-size: var(--text-size);
+  font-weight: var(--text-weight);
+  line-height: var(--text-line);
 }
 
 h1,
@@ -30,4 +25,6 @@ h4,
 h5,
 h6 {
   font-family: var(--heading-family);
+  font-weight: var(--heading-weight);
+  line-height: var(--heading-line);
 }

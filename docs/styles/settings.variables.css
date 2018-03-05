@@ -1,15 +1,42 @@
 :root {
-  --text-color: #1d292d;
-  --text-size: 1.1rem;
+  --main-background: #104493;
+  --content-background: #f5f5f5;
+
+  --text-family: 'Lato', serif;
+  --text-color: #2f2f2f;
+  --text-size: 1.2rem;
+  --text-weight: 300;
+  --text-line: 1.7;
+
   --heading-family: 'Playfair Display', serif;
+  --heading-color: #2b5ead;
+  --heading-size: 2.2rem;
+  --heading-weight: 700;
+  --heading-line: 1.1;
 
-  --heading-color: #111;
-  --heading-size: 2.6rem;
-  --text-family: 'Libre Baskerville', serif;
+  --heading-level1-size: 2.2em;
+  --heading-level1-margins: 1em 0 0.7em;
 
-  --subheading-size: 0.8rem;
-  --subheading-color: #bbb;
+  --heading-level2-size: 1.5em;
+  --heading-level2-margins: 1em 0 0.7em;
+
+  --heading-level3-size: 1.2em;
+  --heading-level3-margins: 1em 0 0.7em;
+
+  --heading-level4-size: 1.2em;
+  --heading-level4-margins: 1em 0 0.7em;
+
+  --heading-level5-size: 1.2em;
+  --heading-level5-margins: 1em 0 0.7em;
+
+  --heading-level6-size: 1.2em;
+  --heading-level6-margins: 1em 0 0.7em;
 
   --meta-size: 1rem;
   --meta-color: #bbb;
+
+  --line-heavy: #ccc;
+  --line-light: #ddd;
+
+  --link-background: #fdef00c4;
 }
