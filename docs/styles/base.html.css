@@ -9,7 +9,6 @@ body,
   min-height: 100vh;
 }
 
-
 body {
   font-family: var(--text-family);
   color: var(--text-color);

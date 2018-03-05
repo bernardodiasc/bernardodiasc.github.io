@@ -1,4 +1,5 @@
 ---
+- 2018-03-05-redesign-and-better-typography: Redesign and better typography
 - 2018-02-27-opportunity-cost: Opportunity cost
 - 2018-02-27-comments-section: Comments section
 - 2018-02-26-boilerplate-generators: Boilerplate generators
