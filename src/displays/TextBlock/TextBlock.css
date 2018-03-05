@@ -35,11 +35,13 @@
 .TextBlock h3 {
   font-size: var(--heading-level3-size);
   margin: var(--heading-level3-margins);
+  text-transform: uppercase;
 }
 
 .TextBlock h4 {
   font-size: var(--heading-level4-size);
   margin: var(--heading-level4-margins);
+  font-weight: var(--heading-weight-bold);
 }
 
 .TextBlock h5 {

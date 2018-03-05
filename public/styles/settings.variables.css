@@ -12,6 +12,7 @@
   --heading-color: #2b5ead;
   --heading-size: 2.2rem;
   --heading-weight: 400;
+  --heading-weight-bold: 700;
   --heading-line: 1.1;
 
   --heading-level1-size: 2.2em;
@@ -23,7 +24,7 @@
   --heading-level3-size: 1.2em;
   --heading-level3-margins: 1em 0 0.7em;
 
-  --heading-level4-size: 1.2em;
+  --heading-level4-size: 1em;
   --heading-level4-margins: 1em 0 0.7em;
 
   --heading-level5-size: 1.2em;
