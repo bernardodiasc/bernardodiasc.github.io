@@ -203,6 +203,25 @@
 }
 
 /**
+ * Media
+ */
+
+.TextBlock img {
+  max-width: 100%;
+}
+
+.TextBlock figure {
+  margin: 1.5em 0;
+}
+
+.TextBlock figcaption {
+  font-size: var(--meta-size);
+  color: var(--meta-color);
+  font-style: italic;
+  text-align: center;
+}
+
+/**
  * TextBlock quirks
  */
 
