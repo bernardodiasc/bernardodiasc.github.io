@@ -6,7 +6,7 @@ tags:
   - design
   - typography
   - CSS
-excerpt: Fourth round of this site's development, a blog for reading must be nice to read.
+excerpt: Fourth day of this site's development, a blog for reading must be nice to read.
 ---
 
 Creating new post:
@@ -25,7 +25,7 @@ Heading to the what this post is all about:
 
 Disclaimer: I'm not a designer, what I do good is to make code out of graphic designs. Art direction is a whole different skill that requires huge experience and dedication. But step by step this project will look prettier, let's see what we've got so far.
 
-### First round
+### First version
 
 This version was most minimalistic as possible. I haven't planned any design for this site so was more a matter to display content black&white that doesn't looked like browser defaults and some minimal structure for layout the content and navigation.
 
@@ -41,7 +41,7 @@ This version was most minimalistic as possible. I haven't planned any design for
   <img width="100%" alt="" src="/content/posts/2018-03-05-redesign-and-better-typography/design-round1-post.png" />
 </a>
 
-### Second round
+### Second version
 
 Few hours more, many CSS lines more. On this stage I've focused on creating some more CSS structures, more colours and an attempt of a design theme. The typography here still looks awful 😅
 
@@ -57,9 +57,9 @@ Few hours more, many CSS lines more. On this stage I've focused on creating some
   <img width="100%" alt="" src="/content/posts/2018-03-05-redesign-and-better-typography/design-round2-post.png" />
 </a>
 
-### Third round
+### Third version
 
-For the third round was very important to make the typography better. I started sharing my blog already and not everyone gets the fact that state of art takes a lot time, the time I haven't yet spent on this project. But being a text content site by essence, make the reading experience good is crucial.
+For the third version was very important to make the typography better. I started sharing my blog already and not everyone gets the fact that state of art takes a lot time, the time I haven't yet spent on this project. But being a text content site by essence, make the reading experience good is crucial.
 
 I choose 2 font families to work with, both provided by [Google Fonts](https://fonts.google.com/):
 
