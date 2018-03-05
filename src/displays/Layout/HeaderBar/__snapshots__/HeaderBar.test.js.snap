@@ -13,21 +13,71 @@ exports[`renders without crashing 1`] = `
       Random Thoughts
     </AppLink>
   </h1>
-  <a
-    className="Layout-HeaderBar__social"
-    href="https://twitter.com/bernardodiasc"
-    rel="noopener noreferrer"
-    target="_blank"
+  <div
+    className="Layout-HeaderBar__about"
   >
-    Twitter
-  </a>
-  <a
-    className="Layout-HeaderBar__social"
-    href="https://github.com/bernardodiasc"
-    rel="noopener noreferrer"
-    target="_blank"
+    <img
+      alt="Bernardo Dias da Cruz"
+      className="Layout-HeaderBar__about-picture"
+      src="/images/me.jpg"
+    />
+    <p>
+      I'm 
+      <strong>
+        Bernardo Dias da Cruz
+      </strong>
+      ,
+      <br />
+      a web developer and thinker.
+    </p>
+    <p>
+      <AppLink
+        to="about-me"
+      >
+        More about me.
+      </AppLink>
+    </p>
+    <p
+      className="Layout-HeaderBar__social"
+    >
+      <span>
+        Follow me on 
+      </span>
+      <a
+        href="https://twitter.com/bernardodiasc"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        Twitter
+      </a>
+      <span>
+         and 
+      </span>
+      <a
+        href="https://github.com/bernardodiasc"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        GitHub
+      </a>
+      .
+    </p>
+  </div>
+  <div
+    style={
+      Object {
+        "display": "none",
+      }
+    }
   >
-    GitHub
-  </a>
+    <h2>
+      Filter posts
+    </h2>
+    <AppLink
+      to="archive"
+    >
+      Archive
+    </AppLink>
+  </div>
 </header>
 `;

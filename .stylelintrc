@@ -4,7 +4,8 @@
   ],
   "syntax": "css",
   "rules": {
-    "block-no-empty": null
+    "block-no-empty": null,
+    "no-descending-specificity": null
   },
   "ignoreFiles": "src/config/**/*"
 }

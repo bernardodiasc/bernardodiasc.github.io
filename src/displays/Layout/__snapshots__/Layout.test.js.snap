@@ -8,7 +8,9 @@ exports[`renders without crashing 1`] = `
     className="Layout__headerbar"
   >
     <HeaderBar
+      categories={Array []}
       languages={null}
+      tags={Array []}
     />
   </div>
   <article

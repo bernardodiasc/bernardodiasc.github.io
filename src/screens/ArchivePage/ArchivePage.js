@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
 
-class <%= componentName %> extends Component {
+class ArchivePage extends Component {
   static defaultProps = {}
 
   render() {
     return (
       <div>
-        <%= componentName %>
+        ArchivePage
       </div>
     )
   }
 }
 
-export default <%= componentName %>
+export default ArchivePage

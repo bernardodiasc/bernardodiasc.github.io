@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
 
-class <%= componentName %> extends Component {
+class CategoryPage extends Component {
   static defaultProps = {}
 
   render() {
     return (
       <div>
-        <%= componentName %>
+        CategoryPage
       </div>
     )
   }
 }
 
-export default <%= componentName %>
+export default CategoryPage

@@ -15,16 +15,36 @@
 .Layout-HeaderBar__title {
   color: inherit;
   font-size: var(--heading-size);
-  margin: 0;
+  font-weight: var(--heading-weight-bold);
+  font-style: italic;
+  margin: 0 0 1em;
+}
+
+.Layout-HeaderBar__about {
+  margin: 0 0 2em;
+}
+
+.Layout-HeaderBar__about p {
+  margin: 0 0 0.5em;
+}
+
+.Layout-HeaderBar__about a {
+  font-size: 0.8em;
+  font-weight: bold;
+}
+
+.Layout-HeaderBar__about a:hover {
+  text-decoration: underline;
+}
+
+.Layout-HeaderBar__about-picture {
+  max-width: 100%;
+  border-radius: 3px;
+  box-shadow: var(--box-shadow);
 }
 
 .Layout-HeaderBar__social {
   font-size: 0.7em;
-}
-
-.Layout-HeaderBar__social:hover::after {
-  content: '⤴';
-  position: absolute;
 }
 
 .Layout-HeaderBar__languages {

@@ -8,13 +8,18 @@ class Layout extends PureComponent {
     children: null,
     breadcrumbs: [],
     languages: {},
+    allTags: [],
+    allCategories: [],
   }
 
   render() {
     return (
       <main className="Layout">
         <div className="Layout__headerbar">
-          <HeaderBar />
+          <HeaderBar
+            tags={this.props.allTags}
+            categories={this.props.allCategories}
+          />
         </div>
         <article className="Layout__content">
           {this.props.children}
