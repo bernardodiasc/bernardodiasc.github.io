@@ -25,7 +25,10 @@ class PostsListing extends PureComponent {
                 <h1 className="PostsListing__title">{item.title}</h1>
                 {item.date && (
                   <p className="PostsListing__date">
-                    {fecha.format(new Date(item.date), 'dddd MMMM Do, YYYY')}
+                    {fecha.format(
+                      new Date(`${item.date.substring(0, 10)}T03:00:00.000Z`),
+                      'dddd MMMM Do, YYYY'
+                    )}
                   </p>
                 )}
                 <p className="PostsListing__excerpt">{item.excerpt}</p>

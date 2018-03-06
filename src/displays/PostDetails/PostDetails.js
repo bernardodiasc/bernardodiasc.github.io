@@ -22,7 +22,10 @@ class PostDetails extends PureComponent {
         <h1 className="PostDetails__title">{title}</h1>
         {date && (
           <p className="PostDetails__meta">
-            {fecha.format(new Date(date), 'dddd MMMM Do, YYYY')}
+            {fecha.format(
+              new Date(`${date.substring(0, 10)}T03:00:00.000Z`),
+              'dddd MMMM Do, YYYY'
+            )}
           </p>
         )}
         <TextBlock>
