@@ -28,10 +28,18 @@ class HeaderBar extends PureComponent {
             src="/images/me.jpg"
             alt="Bernardo Dias da Cruz"
           />
-          <p>I&apos;m <strong>Bernardo Dias da Cruz</strong>,<br/>a web developer and thinker.</p>
-          <p><AppLink to="about-me">More about me.</AppLink></p>
+          <p>I&apos;m <strong>Bernardo Dias da Cruz</strong>,<br/>a senior web developer.</p>
+          <p><AppLink to="about-me">Click here to know more about me.</AppLink></p>
           <p className="Layout-HeaderBar__social">
             <span>Follow me on </span>
+            <a
+              href="https://github.com/bernardodiasc"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              GitHub
+            </a>
+            <span> and </span>
             <a
               href="https://twitter.com/bernardodiasc"
               target="_blank"
@@ -39,47 +47,20 @@ class HeaderBar extends PureComponent {
             >
               Twitter
             </a>
-            <span> and </span>
-            <a
-              href="https://github.com/bernardodiasc"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              GitHub
-            </a>.
           </p>
         </div>
 
-        <div style={{display: 'none'}}>
-          <h2>Filter posts</h2>
-          <AppLink to={'archive'}>Archive</AppLink>
-
-          {this.props.categories.length > 0 && (
-            <nav>
-              <h3>Categories</h3>
-              <ul>
-                {this.props.categories.map(category => (
-                  <li key={category}>
-                    <AppLink to={`category/${category}`}>{category}</AppLink>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          )}
-
-          {this.props.tags.length > 0 && (
-            <nav>
-              <h3>Tags</h3>
-              <ul>
-                {this.props.tags.map(tag => (
-                  <li key={tag}>
-                    <AppLink to={`search/?${tag}`}>{tag}</AppLink>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          )}
-        </div>
+        <nav className="Layout-HeaderBar__further">
+          <h2>Looking further?</h2>
+          <ul className="Layout-HeaderBar__further-list">
+            <li className="Layout-HeaderBar__further-item">
+              <AppLink to={'archive'}>Archive</AppLink>
+            </li>
+            <li className="Layout-HeaderBar__further-item">
+              <AppLink to={'search'}>Search for content</AppLink>
+            </li>
+          </ul>
+        </nav>
       </header>
     )
   }

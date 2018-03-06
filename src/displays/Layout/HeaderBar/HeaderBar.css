@@ -50,3 +50,26 @@
 .Layout-HeaderBar__languages {
   margin: 0.5em 0 1em;
 }
+
+.Layout-HeaderBar__further {
+  font-size: 1em;
+}
+
+.Layout-HeaderBar__further-list {
+  padding: 0 0 0 1em;
+  margin: 0.5em 0;
+}
+
+.Layout-HeaderBar__further-item {
+  margin: 0;
+  line-height: 1.2;
+  list-style-type: circle;
+}
+
+.Layout-HeaderBar__further a {
+  font-size: 0.8em;
+}
+
+.Layout-HeaderBar__further a:hover {
+  text-decoration: underline;
+}

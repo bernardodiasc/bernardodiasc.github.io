@@ -1,7 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders without crashing 1`] = `
-<div>
-  ArchivePage
-</div>
+<Connect(LayoutContainer)>
+  <Meta
+    description=""
+    title="Archive of content"
+  />
+  to do:
+  <br />
+  display a timeline/calendar of posts
+  <br />
+  years, months and days are clickable
+  <br />
+  each filter opens on its route
+  <br />
+  and show available posts on PostsListing
+  <br />
+</Connect(LayoutContainer)>
 `;

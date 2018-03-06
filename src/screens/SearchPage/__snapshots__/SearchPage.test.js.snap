@@ -1,7 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders without crashing 1`] = `
-<div>
-  SearchPage
-</div>
+<Connect(LayoutContainer)>
+  <Meta
+    description=""
+    title="Filter content"
+  />
+  <TextBlock>
+    To do:
+    <br />
+    make the stuff below works
+    <br />
+    and also make look better
+    <br />
+    and also include a search input
+    <br />
+  </TextBlock>
+</Connect(LayoutContainer)>
 `;

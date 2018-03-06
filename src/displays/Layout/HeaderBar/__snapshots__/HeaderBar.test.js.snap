@@ -28,13 +28,13 @@ exports[`renders without crashing 1`] = `
       </strong>
       ,
       <br />
-      a web developer and thinker.
+      a senior web developer.
     </p>
     <p>
       <AppLink
         to="about-me"
       >
-        More about me.
+        Click here to know more about me.
       </AppLink>
     </p>
     <p
@@ -44,40 +44,52 @@ exports[`renders without crashing 1`] = `
         Follow me on 
       </span>
       <a
-        href="https://twitter.com/bernardodiasc"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        Twitter
-      </a>
-      <span>
-         and 
-      </span>
-      <a
         href="https://github.com/bernardodiasc"
         rel="noopener noreferrer"
         target="_blank"
       >
         GitHub
       </a>
-      .
+      <span>
+         and 
+      </span>
+      <a
+        href="https://twitter.com/bernardodiasc"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        Twitter
+      </a>
     </p>
   </div>
-  <div
-    style={
-      Object {
-        "display": "none",
-      }
-    }
+  <nav
+    className="Layout-HeaderBar__further"
   >
     <h2>
-      Filter posts
+      Looking further?
     </h2>
-    <AppLink
-      to="archive"
+    <ul
+      className="Layout-HeaderBar__further-list"
     >
-      Archive
-    </AppLink>
-  </div>
+      <li
+        className="Layout-HeaderBar__further-item"
+      >
+        <AppLink
+          to="archive"
+        >
+          Archive
+        </AppLink>
+      </li>
+      <li
+        className="Layout-HeaderBar__further-item"
+      >
+        <AppLink
+          to="search"
+        >
+          Search for content
+        </AppLink>
+      </li>
+    </ul>
+  </nav>
 </header>
 `;

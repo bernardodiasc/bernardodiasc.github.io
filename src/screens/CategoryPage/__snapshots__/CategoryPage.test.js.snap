@@ -1,7 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders without crashing 1`] = `
-<div>
-  CategoryPage
-</div>
+<Connect(LayoutContainer)>
+  <Meta
+    description=""
+    title="Archive of content"
+  />
+  to do:
+  <br />
+  display category title, descirption and poster
+  <br />
+  and show available posts on PostsListing below
+  <br />
+</Connect(LayoutContainer)>
 `;
