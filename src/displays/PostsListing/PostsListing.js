@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react'
+import fecha from 'fecha'
 import './PostsListing.css'
 
 import AppLink from 'displays/AppLink'
@@ -22,7 +23,11 @@ class PostsListing extends PureComponent {
             <section key={handle} className="PostsListing__each">
               <AppLink to={handle} className="PostsListing__link">
                 <h1 className="PostsListing__title">{item.title}</h1>
-                <p className="PostsListing__date">{item.date}</p>
+                {item.date && (
+                  <p className="PostsListing__date">
+                    {fecha.format(new Date(item.date), 'dddd MMMM Do, YYYY')}
+                  </p>
+                )}
                 <p className="PostsListing__excerpt">{item.excerpt}</p>
               </AppLink>
             </section>

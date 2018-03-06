@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react'
+import fecha from 'fecha'
 import marked from 'marked'
 import renderHTML from 'react-render-html'
 import './PostDetails.css'
@@ -15,11 +16,15 @@ class PostDetails extends PureComponent {
   }
 
   render() {
-    const { body } = this.props.post
+    const { title, date, body } = this.props.post
     return (
       <div className="PostDetails">
-        <h1 className="PostDetails__title">{this.props.post.title}</h1>
-        <p className="PostDetails__meta">{this.props.post.date}</p>
+        <h1 className="PostDetails__title">{title}</h1>
+        {date && (
+          <p className="PostDetails__meta">
+            {fecha.format(new Date(date), 'dddd MMMM Do, YYYY')}
+          </p>
+        )}
         <TextBlock>
           {body && renderHTML(marked(body))}
         </TextBlock>

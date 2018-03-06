@@ -7,9 +7,6 @@ exports[`renders without crashing 1`] = `
   <h1
     className="PostDetails__title"
   />
-  <p
-    className="PostDetails__meta"
-  />
   <TextBlock />
 </div>
 `;

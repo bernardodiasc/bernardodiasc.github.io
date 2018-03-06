@@ -12,7 +12,10 @@ class HomePage extends Component {
   render() {
     return (
       <LayoutContainer>
-        <Meta />
+        <Meta
+          title="Random Thoughts"
+          description="A web developer and thinker."
+        />
         <PostsListing items={this.props.posts} />
       </LayoutContainer>
     )
