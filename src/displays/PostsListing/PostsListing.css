@@ -1,5 +1,6 @@
 .PostsListing {
   font-size: var(--text-size);
+  padding: 2em 2em 3em;
 }
 
 .PostsListing__each {
@@ -13,24 +14,4 @@
 .PostsListing__link {
   display: block;
   position: relative;
-}
-
-.PostsListing__title {
-  color: var(--heading-color);
-  font-size: var(--heading-size);
-  margin: 0 0 0.3em;
-}
-
-.PostsListing__link:hover .PostsListing__title {
-  text-decoration: underline;
-}
-
-.PostsListing__date {
-  color: var(--meta-color);
-  font-size: var(--meta-size);
-  margin-bottom: 0.5em;
-}
-
-.PostsListing__excerpt {
-  color: var(--text-color);
 }

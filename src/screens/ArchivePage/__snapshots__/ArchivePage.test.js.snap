@@ -6,15 +6,18 @@ exports[`renders without crashing 1`] = `
     description=""
     title="Archive of content"
   />
-  to do:
-  <br />
-  display a timeline/calendar of posts
-  <br />
-  years, months and days are clickable
-  <br />
-  each filter opens on its route
-  <br />
-  and show available posts on PostsListing
-  <br />
+  <PageContent>
+    <h1>
+      To do:
+    </h1>
+    display a timeline/calendar of posts
+    <br />
+    years, months and days are clickable
+    <br />
+    each filter opens on its route
+    <br />
+    and show available posts on PostsListing
+    <br />
+  </PageContent>
 </Connect(LayoutContainer)>
 `;

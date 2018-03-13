@@ -12,10 +12,11 @@ class HeaderBar extends PureComponent {
 
   render() {
     return (
-      <header className="Layout-HeaderBar">
+      <div className="Layout-HeaderBar">
         <h1 className="Layout-HeaderBar__title">
           <AppLink>Random Thoughts</AppLink>
         </h1>
+
         {this.props.languages && (
           <div className="Layout-HeaderBar__languages">
             {this.props.languages}
@@ -61,7 +62,7 @@ class HeaderBar extends PureComponent {
             </li>
           </ul>
         </nav>
-      </header>
+      </div>
     )
   }
 }

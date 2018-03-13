@@ -4,6 +4,7 @@ import renderHTML from 'react-render-html'
 
 import Meta from 'components/Meta'
 import LayoutContainer from 'containers/LayoutContainer'
+import PageContent from 'displays/PageContent'
 import TextBlock from 'displays/TextBlock'
 
 class ArticlePage extends Component {
@@ -23,9 +24,11 @@ class ArticlePage extends Component {
           title={title}
           description={excerpt}
         />
-        <TextBlock>
-          {body && renderHTML(marked(body))}
-        </TextBlock>
+        <PageContent>
+          <TextBlock>
+            {body && renderHTML(marked(body))}
+          </TextBlock>
+        </PageContent>
       </LayoutContainer>
     )
   }

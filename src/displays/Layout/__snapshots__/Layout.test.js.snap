@@ -4,17 +4,27 @@ exports[`renders without crashing 1`] = `
 <main
   className="Layout"
 >
-  <div
-    className="Layout__headerbar"
+  <header
+    className="Layout__header"
   >
-    <HeaderBar
-      categories={Array []}
-      languages={null}
-      tags={Array []}
-    />
-  </div>
+    <h1
+      className="Layout__header-title"
+    >
+      <AppLink
+        className=""
+        to=""
+      >
+        Random Thoughts
+      </AppLink>
+    </h1>
+    <Tabs />
+  </header>
   <article
     className="Layout__content"
-  />
+  >
+    <div
+      className="Layout__content-inner"
+    />
+  </article>
 </main>
 `;

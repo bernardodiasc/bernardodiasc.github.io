@@ -17,11 +17,12 @@
   font-size: var(--heading-size);
   font-weight: var(--heading-weight-bold);
   font-style: italic;
-  margin: 0 0 1em;
+  margin: 0;
 }
 
 .Layout-HeaderBar__about {
   margin: 0 0 2em;
+  display: none;
 }
 
 .Layout-HeaderBar__about p {
@@ -53,6 +54,7 @@
 
 .Layout-HeaderBar__further {
   font-size: 1em;
+  display: none;
 }
 
 .Layout-HeaderBar__further-list {

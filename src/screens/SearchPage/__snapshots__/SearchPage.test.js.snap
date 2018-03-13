@@ -6,15 +6,18 @@ exports[`renders without crashing 1`] = `
     description=""
     title="Filter content"
   />
-  <TextBlock>
-    To do:
-    <br />
+  <PageContent>
+    <h1>
+      To do:
+    </h1>
     make the stuff below works
     <br />
     and also make look better
     <br />
     and also include a search input
-    <br />
-  </TextBlock>
+    <TextBlock>
+      <hr />
+    </TextBlock>
+  </PageContent>
 </Connect(LayoutContainer)>
 `;

@@ -1,23 +1,27 @@
 import React, { PureComponent } from 'react'
 import './Layout.css'
 
-import HeaderBar from './HeaderBar'
+import AppLink from 'displays/AppLink'
+import Tabs from './Tabs'
 
 class Layout extends PureComponent {
   static defaultProps = {
     children: null,
-    breadcrumbs: [],
-    languages: {},
   }
 
   render() {
     return (
       <main className="Layout">
-        <div className="Layout__headerbar">
-          <HeaderBar />
-        </div>
+        <header className="Layout__header">
+          <h1 className="Layout__header-title">
+            <AppLink>Random Thoughts</AppLink>
+          </h1>
+          <Tabs />
+        </header>
         <article className="Layout__content">
-          {this.props.children}
+          <div className="Layout__content-inner">
+            {this.props.children}
+          </div>
         </article>
       </main>
     )

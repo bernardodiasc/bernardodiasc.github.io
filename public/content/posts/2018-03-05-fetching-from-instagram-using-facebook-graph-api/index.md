@@ -15,7 +15,7 @@ excerpt: Instagram API is being deprecated and from now will be using Facebook G
 Past week I had a task to fetch media from Instagram and build a mosaic wall with it.
 
 <figure>
-  <img width="100%" alt="Instagram media mosaic at https://x-team.com/join/" src="/content/posts/2018-03-05-fetching-from-instagram-using-facebook-graph-api/instagram-media-mosaic.png" />
+  <img alt="Instagram media mosaic at https://x-team.com/join/" src="/content/posts/2018-03-05-fetching-from-instagram-using-facebook-graph-api/instagram-media-mosaic.png" />
   <figcaption>This module was included at https://x-team.com/join/</figcaption>
 </figure>
 

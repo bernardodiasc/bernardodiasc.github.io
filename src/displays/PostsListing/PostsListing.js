@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react'
-import fecha from 'fecha'
 import './PostsListing.css'
 
 import AppLink from 'displays/AppLink'
+import PostHeader from 'displays/PostHeader'
 
 class PostsListing extends PureComponent {
   static defaultProps = {
@@ -22,16 +22,11 @@ class PostsListing extends PureComponent {
           return (
             <section key={handle} className="PostsListing__each">
               <AppLink to={handle} className="PostsListing__link">
-                <h1 className="PostsListing__title">{item.title}</h1>
-                {item.date && (
-                  <p className="PostsListing__date">
-                    {fecha.format(
-                      new Date(`${item.date.substring(0, 10)}T03:00:00.000Z`),
-                      'dddd MMMM Do, YYYY'
-                    )}
-                  </p>
-                )}
-                <p className="PostsListing__excerpt">{item.excerpt}</p>
+                <PostHeader
+                  title={item.title}
+                  date={item.date}
+                  excerpt={item.excerpt}
+                />
               </AppLink>
             </section>
           )

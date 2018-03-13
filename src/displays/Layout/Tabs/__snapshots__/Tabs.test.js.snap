@@ -1,0 +1,64 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders without crashing 1`] = `
+<ul
+  className="Layout-Tabs"
+>
+  <li
+    className="Layout-Tabs__tab"
+  >
+    <AppLink
+      activeClassName="Layout-Tabs__link--active"
+      className="Layout-Tabs__link"
+      title="Latest posts"
+      to="/"
+    >
+      <Icon
+        icon="home"
+      />
+    </AppLink>
+  </li>
+  <li
+    className="Layout-Tabs__tab"
+  >
+    <AppLink
+      activeClassName="Layout-Tabs__link--active"
+      className="Layout-Tabs__link"
+      title="Search for content"
+      to="search"
+    >
+      <Icon
+        icon="explore"
+      />
+    </AppLink>
+  </li>
+  <li
+    className="Layout-Tabs__tab"
+  >
+    <AppLink
+      activeClassName="Layout-Tabs__link--active"
+      className="Layout-Tabs__link"
+      title="Content archive"
+      to="archive"
+    >
+      <Icon
+        icon="calendar"
+      />
+    </AppLink>
+  </li>
+  <li
+    className="Layout-Tabs__tab"
+  >
+    <AppLink
+      activeClassName="Layout-Tabs__link--active"
+      className="Layout-Tabs__link"
+      title="About me"
+      to="about-me"
+    >
+      <Icon
+        icon="guy-fawkes-mask"
+      />
+    </AppLink>
+  </li>
+</ul>
+`;

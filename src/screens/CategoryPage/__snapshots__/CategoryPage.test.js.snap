@@ -6,11 +6,14 @@ exports[`renders without crashing 1`] = `
     description=""
     title="Archive of content"
   />
-  to do:
-  <br />
-  display category title, descirption and poster
-  <br />
-  and show available posts on PostsListing below
-  <br />
+  <PageContent>
+    <h1>
+      To do:
+    </h1>
+    display category title, descirption and poster
+    <br />
+    and show available posts on PostsListing below
+    <br />
+  </PageContent>
 </Connect(LayoutContainer)>
 `;

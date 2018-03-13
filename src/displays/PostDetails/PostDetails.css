@@ -1,15 +1,4 @@
 .PostDetails {
   font-size: var(--text-size);
-}
-
-.PostDetails__title {
-  color: var(--heading-color);
-  font-size: var(--heading-size);
-  margin: 0 0 0.3em;
-}
-
-.PostDetails__meta {
-  color: var(--meta-color);
-  font-size: var(--meta-size);
-  margin: 0 0 2.5em;
+  padding: 2em 2em 4em;
 }

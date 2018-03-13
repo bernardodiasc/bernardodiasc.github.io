@@ -1,0 +1,36 @@
+.Layout-Tabs {
+  font-size: var(--text-size);
+  display: flex;
+}
+
+.Layout-Tabs__tab {
+  display: inline-block;
+  background: var(--content-background);
+  margin: 0 0 0 5px;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+}
+
+.Layout-Tabs__tab:first-of-type {
+  margin: 0;
+}
+
+.Layout-Tabs__link {
+  display: block;
+  width: 18px;
+  height: 18px;
+  color: var(--meta-color);
+  transition: color 0.3s ease;
+  padding: 0.3em 0.8em;
+  box-sizing: content-box;
+  box-shadow: 0 -1px 3px 0 rgba(45, 45, 45, 0.4) inset;
+}
+
+.Layout-Tabs__link:hover {
+  color: var(--text-color);
+}
+
+.Layout-Tabs__link--active {
+  color: var(--heading-color);
+  box-shadow: none;
+}

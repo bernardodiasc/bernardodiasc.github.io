@@ -4,8 +4,10 @@ exports[`renders without crashing 1`] = `
 <div
   className="PostDetails"
 >
-  <h1
-    className="PostDetails__title"
+  <PostHeader
+    date=""
+    excerpt=""
+    title=""
   />
   <TextBlock />
 </div>

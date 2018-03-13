@@ -2,6 +2,7 @@
   font-size: var(--text-size);
   display: flex;
   justify-content: center;
+  flex-direction: column;
   width: 100%;
   min-height: 100vh;
   margin: 0 auto;
@@ -15,15 +16,37 @@
 .Layout__content {
   flex: 1;
   width: 100%;
-  max-width: 800px;
-  margin: 1em 1em 8em;
+  max-width: 1000px;
+  padding: 0 5em 8em;
+  margin: 0 auto;
+}
+
+.Layout__content-inner {
   background: var(--content-background);
   box-shadow: var(--box-shadow);
-  padding: 2em 2em 3em;
   border-radius: 4px;
 }
 
-.Layout__headerbar {
-  width: 300px;
-  padding: 3em 1em;
+.Layout__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  padding: 2em 6em 0;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1000px;
+}
+
+.Layout__header-title {
+  color: white;
+  font-size: var(--heading-size);
+  font-weight: var(--heading-weight-bold);
+  font-style: italic;
+  margin: 0 0 0.5em;
+}
+
+.Layout__header-title a,
+.Layout__header-title a:visited {
+  color: inherit;
 }

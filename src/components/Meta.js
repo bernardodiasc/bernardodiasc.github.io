@@ -8,7 +8,7 @@ class Meta extends Component {
       ? `${this.props.title} - Bernardo Dias da Cruz`
       : 'Bernardo Dias da Cruz'
     const description = this.props.description || ''
-    const image = this.props.image || ''
+    const image = this.props.image || `${config.PUBLIC_URL}/images/thumbnail.png`
     const slug = this.props.slug || '/'
     return (
       <Helmet>

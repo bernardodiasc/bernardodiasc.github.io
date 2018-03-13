@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 
 import Meta from 'components/Meta'
 import LayoutContainer from 'containers/LayoutContainer'
+import PageContent from 'displays/PageContent'
 
 class CategoryPage extends Component {
   static defaultProps = {}
@@ -13,9 +14,11 @@ class CategoryPage extends Component {
           title="Archive of content"
           description=""
         />
-        to do:<br/>
-        display category title, descirption and poster<br/>
-        and show available posts on PostsListing below<br/>
+        <PageContent>
+          <h1>To do:</h1>
+          display category title, descirption and poster<br/>
+          and show available posts on PostsListing below<br/>
+        </PageContent>
       </LayoutContainer>
     )
   }
