@@ -41,10 +41,22 @@
 
 .Layout__header-title {
   color: white;
-  font-size: var(--heading-size);
-  font-weight: var(--heading-weight-bold);
+  font-family: 'Permanent Marker', cursive;
+  font-size: 3em;
+  font-weight: var(--heading-weight);
   font-style: italic;
   margin: 0 0 0.5em;
+  letter-spacing: 1px;
+  text-shadow:
+    0 1px 0 #ccc,
+    1px 2px 0 #bbb,
+    2px 3px 0 #aaa,
+    0 6px 1px rgba(0, 0, 0, 0.1),
+    0 0 5px rgba(0, 0, 0, 0.1),
+    0 1px 3px rgba(0, 0, 0, 0.3),
+    0 3px 5px rgba(0, 0, 0, 0.2),
+    0 5px 10px rgba(0, 0, 0, 0.25),
+    0 10px 10px rgba(0, 0, 0, 0.2);
 }
 
 .Layout__header-title a,
@@ -59,5 +71,9 @@
 
   .Layout__header {
     padding: 2em 2em 0;
+  }
+
+  .Layout__header-title {
+    font-size: 2em;
   }
 }
