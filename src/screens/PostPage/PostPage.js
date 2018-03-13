@@ -7,10 +7,7 @@ import Disqus from 'displays/Disqus'
 
 class PostPage extends Component {
   static defaultProps = {
-    post: {
-      title: '',
-      excerpt: '',
-    },
+    post: {},
   }
 
   render() {

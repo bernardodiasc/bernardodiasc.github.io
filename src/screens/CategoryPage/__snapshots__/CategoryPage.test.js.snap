@@ -3,17 +3,15 @@
 exports[`renders without crashing 1`] = `
 <Connect(LayoutContainer)>
   <Meta
-    description=""
-    title="Archive of content"
+    title="Category: undefined"
   />
   <PageContent>
-    <h1>
-      To do:
-    </h1>
-    display category title, descirption and poster
-    <br />
-    and show available posts on PostsListing below
-    <br />
+    <CategoryDetails
+      category={Object {}}
+    />
+    <PostsListing
+      items={Array []}
+    />
   </PageContent>
 </Connect(LayoutContainer)>
 `;

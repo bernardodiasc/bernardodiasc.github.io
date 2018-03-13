@@ -6,8 +6,10 @@ exports[`renders without crashing 1`] = `
     description="A web developer and thinker."
     title="Random Thoughts"
   />
-  <PostsListing
-    items={Array []}
-  />
+  <PageContent>
+    <PostsListing
+      items={Array []}
+    />
+  </PageContent>
 </Connect(LayoutContainer)>
 `;

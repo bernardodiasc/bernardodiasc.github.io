@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 
 import Meta from 'components/Meta'
 import LayoutContainer from 'containers/LayoutContainer'
+import PageContent from 'displays/PageContent'
 import PostsListing from 'displays/PostsListing'
 
 class HomePage extends Component {
@@ -16,7 +17,9 @@ class HomePage extends Component {
           title="Random Thoughts"
           description="A web developer and thinker."
         />
-        <PostsListing items={this.props.posts} />
+        <PageContent>
+          <PostsListing items={this.props.posts} />
+        </PageContent>
       </LayoutContainer>
     )
   }

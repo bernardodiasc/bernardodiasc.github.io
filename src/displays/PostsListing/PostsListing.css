@@ -1,6 +1,5 @@
 .PostsListing {
   font-size: var(--text-size);
-  padding: 2em 2em 3em;
 }
 
 .PostsListing__each {

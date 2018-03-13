@@ -2,17 +2,9 @@
 
 exports[`renders without crashing 1`] = `
 <Connect(LayoutContainer)>
-  <Meta
-    description=""
-    title=""
-  />
+  <Meta />
   <PostDetails
-    post={
-      Object {
-        "excerpt": "",
-        "title": "",
-      }
-    }
+    post={Object {}}
   />
   <Disqus
     identifier=""

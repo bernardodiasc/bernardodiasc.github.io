@@ -24,10 +24,6 @@ export const getPostTags = (state, post) =>
 export const getPostBody = (state, post) =>
   pathOr('', ['data', 'posts', post, 'index.md', 'body'], state)
 
-export const getAllPostsForListing = (state) => Object
-  .keys(getAllPostData(state))
-  .map(post => ({...getAllPostDetails(state, post)}))
-
 export const getAllPostDetails = (state, post) => ({
   handle: post,
   title: getPostTitle(state, post),
@@ -38,6 +34,10 @@ export const getAllPostDetails = (state, post) => ({
   body: getPostBody(state, post),
   files: getPostData(state, post),
 })
+
+export const getAllPostsForListing = (state) => Object
+  .keys(getAllPostData(state))
+  .map(post => ({...getAllPostDetails(state, post)}))
 
 export const getAllPostsTags = (state) => {
   let tags = []
@@ -94,3 +94,8 @@ export const getAllCategoryDetails = (state, category) => ({
   body: getCategoryBody(state, category),
   files: getCategoryData(state, category),
 })
+
+export const getAllPostsForListingByCategory = (state, category) => Object
+  .keys(getAllPostData(state))
+  .filter(post => category === getPostCategory(state, post))
+  .map(post => ({...getAllPostDetails(state, post)}))
