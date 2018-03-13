@@ -1,7 +1,7 @@
 ---
 title: Boilerplate generators
 date: 2018-02-26
-category: This Blog
+category: this-blog
 tags:
   - node.js
   - yarn

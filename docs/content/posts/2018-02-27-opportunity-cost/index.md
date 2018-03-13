@@ -1,7 +1,7 @@
 ---
 title: Opportunity cost
 date: 2018-02-27
-category: Strategy
+category: strategy
 tags:
   - life
   - business

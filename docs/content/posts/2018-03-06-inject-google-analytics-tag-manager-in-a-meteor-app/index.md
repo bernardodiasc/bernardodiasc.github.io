@@ -6,7 +6,7 @@ tags:
   - meteor
   - google analytics
   - seo
-excerpt: Instructions about how to easily inject GA tag manager in a Meteor app
+excerpt: Instructions about how to easily inject GA tag manager in a Meteor app.
 ---
 
 Sometimes we want to inject data with the original HTML request to make it available sooner, in cases like Google Analytics tag manager it needs to be inserted two tags, one right after `<head>` opening and other right after `<body>` opening.

@@ -9,7 +9,7 @@ tags:
   - fetch
   - css grid
   - responsiveness
-excerpt: Instagram API is being deprecated and from now will be using Facebook Graph API
+excerpt: Instagram API is being deprecated and from now will be using Facebook Graph API.
 ---
 
 Past week I had a task to fetch media from Instagram and build a mosaic wall with it.

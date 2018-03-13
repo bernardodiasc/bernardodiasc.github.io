@@ -1,7 +1,7 @@
 ---
 title: Hello World
 date: 2018-02-23
-category: This Blog
+category: this-blog
 tags:
   - static files
   - react

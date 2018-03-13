@@ -1,3 +1,3 @@
 ---
-- about-me: About me
+- about-me
 ---
