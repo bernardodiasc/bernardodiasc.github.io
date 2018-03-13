@@ -5,7 +5,7 @@ category: this-blog
 tags:
   - typography
   - content
-excerpt: Content can now be fetched by category and the visual got some polish for better readability.
+excerpt: Content can now be fetched by category and the visual got some polishing for better readability.
 ---
 
 One more day of development on this site, some more updates available. It's nice to see the thing evolving!
