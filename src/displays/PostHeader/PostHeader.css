@@ -3,6 +3,8 @@
 }
 
 .PostHeader__title {
+  display: flex;
+  align-items: center;
   color: var(--heading-color);
   font-size: var(--heading-level1-size);
   margin: 0 0 0.3em;
@@ -12,19 +14,22 @@
   font-size: var(--heading-level2-size);
 }
 
+.PostHeader--listing:hover .PostHeader__title {
+  text-decoration: underline;
+}
+
 .PostHeader__icon {
   display: inline-block;
   height: 0.8em;
   width: 0.8em;
-  transform: translateY(2px);
   margin: 0 4px 0 0;
 }
 
 .PostHeader--details .PostHeader__icon {
-  height: 1.4em;
-  width: 1.4em;
-  transform: translateY(3px);
-  margin: 0 6px 0 0;
+  height: 1em;
+  width: 1em;
+  margin: 0 5px 0 0;
+  transform: translateY(-3px);
 }
 
 .PostHeader__meta {
@@ -38,6 +43,8 @@
 }
 
 .PostHeader__category-link {
+  display: flex;
+  align-items: center;
   color: var(--heading-color);
 }
 
