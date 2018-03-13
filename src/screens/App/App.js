@@ -10,6 +10,12 @@ import ArticlePage from 'screens/ArticlePage'
 import SearchPage from 'screens/SearchPage'
 
 class App extends Component {
+  componentDidUpdate(prevProps) {
+    if (this.props.location !== prevProps.location) {
+      window.scrollTo(0, 0)
+    }
+  }
+
   render() {
     return (
       <Switch>

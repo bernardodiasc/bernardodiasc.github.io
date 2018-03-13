@@ -16,7 +16,7 @@
 .Layout__content {
   flex: 1;
   width: 100%;
-  max-width: 1000px;
+  max-width: 1200px;
   padding: 0 5em 8em;
   margin: 0 auto;
 }
@@ -25,6 +25,7 @@
   background: var(--content-background);
   box-shadow: var(--box-shadow);
   border-radius: 4px;
+  overflow-x: auto;
 }
 
 .Layout__header {
@@ -35,7 +36,7 @@
   padding: 2em 6em 0;
   margin: 0 auto;
   width: 100%;
-  max-width: 1000px;
+  max-width: 1200px;
 }
 
 .Layout__header-title {
@@ -49,4 +50,14 @@
 .Layout__header-title a,
 .Layout__header-title a:visited {
   color: inherit;
+}
+
+@media only screen and (max-width: 1023px) {
+  .Layout__content {
+    padding: 0 1em 8em;
+  }
+
+  .Layout__header {
+    padding: 2em 2em 0;
+  }
 }
