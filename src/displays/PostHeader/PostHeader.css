@@ -8,10 +8,42 @@
   margin: 0 0 0.3em;
 }
 
+.PostHeader--listing .PostHeader__title {
+  font-size: var(--heading-level2-size);
+}
+
+.PostHeader__icon {
+  display: inline-block;
+  height: 0.8em;
+  width: 0.8em;
+  transform: translateY(2px);
+  margin: 0 4px 0 0;
+}
+
+.PostHeader--details .PostHeader__icon {
+  height: 1.4em;
+  width: 1.4em;
+  transform: translateY(3px);
+  margin: 0 6px 0 0;
+}
+
 .PostHeader__meta {
   color: var(--meta-color);
   font-size: var(--meta-size);
   margin: 0 0 1em;
+}
+
+.PostHeader__category {
+  margin: 0 0 0.5em;
+}
+
+.PostHeader__category-link {
+  color: var(--heading-color);
+}
+
+.PostHeader__category-link:hover {
+  color: var(--text-color);
+  text-decoration: underline;
 }
 
 .PostHeader__excerpt {

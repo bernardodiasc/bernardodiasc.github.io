@@ -11,15 +11,30 @@ class PostDetails extends PureComponent {
     post: {
       title: '',
       date: '',
+      category: {
+        handle: '',
+        title: '',
+        icon: '',
+      },
       body: '',
     },
   }
 
   render() {
-    const { title, date, body } = this.props.post
+    const {
+      title,
+      date,
+      category,
+      body,
+    } = this.props.post
     return (
       <div className="PostDetails">
-        <PostHeader title={title} date={date} />
+        <PostHeader
+          mode="details"
+          title={title}
+          date={date}
+          category={category}
+        />
         <TextBlock>
           {body && renderHTML(marked(body))}
         </TextBlock>

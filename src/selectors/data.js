@@ -26,18 +26,15 @@ export const getPostBody = (state, post) =>
 
 export const getAllPostsForListing = (state) => Object
   .keys(getAllPostData(state))
-  .map(post => ({
-    handle: post,
-    title: getPostTitle(state, post),
-    date: getPostDate(state, post),
-    excerpt: getPostExcerpt(state, post),
-  }))
+  .map(post => ({...getAllPostDetails(state, post)}))
 
 export const getAllPostDetails = (state, post) => ({
   handle: post,
   title: getPostTitle(state, post),
   date: getPostDate(state, post),
   excerpt: getPostExcerpt(state, post),
+  category: getAllCategoryDetails(state, getPostCategory(state, post)),
+  tags: getPostTags(state, post),
   body: getPostBody(state, post),
   files: getPostData(state, post),
 })
@@ -76,4 +73,24 @@ export const getAllArticleDetails = (state, article) => ({
   excerpt: getArticleExcerpt(state, article),
   body: getArticleBody(state, article),
   files: getArticleData(state, article),
+})
+
+export const getCategoryData = (state, category) =>
+  pathOr({}, ['data', 'categories', category], state)
+
+export const getCategoryTitle = (state, category) =>
+  pathOr('', ['data', 'categories', category, 'index.md', 'attr', 'title'], state)
+
+export const getCategoryIcon = (state, category) =>
+  pathOr('', ['data', 'categories', category, 'index.md', 'attr', 'icon'], state)
+
+export const getCategoryBody = (state, category) =>
+  pathOr('', ['data', 'categories', category, 'index.md', 'body'], state)
+
+export const getAllCategoryDetails = (state, category) => ({
+  handle: category,
+  title: getCategoryTitle(state, category),
+  icon: getCategoryIcon(state, category),
+  body: getCategoryBody(state, category),
+  files: getCategoryData(state, category),
 })

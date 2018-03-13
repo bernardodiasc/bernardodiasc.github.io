@@ -1,1 +1,4 @@
-.AppLink {}
+.AppLink {
+  font-size: inherit;
+  color: inherit;
+}

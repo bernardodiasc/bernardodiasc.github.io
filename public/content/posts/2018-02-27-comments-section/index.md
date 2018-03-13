@@ -1,7 +1,7 @@
 ---
 title: Comments section
 date: 2018-02-27
-category: This Blog
+category: this-blog
 tags:
   - disqus
   - react

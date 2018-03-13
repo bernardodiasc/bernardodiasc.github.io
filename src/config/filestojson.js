@@ -11,16 +11,14 @@ function posts(content, contentType) {
   const allFiles = content.filter(each => each.dir.includes(`/${contentType}`))
   const index = allFiles.filter(each => each.base === 'index.md')[0]
   index.attr.forEach(each => {
-    Object.keys(each).forEach(key => {
-      const allFilesForEach = allFiles.filter(file =>
-        file.dir.includes(`/${contentType}/${key}`)
-      )
-      output[key] = {}
-      allFilesForEach.forEach(file => {
-        if (file.dir.includes(`/${contentType}/${key}`)) {
-          output[key][file.base] = file
-        }
-      })
+    const allFilesForEach = allFiles.filter(file =>
+      file.dir.includes(`/${contentType}/${each}`)
+    )
+    output[each] = {}
+    allFilesForEach.forEach(file => {
+      if (file.dir.includes(`/${contentType}/${each}`)) {
+        output[each][file.base] = file
+      }
     })
   })
   return output
@@ -37,16 +35,38 @@ function articles(content, contentType) {
   const allFiles = content.filter(each => each.dir.includes(`/${contentType}`))
   const index = allFiles.filter(each => each.base === 'index.md')[0]
   index.attr.forEach(each => {
-    Object.keys(each).forEach(key => {
-      const allFilesForEach = allFiles.filter(file =>
-        file.dir.includes(`/${contentType}/${key}`)
-      )
-      output[key] = {}
-      allFilesForEach.forEach(file => {
-        if (file.dir.includes(`/${contentType}/${key}`)) {
-          output[key][file.base] = file
-        }
-      })
+    const allFilesForEach = allFiles.filter(file =>
+      file.dir.includes(`/${contentType}/${each}`)
+    )
+    output[each] = {}
+    allFilesForEach.forEach(file => {
+      if (file.dir.includes(`/${contentType}/${each}`)) {
+        output[each][file.base] = file
+      }
+    })
+  })
+  return output
+}
+
+/**
+ * Categories content type translation
+ * @param  {Array} content      List of files
+ * @param  {String} contentType Content type name
+ * @return {Object}             The categories content type data object
+ */
+function categories(content, contentType) {
+  let output = {}
+  const allFiles = content.filter(each => each.dir.includes(`/${contentType}`))
+  const index = allFiles.filter(each => each.base === 'index.md')[0]
+  index.attr.forEach(each => {
+    const allFilesForEach = allFiles.filter(file =>
+      file.dir.includes(`/${contentType}/${each}`)
+    )
+    output[each] = {}
+    allFilesForEach.forEach(file => {
+      if (file.dir.includes(`/${contentType}/${each}`)) {
+        output[each][file.base] = file
+      }
     })
   })
   return output
@@ -64,6 +84,7 @@ const config = {
   contentTypes: [
     { posts },
     { articles },
+    { categories },
   ]
 }
 

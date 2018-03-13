@@ -5,8 +5,16 @@ exports[`renders without crashing 1`] = `
   className="PostDetails"
 >
   <PostHeader
+    category={
+      Object {
+        "handle": "",
+        "icon": "",
+        "title": "",
+      }
+    }
     date=""
     excerpt=""
+    mode="details"
     title=""
   />
   <TextBlock />

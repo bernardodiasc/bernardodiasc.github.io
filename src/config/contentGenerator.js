@@ -17,10 +17,10 @@ inquirer
     {
       name: 'contentName',
       type: 'input',
-      message: 'Component name:',
+      message: 'Content name:',
       validate: function (input) {
         if (/^([A-Za-z\d\-])+$/.test(input)) return true
-        else return 'Component name may only include letters.'
+        else return 'Content name may only include letters.'
       }
     }
   ])

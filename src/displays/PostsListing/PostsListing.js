@@ -23,9 +23,12 @@ class PostsListing extends PureComponent {
             <section key={handle} className="PostsListing__each">
               <AppLink to={handle} className="PostsListing__link">
                 <PostHeader
+                  mode="listing"
                   title={item.title}
                   date={item.date}
                   excerpt={item.excerpt}
+                  category={item.category}
+                  tags={item.tags}
                 />
               </AppLink>
             </section>

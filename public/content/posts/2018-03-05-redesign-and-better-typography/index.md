@@ -1,7 +1,7 @@
 ---
 title: Redesign and better typography
 date: 2018-03-05
-category: This Blog
+category: this-blog
 tags:
   - design
   - typography
