@@ -51,6 +51,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 That's it, it's done!
 
 <figure>
-  <img width="100%" alt="Example of a Meteor app source code with GA tag manager injected" src="/content/posts/2018-03-06-inject-google-analytics-tag-manager-in-a-meteor-app/source-code.png" />
+  <img alt="Example of a Meteor app source code with GA tag manager injected" src="/content/posts/2018-03-06-inject-google-analytics-tag-manager-in-a-meteor-app/source-code.png" />
   <figcaption>Example of a Meteor app source code with GA tag manager injected</figcaption>
 </figure>

@@ -1,12 +1,12 @@
 :root {
   --main-background: #104493;
-  --content-background: #f5f5f5;
+  --content-background: #fff;
 
-  --text-family: 'Lato', serif;
+  --text-family: 'Karma', serif;
   --text-color: #2f2f2f;
   --text-size: 1.1rem;
-  --text-weight: 300;
-  --text-line: 1.7;
+  --text-weight: 400;
+  --text-line: 1.6;
 
   --heading-family: 'Playfair Display', serif;
   --heading-color: #2b5ead;
@@ -15,10 +15,10 @@
   --heading-weight-bold: 700;
   --heading-line: 1.1;
 
-  --heading-level1-size: 2.2em;
+  --heading-level1-size: 1.7em;
   --heading-level1-margins: 1.5em 0 0.7em;
 
-  --heading-level2-size: 1.8em;
+  --heading-level2-size: 1.5em;
   --heading-level2-margins: 1.5em 0 0.7em;
 
   --heading-level3-size: 1.2em;

@@ -32,13 +32,13 @@ This version was most minimalistic as possible. I haven't planned any design for
 #### Home page
 
 <a href="/content/posts/2018-03-05-redesign-and-better-typography/design-round1-home.png" target="_blank" rel="noopener noreferrer">
-  <img width="100%" alt="" src="/content/posts/2018-03-05-redesign-and-better-typography/design-round1-home.png" />
+  <img alt="" src="/content/posts/2018-03-05-redesign-and-better-typography/design-round1-home.png" />
 </a>
 
 #### Post page
 
 <a href="/content/posts/2018-03-05-redesign-and-better-typography/design-round1-post.png" target="_blank" rel="noopener noreferrer">
-  <img width="100%" alt="" src="/content/posts/2018-03-05-redesign-and-better-typography/design-round1-post.png" />
+  <img alt="" src="/content/posts/2018-03-05-redesign-and-better-typography/design-round1-post.png" />
 </a>
 
 ### Second round
@@ -48,13 +48,13 @@ Few hours more, many CSS lines more. On this stage I've focused on creating some
 #### Home page
 
 <a href="/content/posts/2018-03-05-redesign-and-better-typography/design-round2-home.png" target="_blank" rel="noopener noreferrer">
-  <img width="100%" alt="" src="/content/posts/2018-03-05-redesign-and-better-typography/design-round2-home.png" />
+  <img alt="" src="/content/posts/2018-03-05-redesign-and-better-typography/design-round2-home.png" />
 </a>
 
 #### Post page
 
 <a href="/content/posts/2018-03-05-redesign-and-better-typography/design-round2-post.png" target="_blank" rel="noopener noreferrer">
-  <img width="100%" alt="" src="/content/posts/2018-03-05-redesign-and-better-typography/design-round2-post.png" />
+  <img alt="" src="/content/posts/2018-03-05-redesign-and-better-typography/design-round2-post.png" />
 </a>
 
 ### Third round
@@ -75,13 +75,13 @@ I also created the `<TextBlock />` component [(see example on docs)](https://ber
 #### Home page
 
 <a href="/content/posts/2018-03-05-redesign-and-better-typography/design-round3-home.png" target="_blank" rel="noopener noreferrer">
-  <img width="100%" alt="" src="/content/posts/2018-03-05-redesign-and-better-typography/design-round3-home.png" />
+  <img alt="" src="/content/posts/2018-03-05-redesign-and-better-typography/design-round3-home.png" />
 </a>
 
 #### Post page
 
 <a href="/content/posts/2018-03-05-redesign-and-better-typography/design-round3-post.png" target="_blank" rel="noopener noreferrer">
-  <img width="100%" alt="" src="/content/posts/2018-03-05-redesign-and-better-typography/design-round3-post.png" />
+  <img alt="" src="/content/posts/2018-03-05-redesign-and-better-typography/design-round3-post.png" />
 </a>
 
 ---
