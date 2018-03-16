@@ -1,7 +1,7 @@
 ---
 title: Fetching from Instagram using Facebook Graph API
 date: 2018-03-05
-category: third-party
+category: integrations
 tags:
   - instagram
   - facebook

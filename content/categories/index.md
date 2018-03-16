@@ -1,5 +1,6 @@
 ---
-- this-blog
+- frontend
+- integrations
 - strategy
-- third-party
+- this-blog
 ---

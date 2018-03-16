@@ -31,15 +31,15 @@ This version was most minimalistic as possible. I haven't planned any design for
 
 #### Home page
 
-<a href="/content/posts/2018-03-05-redesign-and-better-typography/design-round1-home.png" target="_blank" rel="noopener noreferrer">
+<figure>
   <img alt="" src="/content/posts/2018-03-05-redesign-and-better-typography/design-round1-home.png" />
-</a>
+</figure>
 
 #### Post page
 
-<a href="/content/posts/2018-03-05-redesign-and-better-typography/design-round1-post.png" target="_blank" rel="noopener noreferrer">
+<figure>
   <img alt="" src="/content/posts/2018-03-05-redesign-and-better-typography/design-round1-post.png" />
-</a>
+</figure>
 
 ### Second round
 
@@ -47,15 +47,15 @@ Few hours more, many CSS lines more. On this stage I've focused on creating some
 
 #### Home page
 
-<a href="/content/posts/2018-03-05-redesign-and-better-typography/design-round2-home.png" target="_blank" rel="noopener noreferrer">
+<figure>
   <img alt="" src="/content/posts/2018-03-05-redesign-and-better-typography/design-round2-home.png" />
-</a>
+</figure>
 
 #### Post page
 
-<a href="/content/posts/2018-03-05-redesign-and-better-typography/design-round2-post.png" target="_blank" rel="noopener noreferrer">
+<figure>
   <img alt="" src="/content/posts/2018-03-05-redesign-and-better-typography/design-round2-post.png" />
-</a>
+</figure>
 
 ### Third round
 
@@ -70,19 +70,19 @@ The blueprint theme relates to things I love to do, as in sketching UI, wirefram
 
 On more technical details, I've created a lot CSS Variables to store constant values for typography, as colours and font-faces. During design updates I did a lot tries and updating directly on CSS variables, and that made this process much easier.
 
-I also created the `<TextBlock />` component [(see example on docs)](https://bernardodiasc.github.io/docs/?selectedKind=Displays%2FTextBlock&selectedStory=Example) to hold all the typography styles within. I'll dedicate one post just to explain why I isolate typography styles from global CSS scope, for now only a very basic typography styles are set on `body` and `h1-6`, and global resets on HTMl elements that are mostly set to inherit from parents.
+I also created the `<TextBlock />` component [(see example on docs)](http://bernardodiasdacruz.com/docs/?selectedKind=Displays%2FTextBlock&selectedStory=Example) to hold all the typography styles within. I'll dedicate one post just to explain why I isolate typography styles from global CSS scope, for now only a very basic typography styles are set on `body` and `h1-6`, and global resets on HTMl elements that are mostly set to inherit from parents.
 
 #### Home page
 
-<a href="/content/posts/2018-03-05-redesign-and-better-typography/design-round3-home.png" target="_blank" rel="noopener noreferrer">
+<figure>
   <img alt="" src="/content/posts/2018-03-05-redesign-and-better-typography/design-round3-home.png" />
-</a>
+</figure>
 
 #### Post page
 
-<a href="/content/posts/2018-03-05-redesign-and-better-typography/design-round3-post.png" target="_blank" rel="noopener noreferrer">
+<figure>
   <img alt="" src="/content/posts/2018-03-05-redesign-and-better-typography/design-round3-post.png" />
-</a>
+</figure>
 
 ---
 

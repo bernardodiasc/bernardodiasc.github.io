@@ -1,7 +1,7 @@
 ---
 title: Inject Google Analytics tag manager in a Meteor app
 date: 2018-03-06
-category: third-party
+category: integrations
 tags:
   - meteor
   - google analytics
