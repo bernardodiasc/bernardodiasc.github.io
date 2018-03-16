@@ -31,15 +31,15 @@ This version was most minimalistic as possible. I haven't planned any design for
 
 #### Home page
 
-<a href="/content/posts/2018-03-05-redesign-and-better-typography/design-round1-home.png" target="_blank" rel="noopener noreferrer">
+<figure>
   <img alt="" src="/content/posts/2018-03-05-redesign-and-better-typography/design-round1-home.png" />
-</a>
+</figure>
 
 #### Post page
 
-<a href="/content/posts/2018-03-05-redesign-and-better-typography/design-round1-post.png" target="_blank" rel="noopener noreferrer">
+<figure>
   <img alt="" src="/content/posts/2018-03-05-redesign-and-better-typography/design-round1-post.png" />
-</a>
+</figure>
 
 ### Second round
 
@@ -47,15 +47,15 @@ Few hours more, many CSS lines more. On this stage I've focused on creating some
 
 #### Home page
 
-<a href="/content/posts/2018-03-05-redesign-and-better-typography/design-round2-home.png" target="_blank" rel="noopener noreferrer">
+<figure>
   <img alt="" src="/content/posts/2018-03-05-redesign-and-better-typography/design-round2-home.png" />
-</a>
+</figure>
 
 #### Post page
 
-<a href="/content/posts/2018-03-05-redesign-and-better-typography/design-round2-post.png" target="_blank" rel="noopener noreferrer">
+<figure>
   <img alt="" src="/content/posts/2018-03-05-redesign-and-better-typography/design-round2-post.png" />
-</a>
+</figure>
 
 ### Third round
 
@@ -74,15 +74,15 @@ I also created the `<TextBlock />` component [(see example on docs)](http://bern
 
 #### Home page
 
-<a href="/content/posts/2018-03-05-redesign-and-better-typography/design-round3-home.png" target="_blank" rel="noopener noreferrer">
+<figure>
   <img alt="" src="/content/posts/2018-03-05-redesign-and-better-typography/design-round3-home.png" />
-</a>
+</figure>
 
 #### Post page
 
-<a href="/content/posts/2018-03-05-redesign-and-better-typography/design-round3-post.png" target="_blank" rel="noopener noreferrer">
+<figure>
   <img alt="" src="/content/posts/2018-03-05-redesign-and-better-typography/design-round3-post.png" />
-</a>
+</figure>
 
 ---
 
