@@ -1,7 +1,7 @@
 ---
 title: How to fix custom domain ovewriting with gh-pages deploy script
 date: 2018-03-16
-category: this-blog
+category: integrations
 tags:
   - github
   - deploy
