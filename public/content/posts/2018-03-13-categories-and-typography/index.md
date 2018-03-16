@@ -27,13 +27,13 @@ Checkout the list of updates:
 The idea of categories is to provide a way to have a collection of posts. A category is not exactly the same of a tag by some reasons:
 
 - Categories are unique per posts and a post can have many tags;
-- Categories have own pages while tags will only have a dynamic filter on [search page](https://bernardodiasc.github.io/search/);
+- Categories have own pages while tags will only have a dynamic filter on [search page](http://bernardodiasdacruz.com/search/);
 
 At the time of this post, the content are available into 3 categories:
 
-- [Third-party integrations](https://bernardodiasc.github.io/category/third-party/)
-- [This blog development process](https://bernardodiasc.github.io/category/this-blog/)
-- [Strategy & Entrepreneurship](https://bernardodiasc.github.io/category/strategy/)
+- [Third-party integrations](http://bernardodiasdacruz.com/category/integrations/)
+- [This blog development process](http://bernardodiasdacruz.com/category/this-blog/)
+- [Strategy & Entrepreneurship](http://bernardodiasdacruz.com/category/strategy/)
 
 ## Typography
 

@@ -36,7 +36,7 @@ class Meta extends Component {
 
         <meta property="og:title" content={title} />
         <meta property="og:type" content="article" />
-        <meta property="og:url" content={`https://bernardodiasc.github.io${slug}`} />
+        <meta property="og:url" content={`http://bernardodiasdacruz.com${slug}`} />
         {image !== '' && (
           <meta
             property="og:image"
