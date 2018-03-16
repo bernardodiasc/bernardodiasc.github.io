@@ -9,7 +9,7 @@
   "bugs": {
     "url": "https://github.com/bernardodiasc/bernardodiasc.github.io/issues"
   },
-  "homepage": "https://bernardodiasc.github.io/",
+  "homepage": "https://bernardodiasdacruz.com/",
   "scripts": {
     "new:component": "node src/config/componentGenerator.js",
     "new:content": "node src/config/contentGenerator.js",
