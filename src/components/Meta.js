@@ -10,12 +10,15 @@ class Meta extends Component {
 
   render() {
     const siteName = 'Bernardo Dias da Cruz'
+    const siteUrl = 'http://bernardodiasdacruz.com'
     const title = this.props.title
       ? `${this.props.title} - ${siteName}`
       : siteName
     const description = this.props.description
-    const image = this.props.image || '/images/thumbnail.png'
-    const href = `http://bernardodiasdacruz.com${window.location.pathname}`
+    const image = this.props.image
+      ? `${siteUrl}${this.props.image}`
+      : `${siteUrl}/images/thumbnail.png`
+    const href = `${siteUrl}${window.location.pathname}`
     return (
       <Helmet>
         <title>{title}</title>
