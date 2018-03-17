@@ -1,13 +1,16 @@
 import React, { PureComponent } from 'react'
 import './PostDetails.css'
+import config from 'config'
 
 import PostHeader from 'displays/PostHeader'
 import TextBlock from 'displays/TextBlock'
 import MarkdownRenderer from 'displays/MarkdownRenderer'
+import Share from 'displays/Share'
 
 class PostDetails extends PureComponent {
   static defaultProps = {
     post: {
+      handle: '',
       title: '',
       date: '',
       category: {
@@ -21,11 +24,18 @@ class PostDetails extends PureComponent {
 
   render() {
     const {
+      handle,
       title,
       date,
       category,
       body,
     } = this.props.post
+    const url = handle ? [
+      handle.substring(0, 4),
+      handle.substring(5, 7),
+      handle.substring(8, 10),
+      handle.substring(11),
+    ].join('/') : ''
     return (
       <div className="PostDetails">
         <PostHeader
@@ -34,6 +44,9 @@ class PostDetails extends PureComponent {
           date={date}
           category={category}
         />
+        {title && url && (
+          <Share title={title} url={`${config.PUBLIC_URL}/${url}`} />
+        )}
         <TextBlock>
           <MarkdownRenderer text={body} />
         </TextBlock>

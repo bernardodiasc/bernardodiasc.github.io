@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react'
 import { DiscussionEmbed } from 'disqus-react'
 import './Disqus.css'
+import config from 'config'
 
 class Disqus extends PureComponent {
   static defaultProps = {
@@ -17,14 +18,14 @@ class Disqus extends PureComponent {
       title: this.props.title,
     }
 
-    return (
+    return config.PUBLIC_URL ? (
       <div className="Disqus">
         <DiscussionEmbed
           shortname={disqusShortname}
           config={disqusConfig}
         />
       </div>
-    )
+    ) : null
   }
 }
 
