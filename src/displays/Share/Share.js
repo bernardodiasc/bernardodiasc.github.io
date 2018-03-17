@@ -19,14 +19,14 @@ import './Share.css'
 
 class Share extends PureComponent {
   static defaultProps = {
-    url: '',
+    url: window.location.href,
     title: '',
   }
 
   render() {
     const { url, title } = this.props
     const size = 28
-    return url && title ? (
+    return title ? (
       <div className="Share">
         <FacebookShareButton
           url={url}
