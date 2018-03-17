@@ -1,6 +1,6 @@
 import { pathOr, union } from 'ramda'
 
-export const getAllPostData = (state) =>
+export const getAllPostsData = (state) =>
   pathOr({}, ['data', 'posts'], state)
 
 export const getPostData = (state, post) =>
@@ -36,13 +36,13 @@ export const getAllPostDetails = (state, post) => ({
 })
 
 export const getAllPostsForListing = (state) => Object
-  .keys(getAllPostData(state))
+  .keys(getAllPostsData(state))
   .map(post => ({...getAllPostDetails(state, post)}))
 
 export const getAllPostsTags = (state) => {
   let tags = []
   Object
-    .keys(getAllPostData(state))
+    .keys(getAllPostsData(state))
     .forEach(post => tags = union(tags, getPostTags(state, post)))
   return tags
 }
@@ -50,7 +50,7 @@ export const getAllPostsTags = (state) => {
 export const getAllPostsCategories = (state) => {
   let categories = []
   Object
-    .keys(getAllPostData(state))
+    .keys(getAllPostsData(state))
     .forEach(post => categories = union(categories, [getPostCategory(state, post)]))
   return categories
 }
@@ -75,6 +75,9 @@ export const getAllArticleDetails = (state, article) => ({
   files: getArticleData(state, article),
 })
 
+export const getAllCategoriesData = (state) =>
+  pathOr({}, ['data', 'categories'], state)
+
 export const getCategoryData = (state, category) =>
   pathOr({}, ['data', 'categories', category], state)
 
@@ -95,7 +98,11 @@ export const getAllCategoryDetails = (state, category) => ({
   files: getCategoryData(state, category),
 })
 
+export const getAllCategoriesForListing = (state) => Object
+  .keys(getAllCategoriesData(state))
+  .map(category => ({...getAllCategoryDetails(state, category)}))
+
 export const getAllPostsForListingByCategory = (state, category) => Object
-  .keys(getAllPostData(state))
+  .keys(getAllPostsData(state))
   .filter(post => category === getPostCategory(state, post))
   .map(post => ({...getAllPostDetails(state, post)}))
