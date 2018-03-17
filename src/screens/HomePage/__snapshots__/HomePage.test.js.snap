@@ -4,6 +4,7 @@ exports[`renders without crashing 1`] = `
 <Connect(LayoutContainer)>
   <Meta
     description="A web developer and thinker."
+    image=""
     title="Random Thoughts"
   />
   <PageContent>

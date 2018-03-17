@@ -2,7 +2,11 @@
 
 exports[`renders without crashing 1`] = `
 <Connect(LayoutContainer)>
-  <Meta />
+  <Meta
+    description=""
+    image=""
+    title=""
+  />
   <PostDetails
     post={Object {}}
   />

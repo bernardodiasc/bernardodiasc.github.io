@@ -3,6 +3,8 @@
 exports[`renders without crashing 1`] = `
 <Connect(LayoutContainer)>
   <Meta
+    description=""
+    image=""
     title="Category: undefined"
   />
   <PageContent>
