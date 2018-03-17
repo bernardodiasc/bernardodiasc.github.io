@@ -44,7 +44,7 @@ For future efforts, there's a lot of things in my backlog that I want to work in
 > These are not features... this list is more about technical debts...
 
 - Make a better design
-- Complete documentation instructions and component showcases & tests (see http://bernardodiasc.github.io/docs)
+- Complete documentation instructions and component showcases & tests (see http://bernardodiasdacruz.com/docs)
 - Write more posts about technical details of this blog's development
 - Fix date format
 - Include meta information on posts
