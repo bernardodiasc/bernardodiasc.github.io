@@ -41,7 +41,7 @@ Well, the previous choices for typography wasn't good, so I'm testing a new comb
 
 - **Permanent Marker** for the site title
 - **Cairo** for the headings
-- **Karma** for the text
+- **IBM Plex Serif** for the text
 
 ## Screenshots
 

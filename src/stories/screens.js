@@ -10,3 +10,7 @@ storiesOf('Screens', module)
 import 'screens/App/App.story.js'
 import 'screens/HomePage/HomePage.story.js'
 import 'screens/PostPage/PostPage.story.js'
+import 'screens/ArchivePage/ArchivePage.story.js'
+import 'screens/ArticlePage/ArticlePage.story.js'
+import 'screens/CategoryPage/CategoryPage.story.js'
+import 'screens/SearchPage/SearchPage.story.js'
