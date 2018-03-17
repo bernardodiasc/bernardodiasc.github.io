@@ -10,7 +10,7 @@ tags:
 excerpt: Given a Markdown string, then render as HTML with fancy code syntax highlight.
 ---
 
-Markdown is pretty nice. As maybe you already know, this blog is based on static markdown files. FrontMatter files to be more precise. Check out the [source file](https://github.com/bernardodiasc/bernardodiasc.github.io/blob/develop/public/content/posts/2018-03-17-creating-react-component-with-markdown-and-code-syntax-highlight-renderer/index.md) of this post. Now let me tell you how I do the render the content of the markdown files.
+Markdown is pretty nice. As maybe you already know, this blog is based on static markdown files. FrontMatter files to be more precise. Check out the [source file](https://github.com/bernardodiasc/bernardodiasc.github.io/blob/develop/public/content/posts/2018-03-17-creating-react-component-with-markdown-renderer-and-code-syntax-highlight/index.md) of this post. Now let me tell you how I do the render the content of the markdown files.
 
 There are actually many ways to deal with this situation. One for instance, as in this site's [storybook docs](http://bernardodiasdacruz.com/docs/), it uses Webpack loader to import Markdown files directly to JavaScript. Simple as `import Content from 'content.md'` and then the imported data can be rendered using something like the [dangerouslySetInnerHTML](https://zhenyong.github.io/react/tips/dangerously-set-inner-html.html).
 
