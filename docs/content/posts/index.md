@@ -1,4 +1,5 @@
 ---
+- 2018-03-16-how-to-include-a-sitemap-in-a-create-react-app-site
 - 2018-03-16-how-to-fix-custom-domain-ovewriting-with-gh-pages-deploy-script
 - 2018-03-16-component-styles-isolation-dealing-with-css-inheritance
 - 2018-03-13-categories-and-typography
