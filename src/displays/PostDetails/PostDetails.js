@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react'
 import './PostDetails.css'
-import config from 'config'
 
 import PostHeader from 'displays/PostHeader'
 import TextBlock from 'displays/TextBlock'
@@ -36,6 +35,7 @@ class PostDetails extends PureComponent {
       handle.substring(8, 10),
       handle.substring(11),
     ].join('/') : ''
+
     return (
       <div className="PostDetails">
         <PostHeader
@@ -45,7 +45,7 @@ class PostDetails extends PureComponent {
           category={category}
         />
         {title && url && (
-          <Share title={title} url={`${config.PUBLIC_URL}/${url}`} />
+          <Share title={title} url={`${window.location.hostname}/${url}`} />
         )}
         <TextBlock>
           <MarkdownRenderer text={body} />
