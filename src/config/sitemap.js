@@ -1,6 +1,6 @@
 import path from 'path'
-import sm from 'sitemap'
 import fs from 'fs'
+import sm from 'sitemap'
 
 import config from '.'
 import data from '../data.json'
