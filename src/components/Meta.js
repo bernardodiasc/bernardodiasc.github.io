@@ -12,7 +12,7 @@ class Meta extends Component {
     const siteName = 'Bernardo Dias da Cruz'
     const siteUrl = 'http://bernardodiasdacruz.com'
     const title = this.props.title
-      ? `${this.props.title} - ${siteName}`
+      ? this.props.title
       : siteName
     const description = this.props.description
     const image = this.props.image
@@ -21,9 +21,8 @@ class Meta extends Component {
     const href = `${siteUrl}${window.location.pathname}`
     return (
       <Helmet>
-        <title>{title}</title>
+        <title>{`${title} - ${siteName}`}</title>
         <meta name="description" content={description} />
-        <link rel="canonical" href={href} />
         <meta name="twitter:site" content="@bernardodiasc" />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
