@@ -15,19 +15,19 @@ There's a Meteor package that makes this task easy: https://github.com/meteorhac
 
 To use you need to first install it in your app:
 
-```
+```shell
 meteor add meteorhacks:inject-initial
 ```
 
 After installed, include in your app's `package.json`:
 
-```
+```javascript
 api.use('meteorhacks:inject-initial', ['client', 'server']);
 ```
 
 On the `server.js` file use methods `Inject.rawHead` and `Inject.rawBody`:
 
-```
+```javascript
 Inject.rawHead('headGA', `
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -39,7 +39,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 `);
 ```
 
-```
+```javascript
 Inject.rawBody('bodyGA', `
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=YOUR_TAG_ID"

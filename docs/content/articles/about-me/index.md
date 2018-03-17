@@ -15,19 +15,19 @@ Information technology can be an art and manage all this abstract material have 
 
 To outline a few of my experiences:
 
-- Training in entrepreneurship, owner attitude
+- Trained in entrepreneurship, owner attitude
 - Marketing research and brainstorming of ideas
-- Bootstrapping projects and front-end architecture for scale
+- Bootstrapping projects using front-end architecture for scaling
 - Planning and coordinating development
 - Leading development teams, supporting teammates
-- Analysis of problems and solution research
+- Analysis of problems with solutions research
 - User experience and bulletproofing user interface
 
 ## Contact
 
 Drop me an email at `bernardodiasdacruz@gmail.com`.
 
-Call me on `germchaos.skype` or by the phone `+55 0 12 99123-5196`.
+Call me on `germchaos.skype` or by the phone `+55 12 99123-5196`.
 
 Follow me on [github.com/bernardodiasc](https://github.com/bernardodiasc) and [twitter.com/bernardodiasc](https://twitter.com/bernardodiasc).
 
