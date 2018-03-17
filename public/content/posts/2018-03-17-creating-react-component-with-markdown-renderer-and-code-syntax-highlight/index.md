@@ -35,6 +35,7 @@ Then create a component to wrap this rendering logic, so this way you can simply
 This is how my React component looks like:
 
 ```javascript
+// MarkdownRenderer.js
 import { PureComponent } from 'react'
 import marked from 'marked'
 import renderHTML from 'react-render-html'
@@ -66,6 +67,7 @@ See it in the [source code](https://github.com/bernardodiasc/bernardodiasc.githu
 The `highlight.js` will try to identify the code language automatically and create styles as better as possible. Even so using it with `marked` also allows to define the language on code blocks, as in:
 
 ```markdown
+// markdown-file.md
 ```javascript
 function() {
   console.log('this is actually a "markdown" code block haha')

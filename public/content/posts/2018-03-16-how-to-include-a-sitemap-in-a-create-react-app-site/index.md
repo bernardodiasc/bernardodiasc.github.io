@@ -122,8 +122,10 @@ Yeah, I know many resources out there suggests that I load a `routes` file and i
 On `package.json` script, I included a new task called `sitemap` and appended it in the `prebuild` task, see:
 
 ```
-"sitemap": "./node_modules/.bin/babel-node src/config/sitemap.js",
-"prebuild": "npm run content && npm run sitemap",
+"scripts": {
+  "sitemap": "./node_modules/.bin/babel-node src/config/sitemap.js",
+  "prebuild": "npm run content && npm run sitemap"
+}
 ```
 
 ### The final round

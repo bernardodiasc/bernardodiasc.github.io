@@ -1,5 +1,5 @@
 ---
-title: Comments section
+title: Comments section using Disqus and React
 date: 2018-02-27
 category: this-blog
 tags:
