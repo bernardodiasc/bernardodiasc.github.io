@@ -16,7 +16,7 @@ tags:
   - npm
   - yarn
   - workflow
-excerpt:
+excerpt: Creating a sitemap.xml generation with Babel and Node.
 ---
 
 This blog is evolving and its content is getting bigger. It's still hosted on GitHub pages, even though it's DNS now points to a custom domain.
