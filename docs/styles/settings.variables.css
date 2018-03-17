@@ -2,11 +2,11 @@
   --main-background: #104493;
   --content-background: #fff;
 
-  --text-family: 'Karma', serif;
+  --text-family: 'IBM Plex Serif', serif;
   --text-color: #2f2f2f;
-  --text-size: 1.3rem;
+  --text-size: 1.125rem;
   --text-weight: 400;
-  --text-line: 1.5;
+  --text-line: 1.7;
 
   --heading-family: 'Cairo', sans-serif;
   --heading-color: #2b5ead;
@@ -39,7 +39,10 @@
   --line-heavy: #ccc;
   --line-light: #ddd;
 
-  --link-background: #fdef0080;
+  --link-background: #ff980073;
 
   --box-shadow: 6px 5px 3px 0 rgba(45, 45, 45, 0.4);
+
+  --code-color: #ccc;
+  --code-background: #2d2d2d;
 }

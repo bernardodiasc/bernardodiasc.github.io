@@ -1,4 +1,5 @@
 ---
+- 2018-03-17-creating-react-component-with-markdown-renderer-and-code-syntax-highlight
 - 2018-03-16-how-to-include-a-sitemap-in-a-create-react-app-site
 - 2018-03-16-how-to-fix-custom-domain-ovewriting-problem-when-using-gh-pages-deploy-script
 - 2018-03-16-component-styles-isolation-dealing-with-css-inheritance
