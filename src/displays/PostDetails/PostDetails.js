@@ -1,10 +1,9 @@
 import React, { PureComponent } from 'react'
-import marked from 'marked'
-import renderHTML from 'react-render-html'
 import './PostDetails.css'
 
 import PostHeader from 'displays/PostHeader'
 import TextBlock from 'displays/TextBlock'
+import MarkdownRenderer from 'displays/MarkdownRenderer'
 
 class PostDetails extends PureComponent {
   static defaultProps = {
@@ -36,7 +35,7 @@ class PostDetails extends PureComponent {
           category={category}
         />
         <TextBlock>
-          {body && renderHTML(marked(body))}
+          <MarkdownRenderer text={body} />
         </TextBlock>
       </div>
     )

@@ -17,6 +17,10 @@ exports[`renders without crashing 1`] = `
     mode="details"
     title=""
   />
-  <TextBlock />
+  <TextBlock>
+    <MarkdownRenderer
+      text=""
+    />
+  </TextBlock>
 </div>
 `;

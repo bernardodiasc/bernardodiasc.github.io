@@ -1,9 +1,8 @@
 import React, { PureComponent } from 'react'
-import marked from 'marked'
-import renderHTML from 'react-render-html'
 import './CategoryDetails.css'
 
 import TextBlock from 'displays/TextBlock'
+import MarkdownRenderer from 'displays/MarkdownRenderer'
 
 class CategoryDetails extends PureComponent {
   static defaultProps = {
@@ -20,7 +19,7 @@ class CategoryDetails extends PureComponent {
       <div className="CategoryDetails">
         <TextBlock>
           <h1><small>Category:</small><br />{title}</h1>
-          {body && renderHTML(marked(body))}
+          <MarkdownRenderer text={body} />
           <hr />
         </TextBlock>
       </div>

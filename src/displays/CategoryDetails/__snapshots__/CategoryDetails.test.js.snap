@@ -11,6 +11,9 @@ exports[`renders without crashing 1`] = `
       </small>
       <br />
     </h1>
+    <MarkdownRenderer
+      text=""
+    />
     <hr />
   </TextBlock>
 </div>

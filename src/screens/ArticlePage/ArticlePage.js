@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
-import marked from 'marked'
-import renderHTML from 'react-render-html'
 
 import Meta from 'components/Meta'
 import LayoutContainer from 'containers/LayoutContainer'
 import PageContent from 'displays/PageContent'
 import TextBlock from 'displays/TextBlock'
+import MarkdownRenderer from 'displays/MarkdownRenderer'
 
 class ArticlePage extends Component {
   static defaultProps = {
@@ -26,7 +25,7 @@ class ArticlePage extends Component {
         />
         <PageContent>
           <TextBlock>
-            {body && renderHTML(marked(body))}
+            <MarkdownRenderer text={body} />
           </TextBlock>
         </PageContent>
       </LayoutContainer>

@@ -7,7 +7,11 @@ exports[`renders without crashing 1`] = `
     title=""
   />
   <PageContent>
-    <TextBlock />
+    <TextBlock>
+      <MarkdownRenderer
+        text=""
+      />
+    </TextBlock>
   </PageContent>
 </Connect(LayoutContainer)>
 `;
