@@ -15,12 +15,12 @@ class Meta extends Component {
       : siteName
     const description = this.props.description
     const image = this.props.image || '/images/thumbnail.png'
-    const pathname = window.location.pathname
+    const href = `http://bernardodiasdacruz.com${window.location.pathname}`
     return (
       <Helmet>
         <title>{title}</title>
         <meta name="description" content={description} />
-        <link rel="canonical" href={pathname} />
+        <link rel="canonical" href={href} />
         <meta name="twitter:site" content="@bernardodiasc" />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
@@ -28,7 +28,7 @@ class Meta extends Component {
         <meta name="twitter:image" content={image} />
         <meta property="og:title" content={title} />
         <meta property="og:type" content="article" />
-        <meta property="og:url" content={pathname} />
+        <meta property="og:url" content={href} />
         <meta property="og:image" content={image} />
         <meta property="og:description" content={description} />
         <meta property="og:site_name" content={siteName} />
