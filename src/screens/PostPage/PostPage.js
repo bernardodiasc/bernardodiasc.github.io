@@ -11,16 +11,19 @@ class PostPage extends Component {
   }
 
   render() {
+    const { handle, title, excerpt, thumbnail } = this.props.post
+    const image = thumbnail ? `content/${thumbnail}` : ''
     return (
       <LayoutContainer>
         <Meta
-          title={this.props.post.title}
-          description={this.props.post.excerpt}
+          title={title}
+          description={excerpt}
+          image={image}
         />
         <PostDetails post={this.props.post} />
         <Disqus
-          identifier={this.props.post.handle}
-          title={this.props.post.title}
+          identifier={handle}
+          title={title}
         />
       </LayoutContainer>
     )

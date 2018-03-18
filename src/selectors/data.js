@@ -24,6 +24,9 @@ export const getPostTags = (state, post) =>
 export const getPostBody = (state, post) =>
   pathOr('', ['data', 'posts', post, 'index.md', 'body'], state)
 
+export const getPostThumbnail = (state, post) =>
+  pathOr('', ['data', 'posts', post, 'thumbnail.jpg', 'file'], state)
+
 export const getAllPostDetails = (state, post) => ({
   handle: post,
   title: getPostTitle(state, post),
@@ -32,6 +35,7 @@ export const getAllPostDetails = (state, post) => ({
   category: getAllCategoryDetails(state, getPostCategory(state, post)),
   tags: getPostTags(state, post),
   body: getPostBody(state, post),
+  thumbnail: getPostThumbnail(state, post),
   files: getPostData(state, post),
 })
 

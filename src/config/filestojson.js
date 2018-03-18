@@ -79,7 +79,7 @@ function categories(content, contentType) {
 const config = {
   content: path.resolve(__dirname, '..', '..', 'public', 'content'),
   output: path.resolve(__dirname, '..', 'data.json'),
-  include: ['.md', '.png'],
+  include: ['.md', '.png', '.jpg'],
   exclude: ['README.md'],
   contentTypes: [
     { posts },
