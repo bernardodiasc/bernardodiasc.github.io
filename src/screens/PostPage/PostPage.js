@@ -12,7 +12,7 @@ class PostPage extends Component {
 
   render() {
     const { handle, title, excerpt, thumbnail } = this.props.post
-    const image = thumbnail ? `content/${thumbnail}` : ''
+    const image = thumbnail ? `/content${thumbnail}` : ''
     return (
       <LayoutContainer>
         <Meta
