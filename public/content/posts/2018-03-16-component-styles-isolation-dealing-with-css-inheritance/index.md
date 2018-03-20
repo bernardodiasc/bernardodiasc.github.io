@@ -1,5 +1,5 @@
 ---
-title: Component styles isolation, dealing with CSS inheritance
+title: 'Component styles isolation: Dealing with CSS inheritance'
 date: 2018-03-16
 category: frontend
 tags:
