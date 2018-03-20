@@ -114,6 +114,6 @@ One other technique I've read about recently that I really enjoyed can be found 
 
 ## Bulletproof Components!
 
-That's pretty cool, right? One big problem with large CSS codebases is the unpredictability. Believe me, this problem can result in a ton of wasted money because it can make developers waste too many time searching and fixing bugs and regressions, things that might not even had to happen at first.
+That's pretty cool, right? One big problem with large CSS codebases is the unpredictability. Believe me, this problem can result in a ton of wasted money because it can make developers waste too much time dealing with bugs and regressions, things that might not even had to happen at first.
 
 Going for a consistent approach in the frontend architecture allows the project to resiliently scale. Each new component included will be well isolated, and these wicked CSS bugs will be avoided for good. Styles isolation is the first step to build bulletproof UI components!
