@@ -16,7 +16,7 @@ excerpt: How to ensure visual consistency with UI components usages.
 
 Hello there! This is the first post in the new category [Frontend Architecture](/category/frontend), where I plan to describe many cool methodologies and techniques for large-scale frontend apps. Let's get started!
 
-In this post, I'll tell you how to deal with unexpected styles that happen in large-scale modular projects making then expected by taking advantage of native mechanisms of CSS!
+In this post, I'll tell you how to deal with unpredictable styles issues that happen in large-scale projects. Our goal is to create bulletproof UI components making the CSS to act predictably by taking advantage of native mechanisms of language!
 
 ## A little bit of introduction on modularization
 
@@ -100,9 +100,17 @@ This is what we did:
 
 One important aspect of that approach was in the CSS output. By choosing CSS-Modules `composes`, we had a single class declaration in the CSS output. This meant that increasing the number of isolated components would not result in a larger quantity of CSS regarding isolation styles. Also, we choose the ITCSS approach for the source order. This means the `objects.isolation.css` classes came before all the component classes in the source order, so overrides worked flawlessly.
 
-I mentioned that I wasn't going to tell you the ultimate way to deal with styles isolation because, as you may notice in the approach above, we chose to reset only the component wrapper and not all its children elements. That would've been perfectly possible with the same technique, but we decided to keep it simple, and take advantage of inheritance inside components do the and reset just at the component level.
+The idea is fairly simple, as long your `.component` class is declared early on CSS output, you can have same effect with plain CSS by just including the class in the HTML tag:
 
-One other technique I've read about recently that I really enjoyed can be found in this Yelp post: [CSS in the Age of React: How We Traded the Cascade for Consistency](https://engineeringblog.yelp.com/2018/03/css-in-the-age-of-react.html). I'd recommend you to take a look at their [Lemon Reset](https://github.com/Yelp/lemon-reset) set of React components too.
+```html
+<section class="component">
+  <p>This component have its inheritable styles isolated from the application.</p>
+</section>
+```
+
+I mentioned that I wasn't going to tell you the ultimate way to deal with styles isolation because, as you may noticed in the examples above, it's only reseting the component root and not all children elements. But that would've been perfectly possible with the same technique. I think its fine to only reset the component root and then take advantage of native CSS inheritance for the children elements.
+
+One other technique I've read about recently that I really enjoyed can be found in this Yelp post: [CSS in the Age of React: How We Traded the Cascade for Consistency](https://engineeringblog.yelp.com/2018/03/css-in-the-age-of-react.html). I'd recommend you to take a look at their [Lemon Reset](https://github.com/Yelp/lemon-reset) set of React components too. In this case they are using reset for all elements in a very interesting way too.
 
 ## Bulletproof Components!
 
