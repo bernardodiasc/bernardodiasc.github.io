@@ -110,10 +110,10 @@ The idea is fairly simple, as long your `.component` class is declared early on 
 
 I mentioned that I wasn't going to tell you the ultimate way to deal with styles isolation because, as you may noticed in the examples above, it's only reseting the component root and not all children elements. But that would've been perfectly possible with the same technique. I think its fine to only reset the component root and then take advantage of native CSS inheritance for the children elements.
 
-One other technique I've read about recently that I really enjoyed can be found in this Yelp post: [CSS in the Age of React: How We Traded the Cascade for Consistency](https://engineeringblog.yelp.com/2018/03/css-in-the-age-of-react.html). I'd recommend you to take a look at their [Lemon Reset](https://github.com/Yelp/lemon-reset) set of React components too. In this case they are using reset for all elements in a very interesting way too.
+One other technique I've read about recently that I really enjoyed can be found in this Yelp post: [CSS in the Age of React: How We Traded the Cascade for Consistency](https://engineeringblog.yelp.com/2018/03/css-in-the-age-of-react.html). I'd recommend you to take a look at their [Lemon Reset](https://github.com/Yelp/lemon-reset) set of React components too. In this case they are using reset for all elements in a very interesting way.
 
 ## Bulletproof Components!
 
-That's pretty cool, right? One big problem with large CSS codebases is the unpredictability. Believe me, this problem can result in a ton of wasted money because it can make developers waste too many hours searching and fixing bugs, bugs that might not even had to happen at first.
+That's pretty cool, right? One big problem with large CSS codebases is the unpredictability. Believe me, this problem can result in a ton of wasted money because it can make developers waste too many time searching and fixing bugs and regressions, things that might not even had to happen at first.
 
 Going for a consistent approach in the frontend architecture allows the project to resiliently scale. Each new component included will be well isolated, and these wicked CSS bugs will be avoided for good. Styles isolation is the first step to build bulletproof UI components!
