@@ -55,7 +55,7 @@ class PostHeader extends PureComponent {
           <p className="PostHeader__meta">
             {fecha.format(
               new Date(`${date.substring(0, 10)}T03:00:00.000Z`),
-              'dddd MMMM Do, YYYY'
+              'dddd, MMMM Do, YYYY'
             )}
           </p>
         )}
