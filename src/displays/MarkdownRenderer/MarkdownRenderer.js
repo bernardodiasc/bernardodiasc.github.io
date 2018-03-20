@@ -5,7 +5,9 @@ import hljs from 'highlight.js'
 import 'highlight.js/styles/tomorrow-night-eighties.css'
 
 marked.setOptions({
-  highlight: (code) => hljs.highlightAuto(code).value
+  highlight: (code, language) => language
+    ? hljs.highlight(language, code).value
+    : hljs.highlightAuto(code).value
 })
 
 class MarkdownRenderer extends PureComponent {

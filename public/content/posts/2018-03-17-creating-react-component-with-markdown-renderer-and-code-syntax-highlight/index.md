@@ -43,7 +43,9 @@ import hljs from 'highlight.js'
 import 'highlight.js/styles/tomorrow-night-eighties.css'
 
 marked.setOptions({
-  highlight: (code) => hljs.highlightAuto(code).value
+  highlight: (code, language) => language
+    ? hljs.highlight(language, code).value
+    : hljs.highlightAuto(code).value
 })
 
 class MarkdownRenderer extends PureComponent {
@@ -73,3 +75,19 @@ function() {
   console.log('this is actually a "markdown" code block haha')
 }
 ``````
+
+---
+
+_[Edit 2018-03-20]_
+
+The highlight option I was using when I wrote this post wasn't correctly identifying the languages in the automatic way, then I improved a little bit the `MarkdownRenderer.js` code:
+
+```diff
+marked.setOptions({
+-  highlight: (code) => hljs.highlightAuto(code).value
++  highlight: (code, language) => language
++    ? hljs.highlight(language, code).value
++    : hljs.highlightAuto(code).value
+})
+```
+

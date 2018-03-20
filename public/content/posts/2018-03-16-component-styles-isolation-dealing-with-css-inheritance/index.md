@@ -73,7 +73,7 @@ On a big project I helped to develop, we used PostCSS with CSS-Modules in a Reac
 
 This is what we did:
 
-```
+```css
 /**
  *
  * Component isolation
