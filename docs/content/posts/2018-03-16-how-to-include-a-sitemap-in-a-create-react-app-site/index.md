@@ -84,11 +84,19 @@ import {
 const OUTPUT_FILE = path.resolve(__dirname, '..', '..', 'public', 'sitemap.xml')
 
 const postsUrls = getAllPostsForListing({data})
-  .map(post => ({
-    url: `${config.PUBLIC_URL}/${post.handle}`,
-    changefreq: 'weekly',
-    priority: 0.8,
-  }))
+  .map(post => {
+    const handle = [
+      post.handle.substring(0, 4),
+      post.handle.substring(5, 7),
+      post.handle.substring(8, 10),
+      post.handle.substring(11),
+    ].join('/')
+    return {
+      url: `${config.PUBLIC_URL}/${handle}`,
+      changefreq: 'weekly',
+      priority: 0.8,
+    }
+  })
 
 const categoriesUrls = getAllCategoriesForListing({data})
   .map(category => ({
@@ -133,3 +141,33 @@ On `package.json` script, I included a new task called `sitemap` and appended it
 After making the commit and deploy of these changes, I went to https://www.google.com/webmasters/ and tested the sitemap there, successfully. Check out the result http://bernardodiasdacruz.com/sitemap.xml.
 
 This solution was integrated on this website in this [commit](https://github.com/bernardodiasc/bernardodiasc.github.io/commit/0d7f2f457db38512d8392621d1e31935afcf4039).
+
+---
+
+_[Edit 2018-03-21]_
+
+Oops, the URLs of posts have `/:year/:month/:day/:title` format but the filenames are in `:year-:month-:day-:title` format. Little mistake, that explained why my indexing wasn't working.
+
+I'm aware of other things that could be improved, and I would definitely work on that as much as my availability allows me. Scripts like this could get a huge benefit from testing suites. As a matter of fact, on client projects, especially the big ones, I usually write scripts simultaneously running the test suites. As in TDD, coding to get all specs passing. A mistake like this would have been spotted before publishing. As they say: "fix bugs before they exist".
+
+```diff
+const postsUrls = getAllPostsForListing({data})
+-  .map(post => ({
+-    url: `${config.PUBLIC_URL}/${post.handle}`,
+-    changefreq: 'weekly',
+-    priority: 0.8,
+-  }))
++  .map(post => {
++    const handle = [
++      post.handle.substring(0, 4),
++      post.handle.substring(5, 7),
++      post.handle.substring(8, 10),
++      post.handle.substring(11),
++    ].join('/')
++    return {
++      url: `${config.PUBLIC_URL}/${handle}`,
++      changefreq: 'weekly',
++      priority: 0.8,
++    }
++  })
+```
