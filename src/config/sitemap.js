@@ -12,11 +12,19 @@ import {
 const OUTPUT_FILE = path.resolve(__dirname, '..', '..', 'public', 'sitemap.xml')
 
 const postsUrls = getAllPostsForListing({data})
-  .map(post => ({
-    url: `${config.PUBLIC_URL}/${post.handle}`,
-    changefreq: 'weekly',
-    priority: 0.8,
-  }))
+  .map(post => {
+    const handle = [
+      post.handle.substring(0, 4),
+      post.handle.substring(5, 7),
+      post.handle.substring(8, 10),
+      post.handle.substring(11),
+    ].join('/')
+    return {
+      url: `${config.PUBLIC_URL}/${handle}`,
+      changefreq: 'weekly',
+      priority: 0.8,
+    })
+  }
 
 const categoriesUrls = getAllCategoriesForListing({data})
   .map(category => ({

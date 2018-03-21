@@ -25,7 +25,7 @@ To outline a few of my experiences:
 
 ## Contact
 
-Drop me an email at `bernardodiasdacruz@gmail.com`.
+Drop me an email at bernardodiasdacruz@gmail.com.
 
 Call me on `germchaos.skype` or by the phone `+55 12 99123-5196`.
 
