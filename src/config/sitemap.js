@@ -23,8 +23,8 @@ const postsUrls = getAllPostsForListing({data})
       url: `${config.PUBLIC_URL}/${handle}`,
       changefreq: 'weekly',
       priority: 0.8,
-    })
-  }
+    }
+  })
 
 const categoriesUrls = getAllCategoriesForListing({data})
   .map(category => ({
