@@ -28,7 +28,7 @@ Alright let's see what's the big deal here:
 
 - It's open source [github.com/bernardodiasc/bernardodiasc.github.io](https://github.com/bernardodiasc/bernardodiasc.github.io)
 - The content is based on static files [github.com/bernardodiasc/filestojson](https://github.com/bernardodiasc/filestojson)
-- The framework is quite powerful [bernardodiasdacruz.com/docs](http://bernardodiasdacruz.com/docs/)
+- The framework is quite powerful [bernardodiasdacruz.com/docs](https://bernardodiasdacruz.com/docs/)
 
 Being a front end developer, there's a lot to do for a project to make it awesome. Starting with the fact that a framework is the whole set of tools and techniques the involves the project and it's super fun to learn how to do a framework. Well, yeah, I could use something that's ready in the community, and I did used many different options for different cases, I had experience with all the major CMSes around that, and many frameworks of a variety of kinds, but right here, I made my own framework, because It's cool, because it's the way I want, because I need to showcase that I know what I'm doing for people to hire me! 😁
 
@@ -36,7 +36,7 @@ The `filestojson` script was made for [x-team.com/legacy](https://x-team.com/leg
 
 Most problems I found in the second version was basicaly related to make a single-page application to behave well in a static-file server. Was my first time doing this, I gave a try on Gasby and Next.js, but I wanted to make something simpler, so I kept the Creat-React-App setup and installed [github.com/stereobooster/react-snap](https://github.com/stereobooster/react-snap). Sweet! It worked very well.
 
-For the workflow I prepared a whole bunch of cool tooling, patterns and procedures. I enjoy working for large scale project, so in this framework I used the entire arsenal recommended for big apps (almost, there's no type system in place). You can see it in the main README of this site or check with even further details in the docs at [bernardodiasdacruz.com/docs](http://bernardodiasdacruz.com/docs/), but let me briefly mention here:
+For the workflow I prepared a whole bunch of cool tooling, patterns and procedures. I enjoy working for large scale project, so in this framework I used the entire arsenal recommended for big apps (almost, there's no type system in place). You can see it in the main README of this site or check with even further details in the docs at [bernardodiasdacruz.com/docs](https://bernardodiasdacruz.com/docs/), but let me briefly mention here:
 
 - Setup: `yarn install`
 - Development: `yarn start`

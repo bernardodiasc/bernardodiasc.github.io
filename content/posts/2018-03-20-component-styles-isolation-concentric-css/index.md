@@ -11,7 +11,7 @@ tags:
 excerpt: A thoughtful way to write CSS properties.
 ---
 
-Alo! We are going to dive into another chapter towards great standards for frontend architecture. This is a continuation of the [Frontend Architecture](/category/frontend) series. If you didn't read yet, go checkout the first post about the subject: [Component styles isolation: Dealing with CSS inheritance](http://bernardodiasdacruz.com/2018/03/16/component-styles-isolation-dealing-with-css-inheritance/).
+Alo! We are going to dive into another chapter towards great standards for frontend architecture. This is a continuation of the [Frontend Architecture](/category/frontend) series. If you didn't read yet, go checkout the first post about the subject: [Component styles isolation: Dealing with CSS inheritance](https://bernardodiasdacruz.com/2018/03/16/component-styles-isolation-dealing-with-css-inheritance/).
 
 This time I'm going to cover a thoughtful way to write CSS code. Have you ever heard about "concentric CSS"? Nope? Yeah? It's all right, please bare with me. Let's get our heads into this concept and understand how this can bring our CSS skills (and code) to a higher level.
 

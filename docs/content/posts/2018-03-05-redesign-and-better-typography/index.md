@@ -70,7 +70,7 @@ The blueprint theme relates to things I love to do, as in sketching UI, wirefram
 
 On more technical details, I've created a lot CSS Variables to store constant values for typography, as colours and font-faces. During design updates I did a lot tries and updating directly on CSS variables, and that made this process much easier.
 
-I also created the `<TextBlock />` component [(see example on docs)](http://bernardodiasdacruz.com/docs/?selectedKind=Displays%2FTextBlock&selectedStory=Example) to hold all the typography styles within. I'll dedicate one post just to explain why I isolate typography styles from global CSS scope, for now only a very basic typography styles are set on `body` and `h1-6`, and global resets on HTMl elements that are mostly set to inherit from parents.
+I also created the `<TextBlock />` component [(see example on docs)](https://bernardodiasdacruz.com/docs/?selectedKind=Displays%2FTextBlock&selectedStory=Example) to hold all the typography styles within. I'll dedicate one post just to explain why I isolate typography styles from global CSS scope, for now only a very basic typography styles are set on `body` and `h1-6`, and global resets on HTMl elements that are mostly set to inherit from parents.
 
 #### Home page
 

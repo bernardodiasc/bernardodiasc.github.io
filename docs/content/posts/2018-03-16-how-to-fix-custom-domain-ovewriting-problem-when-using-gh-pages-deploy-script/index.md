@@ -12,7 +12,7 @@ tags:
 excerpt: Sometimes little changes can put down an entire website, luckily sometimes the fix is easy!
 ---
 
-Yesterday I moved my GitHub pages based website to a custom domain. It was https://bernardodiasc.github.io and now it is http://bernardodiasdacruz.com. The steps to make this is pretty straightforward, there are many useful instructions available on GitHub docs: [Using a custom domain with GitHub Pages](https://help.github.com/articles/using-a-custom-domain-with-github-pages/)
+Yesterday I moved my GitHub pages based website to a custom domain. It was https://bernardodiasc.github.io and now it is https://bernardodiasdacruz.com. The steps to make this is pretty straightforward, there are many useful instructions available on GitHub docs: [Using a custom domain with GitHub Pages](https://help.github.com/articles/using-a-custom-domain-with-github-pages/)
 
 This project is based on [create-react-app](https://github.com/facebookincubator/create-react-app/) and for deployment step I choose to host on gh-pages, there are many different ways to make this task as easier as possible, I choose to go with the [NPM gh-pages](https://github.com/tschaub/gh-pages).
 

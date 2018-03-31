@@ -106,7 +106,7 @@ const categoriesUrls = getAllCategoriesForListing({data})
   }))
 
 const sitemap = sm.createSitemap({
-    hostname: 'http://bernardodiasdacruz.com',
+    hostname: 'https://bernardodiasdacruz.com',
     cacheTime: 600000, //600 sec (10 min) cache purge period
     urls: [
       { url: '/', changefreq: 'weekly', priority: 1 },
@@ -138,7 +138,7 @@ On `package.json` script, I included a new task called `sitemap` and appended it
 
 ### The final round
 
-After making the commit and deploy of these changes, I went to https://www.google.com/webmasters/ and tested the sitemap there, successfully. Check out the result http://bernardodiasdacruz.com/sitemap.xml.
+After making the commit and deploy of these changes, I went to https://www.google.com/webmasters/ and tested the sitemap there, successfully. Check out the result https://bernardodiasdacruz.com/sitemap.xml.
 
 This solution was integrated on this website in this [commit](https://github.com/bernardodiasc/bernardodiasc.github.io/commit/0d7f2f457db38512d8392621d1e31935afcf4039).
 
