@@ -19,7 +19,7 @@ import './Share.css'
 
 class Share extends PureComponent {
   static defaultProps = {
-    url: `http://bernardodiasdacruz.com${window.location.pathname}`,
+    url: `https://bernardodiasdacruz.com${window.location.pathname}`,
     title: '',
   }
 

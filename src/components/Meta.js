@@ -10,7 +10,7 @@ class Meta extends Component {
 
   render() {
     const siteName = 'Bernardo Dias da Cruz'
-    const siteUrl = 'http://bernardodiasdacruz.com'
+    const siteUrl = 'https://bernardodiasdacruz.com'
     const title = this.props.title
       ? this.props.title
       : siteName
