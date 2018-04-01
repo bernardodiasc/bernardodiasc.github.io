@@ -1,5 +1,5 @@
 ---
-title: My GraphQl studies
+title: My GraphQL studies
 date: 2018-04-01
 category: strategy
 tags:
