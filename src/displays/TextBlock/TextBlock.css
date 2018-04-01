@@ -217,6 +217,11 @@
   text-align: center;
 }
 
+.TextBlock iframe {
+  margin: 2em auto;
+  display: block;
+}
+
 /**
  * TextBlock quirks
  */
