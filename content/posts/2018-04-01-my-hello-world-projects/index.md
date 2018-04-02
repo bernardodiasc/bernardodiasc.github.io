@@ -29,7 +29,7 @@ The "readings log" helped a lot and it's still a good resource for myself. When 
 
 Platforms offer easier or harder ways to input and consume information, the GitHub issues seemed like a good option for me at that time. Nowadays I post my logs on a Slack channel dedicated only to my work journaling:
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/dnzE9ip5U04?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/dnzE9ip5U04?rel=0" frameborder="0" allow="encrypted-media" allowfullscreen></iframe>
 
 Journals are a great tool for logging studies. I use it to log everything, much more than links. It's not perfect but it's very practical. Before GitHub issue or Slack, I've tried many different platforms, even built my own. The options are too many, but at the end of the day what really matters is the habit of logging.
 
