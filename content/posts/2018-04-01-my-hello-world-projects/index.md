@@ -41,6 +41,11 @@ The "Hello World" programs are traditionally used to introduce a programmer to a
 
 I had many poc, spikes, and prototypes made in my life, but just recently I've got the idea of keeping them in a repo: the [**Hello World**](https://github.com/bernardodiasc/hello-world) repo! Pretty simple, right? Why haven't I thought about that many years ago? Haha. Well, better late than never, I guess. And here I am suggesting you to do the same, your future self will thank you. :)
 
+<figure>
+  <img alt="My Hello World repo's README.md" src="/content/posts/2018-04-01-my-hello-world-projects/hello-world-repo.png" />
+  <figcaption>My Hello World repo's README.md</figcaption>
+</figure>
+
 ## What about you?
 
 These are my tips for you that are always learning new things:
