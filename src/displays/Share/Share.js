@@ -16,15 +16,16 @@ import {
   RedditIcon,
 } from 'react-share'
 import './Share.css'
+import config from 'config'
 
 class Share extends PureComponent {
   static defaultProps = {
-    url: `https://bernardodiasdacruz.com${window.location.pathname}`,
     title: '',
   }
 
   render() {
-    const { url, title } = this.props
+    const { title } = this.props
+    const url = `${config.homepage}${window.location.pathname}`
     const size = 28
     return title ? (
       <div className="Share">

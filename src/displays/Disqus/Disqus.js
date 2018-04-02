@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react'
 import { DiscussionEmbed } from 'disqus-react'
 import './Disqus.css'
+import config from 'config'
 
 class Disqus extends PureComponent {
   static defaultProps = {
-    url: '',
     identifier: '',
     title: '',
   }
@@ -12,11 +12,10 @@ class Disqus extends PureComponent {
   render() {
     const disqusShortname = 'bernardodiasc'
     const disqusConfig = {
-      // url: this.props.url,
+      url: `${config.homepage}${window.location.pathname}`,
       identifier: this.props.identifier,
       title: this.props.title,
     }
-
     return window.location.hostname !== 'localhost' ? (
       <div className="Disqus">
         <DiscussionEmbed
