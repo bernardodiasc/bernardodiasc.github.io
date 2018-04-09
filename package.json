@@ -27,6 +27,7 @@
     "eject": "react-scripts eject",
     "docs": "export NODE_PATH=src && start-storybook -p 9009 -s public",
     "docs:build": "export NODE_PATH=src && build-storybook -s public -o build/docs",
+    "preserve": "npm run build",
     "serve": "serve -s build",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build -b master --dotfiles"
