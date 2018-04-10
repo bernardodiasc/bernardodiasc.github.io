@@ -62,7 +62,7 @@ class MarkdownRenderer extends PureComponent {
 export default MarkdownRenderer
 ```
 
-See it in the [source code](https://github.com/bernardodiasc/bernardodiasc.github.io/blob/develop/src/displays/MarkdownRenderer/MarkdownRenderer.js).
+See it in the [source code](https://github.com/bernardodiasc/bernardodiasc.github.io/blob/c2908e161e4749f0e5e9672fa8a88be3b73b7260/src/displays/MarkdownRenderer/MarkdownRenderer.js).
 
 ## Extra goodies
 

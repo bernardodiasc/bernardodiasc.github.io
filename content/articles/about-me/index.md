@@ -15,7 +15,7 @@ Information technology can be an art and manage all this abstract material have 
 
 To outline a few of my experiences:
 
-- Trained in entrepreneurship, owner attitude
+- Trained in entrepreneurship, owner attitude (http://www.empretec.net/)
 - Marketing research and brainstorming of ideas
 - Bootstrapping projects using front-end architecture for scaling
 - Planning and coordinating development
