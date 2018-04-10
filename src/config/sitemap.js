@@ -20,7 +20,7 @@ const postsUrls = getAllPostsForListing({data})
       post.handle.substring(11),
     ].join('/')
     return {
-      url: `${config.PUBLIC_URL}/${handle}`,
+      url: `${config.PUBLIC_URL}/${handle}/`,
       changefreq: 'weekly',
       priority: 0.8,
     }
@@ -28,7 +28,7 @@ const postsUrls = getAllPostsForListing({data})
 
 const categoriesUrls = getAllCategoriesForListing({data})
   .map(category => ({
-    url: `${config.PUBLIC_URL}/category/${category.handle}`,
+    url: `${config.PUBLIC_URL}/category/${category.handle}/`,
     changefreq: 'weekly',
     priority: 0.3,
   }))
@@ -38,9 +38,9 @@ const sitemap = sm.createSitemap({
     cacheTime: 600000, //600 sec (10 min) cache purge period
     urls: [
       { url: '/', changefreq: 'weekly', priority: 1 },
-      { url: '/archive', changefreq: 'weekly', priority: 0.1 },
-      { url: '/search', changefreq: 'weekly', priority: 0.1 },
-      { url: '/about-me', changefreq: 'monthly', priority: 0.5 },
+      { url: '/archive/', changefreq: 'weekly', priority: 0.1 },
+      { url: '/search/', changefreq: 'weekly', priority: 0.1 },
+      { url: '/about-me/', changefreq: 'monthly', priority: 0.5 },
       ...postsUrls,
       ...categoriesUrls,
     ]

@@ -11,9 +11,9 @@ excerpt: Markdown contents just got really really better!
 
 Alright, previously I wrote about how this site renders content from Markdown files, you can read it here: [Creating React component with Markdown renderer and code syntax highlight](https://bernardodiasdacruz.com/2018/03/17/creating-react-component-with-markdown-renderer-and-code-syntax-highlight). In this post I'll explain some cool upgrades I made in the `MarkdownRenderer` component used in this site.
 
-## How it's working now
+## How it was working so far
 
-Just to give you some context, this site uses markdown static files to store the content. There is no rich-text editor interface to provide fancy features for different kinds of data representation. If I want to include an image in the middle of the post I need to explicitly declare the markup using HTML tags:
+Just to give you some context, this site uses markdown static files to store the content. There is no rich-text editor interface to provide fancy features for different kinds of data representation. If I want to include an image in the middle of the post I had to explicitly declare the markup using HTML tags:
 
 ```html
 <figure>
@@ -32,11 +32,11 @@ Using a React component I can simplify the data structure patterns and also incl
 
 ### Imagery
 
-As mentioned before, this is how I was using to include images in the markdown so far:
+As mentioned before, this is how I was using to include images in the markdown:
 
 ```html
 <figure>
-  <img alt="The alternative textual representation" src="full-path/of/the-image.png" />
+  <img alt="The alternative textual representation" src="path/of/the/image.png" />
   <figcaption>Some helpful caption</figcaption>
 </figure>
 ```
@@ -46,7 +46,7 @@ And this is how it is with `Image` React component:
 ```html
 <Image
   alt="The alternative textual representation"
-  src="the-image.png"
+  src="path/of/the/image.png"
   caption="Some helpful caption"
 />
 ```
@@ -88,7 +88,7 @@ The API of the React components are made in the way I desire. I don't have to fo
 <script async src="https://static.codepen.io/assets/embed/ei.js"></script>
 ```
 
-So much can be simplified and standardized here
+So much can be simplified and standardized here:
 
 ```html
 <Codepen
@@ -98,7 +98,7 @@ So much can be simplified and standardized here
 />
 ```
 
-Pretty better! Let the React component to handle the global patterns. Let the markdown simpler.
+Pretty better! Let the React component to handle the general patterns. Let the markdown content simpler.
 
 ### Embed video
 
@@ -121,7 +121,7 @@ To become:
 <Video hash="dnzE9ip5U04" />
 ```
 
-Sizing properties will be pretty much the same almost all times and then can be optional. This is the same for all attributes.
+Sizing properties will be pretty much the same almost all times for this site use case and then can be optional. This is the same for all other attributes.
 
 ## How to do such awesome thing?
 
