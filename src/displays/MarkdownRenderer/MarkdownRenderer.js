@@ -1,14 +1,22 @@
-import { PureComponent } from 'react'
-import marked from 'marked'
+import React, { PureComponent } from 'react'
+import Markdown from 'markdown-to-jsx'
 import renderHTML from 'react-render-html'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/tomorrow-night-eighties.css'
 
-marked.setOptions({
-  highlight: (code, language) => language
+import Icon from 'displays/Icon'
+import Image from 'displays/Image'
+import Codepen from 'displays/Codepen'
+
+const CodeBlock = (node) => {
+  const props = node.children.props
+  const language = props.className ? props.className.replace(/^(lang-)/, '') : ''
+  const code = props.children || ''
+  const htmlBlock = language
     ? hljs.highlight(language, code).value
     : hljs.highlightAuto(code).value
-})
+  return renderHTML(`<pre><code class="${props.className}">${htmlBlock}</code></pre>`)
+}
 
 class MarkdownRenderer extends PureComponent {
   static defaultProps = {
@@ -17,7 +25,21 @@ class MarkdownRenderer extends PureComponent {
 
   render() {
     const { text } = this.props
-    return text ? renderHTML(marked(text)) : null
+    return text ? (
+      <Markdown
+        children={text}
+        options={{
+          overrides: {
+            Icon,
+            Image,
+            Codepen,
+            pre: {
+              component: CodeBlock
+            }
+          },
+        }}
+      />
+    ) : null
   }
 }
 

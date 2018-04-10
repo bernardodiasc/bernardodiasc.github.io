@@ -43,6 +43,7 @@ module.exports = {
     ],
     "react/jsx-uses-react": "error",
     "react/jsx-uses-vars": "error",
+    "react/no-children-prop": 0,
     "react/prop-types": 0, //temp
     "jest/no-disabled-tests": "warn",
     "jest/no-focused-tests": "error",

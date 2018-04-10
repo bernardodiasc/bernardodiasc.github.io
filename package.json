@@ -55,6 +55,7 @@
     "husky": "^0.14.3",
     "json-loader": "^0.5.7",
     "lint-staged": "^6.1.0",
+    "markdown-to-jsx": "^6.6.1",
     "marked": "^0.3.12",
     "ramda": "^0.25.0",
     "react": "^16.2.0",
