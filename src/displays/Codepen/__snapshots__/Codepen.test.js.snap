@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders without crashing 1`] = `
+<iframe
+  allowFullScreen="true"
+  allowTransparency="true"
+  className="Codepen"
+  frameBorder="no"
+  height=""
+  scrolling="no"
+  src="//codepen.io/bernardodiasc/embed//?height=&theme-id=0&default-tab=result&embed-version=2"
+  title=""
+>
+  See the Pen 
+  <a
+    href="https://codepen.io/bernardodiasc/pen//"
+  />
+   by Bernardo Dias (
+  <a
+    href="https://codepen.io/bernardodiasc"
+  >
+    @bernardodiasc
+  </a>
+  ) on 
+  <a
+    href="https://codepen.io"
+  >
+    CodePen
+  </a>
+  .
+</iframe>
+`;

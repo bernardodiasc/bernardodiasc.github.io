@@ -5,6 +5,8 @@ import hljs from 'highlight.js'
 import 'highlight.js/styles/tomorrow-night-eighties.css'
 
 import Icon from 'displays/Icon'
+import Image from 'displays/Image'
+import Codepen from 'displays/Codepen'
 
 const CodeBlock = (node) => {
   const props = node.children.props
@@ -29,6 +31,8 @@ class MarkdownRenderer extends PureComponent {
         options={{
           overrides: {
             Icon,
+            Image,
+            Codepen,
             pre: {
               component: CodeBlock
             }
