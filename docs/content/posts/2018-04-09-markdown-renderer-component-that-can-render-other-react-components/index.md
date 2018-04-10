@@ -6,7 +6,7 @@ tags:
   - react
   - markdown
   - html
-excerpt:
+excerpt: Markdown contents just got really really better!
 ---
 
 Alright, previously I wrote about how this site renders content from Markdown files, you can read it here: [Creating React component with Markdown renderer and code syntax highlight](https://bernardodiasdacruz.com/2018/03/17/creating-react-component-with-markdown-renderer-and-code-syntax-highlight). In this post I'll explain some cool upgrades I made in the `MarkdownRenderer` component used in this site.
