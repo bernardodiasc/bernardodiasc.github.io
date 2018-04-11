@@ -43,6 +43,8 @@
 
   --box-shadow: 6px 5px 3px 0 rgba(45, 45, 45, 0.4);
 
-  --code-color: #ccc;
-  --code-background: #2d2d2d;
+  --pre-color: #ccc;
+  --pre-background: #2d2d2d;
+  --code-color: #000;
+  --code-background: #cacaca;
 }

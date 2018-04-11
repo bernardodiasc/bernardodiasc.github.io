@@ -67,6 +67,8 @@
   line-height: var(--text-line);
   word-wrap: break-word;
   margin: 0 0 1em;
+  text-align: justify;
+  hyphens: auto;
 }
 
 .TextBlock a {
@@ -83,12 +85,19 @@
   background-position: 0 100%;
 }
 
+.TextBlock blockquote {
+  border-left: 10px solid var(--code-background);
+  margin: 30px 0;
+  padding: 0 0 0 25px;
+}
+
 /**
  * Code
  */
 
 .TextBlock pre {
-  background: var(--code-background);
+  background: var(--pre-background);
+  color: var(--pre-color);
   padding: 1.3em 2em;
   margin: 0.5em -2em 1.2em;
   line-height: 1;
@@ -97,13 +106,15 @@
 
 .TextBlock code {
   background: var(--code-background);
-  padding: 0 0.3em 0.2em;
+  padding: 0.1em 0.3em 0.2em;
   color: var(--code-color);
-  border-radius: 3px;
+  border-radius: 2px;
+  font-size: 0.9em;
 }
 
 .TextBlock pre code {
   background: unset;
+  color: inherit;
   padding: 0;
   font-size: 0.8em;
   white-space: pre;
