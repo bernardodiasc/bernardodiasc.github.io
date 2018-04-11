@@ -13,8 +13,6 @@ excerpt: Keeping up to date on IT can be a great challenge, having study systems
 
 Hello World!
 
-<Icon icon="guy-fawkes-mask"></Icon>
-
 Yeah, the world is big. Too many people creating and developing new technologies every day. It's hard to keep up with every new trend that appears. Some of these technologies become new standards and some others don't. How could we tell which worth to invest more time learning about? That's a hard question, the only way to figure out is from experience and the wisdom that comes with it.
 
 ## Study, Study, Study...

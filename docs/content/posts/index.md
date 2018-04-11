@@ -1,11 +1,12 @@
 ---
+- 2018-04-10-integrate-google-analytics-with-react-router-v4
 - 2018-04-10-the-active-listening
 - 2018-04-09-markdown-renderer-component-that-can-render-other-react-components
 - 2018-04-01-my-graphql-studies
 - 2018-04-01-my-hello-world-projects
 - 2018-03-17-creating-react-component-with-markdown-renderer-and-code-syntax-highlight
 - 2018-03-16-how-to-include-a-sitemap-in-a-create-react-app-site
-- 2018-03-16-how-to-fix-custom-domain-ovewriting-problem-when-using-gh-pages-deploy-script
+- 2018-03-16-how-to-fix-custom-domain-overwriting-problem-when-using-gh-pages-deploy-script
 - 2018-03-16-component-styles-isolation-dealing-with-css-inheritance
 - 2018-03-13-categories-and-typography
 - 2018-03-06-inject-google-analytics-tag-manager-in-a-meteor-app
