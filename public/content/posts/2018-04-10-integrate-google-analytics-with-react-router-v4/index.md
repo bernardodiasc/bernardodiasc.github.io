@@ -21,7 +21,7 @@ Not only in there but in several other places, I found recommendations for https
 
 I prefer simpler. It's possible for this site to use a simpler solution. Because this site is fairly simple by itself. Let me show you how I did.
 
-First loaded the gtag library at `index.html` as described in https://developers.google.com/analytics/devguides/collection/gtagjs/:
+The first step was to load the gtag library at `index.html`, as described in the docs https://developers.google.com/analytics/devguides/collection/gtagjs/:
 
 ```html
   <body>
