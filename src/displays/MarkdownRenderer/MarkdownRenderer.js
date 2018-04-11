@@ -3,6 +3,7 @@ import Markdown from 'markdown-to-jsx'
 import renderHTML from 'react-render-html'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/tomorrow-night-eighties.css'
+import './MarkdownRenderer.css'
 
 import Icon from 'displays/Icon'
 import Image from 'displays/Image'
@@ -35,7 +36,12 @@ class MarkdownRenderer extends PureComponent {
             Codepen,
             pre: {
               component: CodeBlock
-            }
+            },
+            div: {
+              props: {
+                className: 'MarkdownRenderer',
+              },
+            },
           },
         }}
       />
