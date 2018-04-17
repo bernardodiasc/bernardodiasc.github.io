@@ -18,7 +18,7 @@ excerpt: How to render animations from Adobe After Effects using Bodymovin/Lotti
 
 So I heard you like animations? Me too! :D
 
-> Maybe you came here from React-Native grounds looking to improve your user experience with beauty animations. Well, in this post I'm going to focus on React web, but it's all based on the same foundations, therefore, the content helps for any of the cases.
+> Maybe you came here from React-Native grounds looking to improve your user experience with beauty animations. Well, in this post I'm going to focus on animations for web, but it's all based on the same foundations, therefore, the content helps for any of the cases.
 
 ## The user experience
 
@@ -26,7 +26,7 @@ Just a little bit of context, I always like to share this talk when the subject 
 
 <Video id="Fy0aCDmgnxg" />
 
-Let's go from the take: "adding juice to games or apps or websites". This is about improving the experience. Make something static more to feel more alive and reaching emotions through interactions. We are not on paper anymore, this is the digital experience! Every little detail counts to engage our user.
+Let's go from the take: "adding juice to games or apps or websites". This is about improving the experience. Make something static to feel more alive and reaching emotions through interactions. We are not on paper anymore, this is the digital experience! Every little detail counts to engage our user.
 
 ## Animations for the web
 
@@ -76,9 +76,9 @@ There are many more cool examples in https://www.lottiefiles.com/ website!
 
 Since we saw the goodness of Lottie web, let me tell you about one drawback I had to deal with recently. You know, it's good to be realistic about technicals choices, not everything is flowers.
 
-The case was: In a Meteor project I've been working on, I had to include an animation and our team decided to use Lottie web. The problem is that the library relies on `window` and that's not available for SSR, something that happens by default on Meteor apps. Until the date this post, that isn't a solved problem, although it's a known problem and I believe will be resolved soon.
+The case was: In a Meteor project I've been working on, I had to include an animation and our team decided to use Lottie web. The problem is that the library relies on `window` object that's not available for SSR. Server-side rendering is a default feature on Meteor apps. Until the date of this post, this issue isn't a solved, although it's a known problem and I believe will be resolved soon.
 
-As I told before, there are many ways to create interactive animations for the web and for this particular case I decided to go with CSS keyframes, the result went very well, you can take a look here:
+As I told before, there are many ways to create interactive animations for the web and for this particular case I decided to go with CSS keyframes, the result went as expected, you can take a look here:
 
 <Codepen title="Rocket animation" hash="QmPybv" />
 
