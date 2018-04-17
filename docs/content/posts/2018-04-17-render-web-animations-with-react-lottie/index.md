@@ -18,7 +18,7 @@ excerpt: How to render animations from Adobe After Effects using Bodymovin/Lotti
 
 So I heard you like animations? Me too! :D
 
-> Maybe you came here from React-Native grounds looking to improve your user experience with beauty animations. Well, in this post I'm going to focus on React web, but it's all based on the same foundations, therefore, the content helps for any of the cases.
+> Maybe you came here from React-Native grounds looking to improve your user experience with beauty animations. Well, in this post I'm going to focus on animations for web, but it's all based on the same foundations, therefore, the content helps for any of the cases.
 
 ## The user experience
 
@@ -26,7 +26,7 @@ Just a little bit of context, I always like to share this talk when the subject 
 
 <Video id="Fy0aCDmgnxg" />
 
-Let's go from the take: "adding juice to games or apps or websites". This is about improving the experience. Make something static more to feel more alive and reaching emotions through interactions. We are not on paper anymore, this is the digital experience! Every little detail counts to engage our user.
+Let's go from the take: "adding juice to games or apps or websites". This is about improving the experience. Make something static to feel more alive and reaching emotions through interactions. We are not on paper anymore, this is the digital experience! Every little detail counts to engage our user.
 
 ## Animations for the web
 
@@ -36,7 +36,7 @@ Remember the Macromedia/Adobe Flash days? I do remember a lot. Oh, nostalgia. I 
 
 Yeah, that's a good question! Firstly, there were valid reasons for the Flash to fall into disuse. Reasons like going against the open web, shame on SWF. But let's make clear that the capabilities of the Flash software by itself wasn't one of the reasons. I can ensure you. And now that we don't use such tooling anymore, what do we use for animations?
 
-Tell you the truth: I don't know exactly what's the new standard! I guess there aren't any ultimate standard currently. There are just too many ways nowadays. CSS/SVG/JS animations are becoming stronger and it's capabilities getting better and better over time. Dozens of JS libraries out there that do a great job supporting animations. ¯\\_(ツ)_/¯
+Tell you the truth: I don't know exactly what's the new standard! I guess there aren't any ultimate standard currently. There are just too many ways nowadays. CSS/SVG/JS animations are becoming stronger and it's capabilities getting better and better over time. Dozens of JS libraries out there that do a great job supporting animations. ¯\\\_(ツ)\_/¯
 
 ## Bodymovin & Lottie
 
@@ -52,7 +52,7 @@ Pretty easy! Now, if you want to render the animation in your web/native project
 
 And if you want to leverage the use case here for a React website, you can use the https://github.com/chenqingspring/react-lottie component. It simplifies the adoption really well, check out some demos:
 
-<Animation animation="legoLoader" />
+<Animation animation="legoLoader" height="340" />
 
 Yeah, Lego... Components... got it? Haha. That's infinite animation with a loop, but Bodymovin supports other events as well. Check the example bellow of the "favorite" star animation clicking on it:
 
@@ -76,9 +76,9 @@ There are many more cool examples in https://www.lottiefiles.com/ website!
 
 Since we saw the goodness of Lottie web, let me tell you about one drawback I had to deal with recently. You know, it's good to be realistic about technicals choices, not everything is flowers.
 
-The case was: In a Meteor project I've been working on, I had to include an animation and our team decided to use Lottie web. The problem is that the library relies on `window` and that's not available for SSR, something that happens by default on Meteor apps. Until the date this post, that isn't a solved problem, although it's a known problem and I believe will be resolved soon.
+The case was: In a Meteor project I've been working on, I had to include an animation and our team decided to use Lottie web. The problem is that the library relies on `window` object that's not available for SSR. Server-side rendering is a default feature on Meteor apps. Until the date of this post, this issue isn't a solved, although it's a known problem and I believe will be resolved soon.
 
-As I told before, there are many ways to create interactive animations for the web and for this particular case I decided to go with CSS keyframes, the result went very well, you can take a look here:
+As I told before, there are many ways to create interactive animations for the web and for this particular case I decided to go with CSS keyframes, the result went as expected, you can take a look here:
 
 <Codepen title="Rocket animation" hash="QmPybv" />
 
