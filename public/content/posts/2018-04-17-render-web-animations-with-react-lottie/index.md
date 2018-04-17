@@ -149,7 +149,7 @@ class Animation extends PureComponent {
 export default Animation
 ```
 
-You can always check the source code of this website too: [Animation](https://github.com/bernardodiasc/bernardodiasc.github.io/blob/86fb993e589b3ee07a6d465d3e1c1a2a7362c3bb/src/displays/Animation/Animation.js)
+You can always check the source code of this website too: [Animation](https://github.com/bernardodiasc/bernardodiasc.github.io/blob/3e4289e5d8aedb72d44cc82a559eec20fae7372c/src/displays/Animation/Animation.js)
 
 ### Animation credits:
 
