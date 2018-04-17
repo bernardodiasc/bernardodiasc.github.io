@@ -64,6 +64,93 @@ Yeah, Lego... Components... got it? Haha. That's infinite animation with a loop,
   height="200"
 />
 
+### My React component
+
+Alright, if you are curious about how I included Lottie web animation in the content of this blog, then first take a look at this post I wrote: [Markdown renderer component that can render other React components](https://bernardodiasdacruz.com/2018/04/09/markdown-renderer-component-that-can-render-other-react-components).
+
+For my use case I create the `<Animation />` component:
+
+```jsx
+import React, { PureComponent } from 'react'
+import Lottie from 'react-lottie'
+import animations from './animations'
+import './Animation.css'
+
+class Animation extends PureComponent {
+  static defaultProps = {
+    animation: '',
+    width: '100%',
+    height: '100%',
+    loop: true,
+    autoPlay: true,
+  }
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      isStopped: !this.props.autoPlay,
+      isPaused: !this.props.autoPlay,
+      isComplete: false,
+    }
+  }
+
+  handleClick = () => {
+    this.setState({ isPaused: !this.state.isPaused })
+  }
+
+  handleEvent = (obj) => {
+    if (!this.props.loop) {
+      if (obj.currentTime === (obj.totalTime - 1)) {
+        if (this.state.isComplete) {
+          this.setState({ isStopped: true, isComplete: false })
+        } else {
+          this.setState({ isStopped: false, isComplete: true })
+        }
+      }
+    }
+  }
+
+  render() {
+    const animation = animations[this.props.animation]
+    const defaultOptions = {
+      loop: this.props.loop,
+      autoplay: this.props.autoPlay,
+      animationData: animation,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice',
+      }
+    }
+    const makeValidNumber = (value) =>
+      value.substr(value.length - 1) === '%' ? value : Number(value)
+
+    return (
+      <div className="Animation">
+        <Lottie
+          onClick={this.handleClick}
+          options={defaultOptions}
+          width={makeValidNumber(this.props.width)}
+          height={makeValidNumber(this.props.height)}
+          isStopped={this.state.isStopped}
+          isPaused={this.state.isPaused}
+          eventListeners={
+            [
+              {
+                eventName: 'enterFrame',
+                callback: obj => this.handleEvent(obj),
+              },
+            ]
+          }
+        />
+      </div>
+    )
+  }
+}
+
+export default Animation
+```
+
+You can always check the source code of this website too: [Animation](https://github.com/bernardodiasc/bernardodiasc.github.io/blob/3e4289e5d8aedb72d44cc82a559eec20fae7372c/src/displays/Animation/Animation.js)
+
 ### Animation credits:
 
 - Rey updated: https://www.lottiefiles.com/82-rey-updated
@@ -80,6 +167,6 @@ The case was: In a Meteor project I've been working on, I had to include an anim
 
 As I told before, there are many ways to create interactive animations for the web and for this particular case I decided to go with CSS keyframes, the result went as expected, you can take a look here:
 
-<Codepen title="Rocket animation" hash="QmPybv" />
+<Codepen title="Rocket animation" hash="QmPybv" height="350" />
 
 I hope to get back on animation topic much more often on future blog posts. I've been using several different approaches and still can't tell which one is the best. My guess is that there are cases and cases that will rely on different solutions. See ya!
