@@ -4,7 +4,7 @@ import './Codepen.css'
 class Codepen extends PureComponent {
   static defaultProps = {
     hash: '',
-    height: '300',
+    height: '',
     title: '',
   }
 

@@ -21,6 +21,10 @@ class Animation extends PureComponent {
     }
   }
 
+  handleClick = () => {
+    this.setState({ isPaused: !this.state.isPaused })
+  }
+
   handleEvent = (obj) => {
     if (!this.props.loop) {
       if (obj.currentTime === (obj.totalTime - 1)) {
@@ -49,7 +53,7 @@ class Animation extends PureComponent {
     return (
       <div className="Animation">
         <Lottie
-          onClick={() => {}}
+          onClick={this.handleClick}
           options={defaultOptions}
           width={makeValidNumber(this.props.width)}
           height={makeValidNumber(this.props.height)}

@@ -1,5 +1,9 @@
 .Animation {
   margin-bottom: 20px;
+}
+
+.Animation > div {
+  outline: none;
   cursor: pointer;
 }
 
