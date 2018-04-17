@@ -8,6 +8,8 @@ import './MarkdownRenderer.css'
 import Icon from 'displays/Icon'
 import Image from 'displays/Image'
 import Codepen from 'displays/Codepen'
+import Animation from 'displays/Animation'
+import Video from 'displays/Video'
 
 const CodeBlock = (node) => {
   const props = node.children.props
@@ -34,6 +36,8 @@ class MarkdownRenderer extends PureComponent {
             Icon,
             Image,
             Codepen,
+            Animation,
+            Video,
             pre: {
               component: CodeBlock
             },

@@ -1,0 +1,8 @@
+.Animation {
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.Animation svg {
+  display: block;
+}
