@@ -18,7 +18,7 @@ excerpt: How to render animations from Adobe After Effects using Bodymovin/Lotti
 
 So I heard you like animations? Me too! :D
 
-> Maybe you came here from React-Native grounds looking to improve your user experience with beauty animations. Well, in this post I'm going to focus on animations for web, but it's all based on the same foundations, therefore, the content helps for any of the cases.
+> Maybe you came here from React-Native grounds looking to improve your user experience with beauty animations. Well, in this post I'm going to focus on animations for web, but it's all based on the same foundations, therefore, the content may help for any of the cases.
 
 ## The user experience
 
@@ -34,7 +34,7 @@ Let's go from the take: "adding juice to games or apps or websites". This is abo
 
 Remember the Macromedia/Adobe Flash days? I do remember a lot. Oh, nostalgia. I built so many full animated websites and even small pieces of animations or just animated videos for the fun. Nowadays we, web and app developers, don't use Flash anymore, mostly. Well, not as much as we used before and not for the same purposes. But what replaced that amazing tool?
 
-Yeah, that's a good question! Firstly, there were valid reasons for the Flash to fall into disuse. Reasons like going against the open web, shame on SWF. But let's make clear that the capabilities of the Flash software by itself wasn't one of the reasons. I can ensure you. And now that we don't use such tooling anymore, what do we use for animations?
+Yeah, that's a good question! Firstly, there were valid reasons for the Flash to fall into disuse. Reasons like going against the open web, shame on SWF. But let's make clear that the capabilities of the Flash software by itself wasn't one of the reasons. I can ensure you. And now that we don't use such tooling anymore, what do we use to create animations?
 
 Tell you the truth: I don't know exactly what's the new standard! I guess there aren't any ultimate standard currently. There are just too many ways nowadays. CSS/SVG/JS animations are becoming stronger and it's capabilities getting better and better over time. Dozens of JS libraries out there that do a great job supporting animations. ¯\\\_(ツ)\_/¯
 
@@ -161,9 +161,9 @@ There are many more cool examples in https://www.lottiefiles.com/ website!
 
 ## Moar about animations!1!!
 
-Since we saw the goodness of Lottie web, let me tell you about one drawback I had to deal with recently. You know, it's good to be realistic about technicals choices, not everything is flowers.
+Since we saw the goodness of Lottie web, let me tell you about one drawback I had to deal with recently. You know, it's good to be realistic about technical choices, not everything is flowers.
 
-The case was: In a Meteor project I've been working on, I had to include an animation and our team decided to use Lottie web. The problem is that the library relies on `window` object that's not available for SSR. Server-side rendering is a default feature on Meteor apps. Until the date of this post, this issue isn't a solved, although it's a known problem and I believe will be resolved soon.
+The case was: In a Meteor project I've been working on, I had to include an animation and our team decided to use Lottie web. The problem is that the library relies on `window` object that's not available for SSR. Server-side rendering is a default feature on Meteor apps. Until the date of this post, this issue isn't resolved, although it's a known problem and I believe will be addressed soon.
 
 As I told before, there are many ways to create interactive animations for the web and for this particular case I decided to go with CSS keyframes, the result went as expected, you can take a look here:
 
