@@ -167,6 +167,6 @@ The case was: In a Meteor project I've been working on, I had to include an anim
 
 As I told before, there are many ways to create interactive animations for the web and for this particular case I decided to go with CSS keyframes, the result went as expected, you can take a look here:
 
-<Codepen title="Rocket animation" hash="QmPybv" height="300" />
+<Codepen title="Rocket animation" hash="QmPybv" height="350" />
 
 I hope to get back on animation topic much more often on future blog posts. I've been using several different approaches and still can't tell which one is the best. My guess is that there are cases and cases that will rely on different solutions. See ya!
