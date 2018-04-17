@@ -36,7 +36,7 @@ Remember the Macromedia/Adobe Flash days? I do remember a lot. Oh, nostalgia. I 
 
 Yeah, that's a good question! Firstly, there were valid reasons for the Flash to fall into disuse. Reasons like going against the open web, shame on SWF. But let's make clear that the capabilities of the Flash software by itself wasn't one of the reasons. I can ensure you. And now that we don't use such tooling anymore, what do we use for animations?
 
-Tell you the truth: I don't know exactly what's the new standard! I guess there aren't any ultimate standard currently. There are just too many ways nowadays. CSS/SVG/JS animations are becoming stronger and it's capabilities getting better and better over time. Dozens of JS libraries out there that do a great job supporting animations. ¯\\_(ツ)_/¯
+Tell you the truth: I don't know exactly what's the new standard! I guess there aren't any ultimate standard currently. There are just too many ways nowadays. CSS/SVG/JS animations are becoming stronger and it's capabilities getting better and better over time. Dozens of JS libraries out there that do a great job supporting animations. ¯\\\_(ツ)\_/¯
 
 ## Bodymovin & Lottie
 
@@ -52,7 +52,7 @@ Pretty easy! Now, if you want to render the animation in your web/native project
 
 And if you want to leverage the use case here for a React website, you can use the https://github.com/chenqingspring/react-lottie component. It simplifies the adoption really well, check out some demos:
 
-<Animation animation="legoLoader" />
+<Animation animation="legoLoader" height="340" />
 
 Yeah, Lego... Components... got it? Haha. That's infinite animation with a loop, but Bodymovin supports other events as well. Check the example bellow of the "favorite" star animation clicking on it:
 
