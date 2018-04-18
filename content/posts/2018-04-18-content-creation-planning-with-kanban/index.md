@@ -46,13 +46,11 @@ You can read more about if you are curious: [What is Kanban?](https://www.atlass
 
 There's a nice thing about GitHub, the platform have a lot of discrete features that link contents to each other and provides automation at some level.
 
-In the GH Project board I do something like this: first I add a *note* with few words of my idea and leave in the **To do** column. As the time passes and I consume more information about that subject, then I convert the *note* to an *issue* and edit the description or append comments with new thoughts and resources.
+In the GH Project board I do something like this: first I add a **note** with few words of my idea and leave in the **To do** column. As the time passes and I consume more information about that subject, then I convert the *note* to an **issue** and edit the description or append comments with new thoughts and resources.
 
 In the matter of "content marketing strategy", many of the preparation can be made in the GH Issue. If it's a collaborative piece, other people can comment, give feedback and contributions. You can take advantage of the platform as much as you want.
 
-This blog is hosted on GitHub so it quite convenient for me to link commits in the related idea issue, as in `git commit -m "Blog post about content creation planning with Kanban #24"`. For this particular blog post the Kanban card: [Content creation planning with Kanban](https://github.com/bernardodiasc/bernardodiasc.github.io/issues/24).
-
-And this is the Kanban board with all ideas that popped up in my mind: [Writing ideas](https://github.com/bernardodiasc/bernardodiasc.github.io/projects/1).
+This blog is hosted on GitHub so its quite convenient for me to link commits in the related idea issue, as in `git commit -m "Blog post about content creation planning with Kanban #24"`. For this particular blog post I had the Kanban card: [Content creation planning with Kanban](https://github.com/bernardodiasc/bernardodiasc.github.io/issues/24). And this is the Kanban board with all ideas that popped up in my mind so far: [Writing ideas](https://github.com/bernardodiasc/bernardodiasc.github.io/projects/1).
 
 ## Close the loops
 
