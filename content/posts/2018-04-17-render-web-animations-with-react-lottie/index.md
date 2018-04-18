@@ -1,7 +1,7 @@
 ---
 title: Render web animations with React Lottie
 date: 2018-04-17
-category: frontend
+category: this-blog
 tags:
   - react
   - lottie
