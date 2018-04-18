@@ -14,7 +14,7 @@ excerpt: Ideas are much faster than actions, take notes and manage them later to
 
 Hello there. If you are a thoughtful person then you came to the right place :D
 
-I'm going to tell you how I'm managing my ideas of the things I want to write in this blog. This blog has a particular editorial that relates to software development and entrepreneurship. In many ways is dedicated to exploring professional subjects that I've been and will be learning in my lifetime.
+I'm going to tell you how I'm managing my ideas of the things I want to write in this blog. This blog has a particular editorial that relates to software development and entrepreneurship. In many ways is dedicated to explore professional subjects that I've been and will be learning in my lifetime.
 
 Please be aware that this post is not a "content marketing strategy" guide, although that strategy can have its place in the method I'm going to tell.
 
@@ -56,6 +56,6 @@ This blog is hosted on GitHub so its quite convenient for me to link commits in 
 
 ## Close the loops
 
-I hope this helps if you are have lots of ideas and are trying to make them become articles. I started recently and it's helping me way more than any other method I used before.
+I hope this helps if you have lots of ideas and want them to become articles. I started recently and it's helping me way more than any other method I used before.
 
 And now, one more item to the **Done** list!
