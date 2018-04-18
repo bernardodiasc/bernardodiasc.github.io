@@ -1,4 +1,5 @@
 ---
+- 2018-04-18-content-creation-planning-with-kanban
 - 2018-04-17-render-web-animations-with-react-lottie
 - 2018-04-10-integrate-google-analytics-with-react-router-v4
 - 2018-04-10-the-active-listening
