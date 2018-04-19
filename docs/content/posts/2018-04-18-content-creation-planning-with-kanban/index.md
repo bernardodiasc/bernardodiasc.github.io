@@ -30,9 +30,9 @@ There are a bunch of techniques to close the loops, and the loops can be a lot d
 
 ## Take notes
 
-The method starts simple: take notes! The notes should be taken right away when they popup in your head. You'll not be writing the whole piece at this moment, just write a probably title and a small excerpt. You'll come back to the notes later.
+The method starts simple: take notes! The notes should be taken right away when they popup in your head. You'll not be writing the whole piece at this moment, just write a probable title and a small excerpt. You'll come back to the notes later.
 
-But where? That's a good question and some may tell you that "doesn't really matter where or how, what really matters is the habit". And that's true! But based on my experience, the "where and how" will enforce or weaken the habit. I already mentioned a little bit about this here: [My "Hello World" projects](https://bernardodiasdacruz.com/2018/04/01/my-hello-world-projects/). My recommendation is that you use a platform that you are must used to, a place that you spend a lot of time and have good familiarity.
+But where? That's a good question and some may tell you that "doesn't really matter where or how, what really matters is the habit". And that's true! But based on my experience, the "where and how" will enforce or weaken the habit. I already mentioned a little bit about this here: [My "Hello World" projects](https://bernardodiasdacruz.com/2018/04/01/my-hello-world-projects/). My recommendation is that you use a platform that you are more confortable, a place that you spend a lot of time and have good familiarity.
 
 ## Planning with Kanban
 
@@ -44,17 +44,19 @@ For the article ideas management workflow it will be like this: In the **To do**
 
 You can read more about if you are curious: [What is Kanban?](https://www.atlassian.com/agile/kanban).
 
-### GitHub Issues
+### The GitHub platform
 
 There's a nice thing about GitHub, the platform have a lot of discrete features that link contents to each other and provides automation at some level.
 
-In the GitHub Project board I do something like this: first I add a **note** with few words of my idea and leave in the **To do** column. As the time passes and I consume more information about that subject, then I convert the **note** to an **issue** and edit the description or append comments with new thoughts and resources.
+In the GitHub Project board I do something like this: first I add a **note** with few words of my idea and leave in the **To do** column. As the time passes I consume and produce more information about that subject, then I convert the **note** to an **issue** and edit the description or append comments with new thoughts and resources.
 
 In the matter of "content marketing strategy", many of the preparation can be made in the GitHub Issue. If it's a collaborative piece, other people can comment, give feedback and contributions. You can take advantage of the platform as much as you want.
 
-This blog is hosted on GitHub so its quite convenient for me to link commits in the related idea issue, as in `git commit -m "Blog post about content creation planning with Kanban #24"`. For this particular blog post I had the Kanban card: [Content creation planning with Kanban](https://github.com/bernardodiasc/bernardodiasc.github.io/issues/24). And this is the Kanban board with all ideas that popped up in my mind so far: [Writing ideas](https://github.com/bernardodiasc/bernardodiasc.github.io/projects/1).
+This blog is hosted on GitHub so its quite convenient for me to link commits in the related idea, as in `git commit -m "Blog post about content creation planning with Kanban #24"`. For this particular blog post I had the Kanban card: [Content creation planning with Kanban](https://github.com/bernardodiasc/bernardodiasc.github.io/issues/24).
 
-## Close the loops
+And this is the Kanban board with all ideas that popped up in my mind so far: [Writing ideas](https://github.com/bernardodiasc/bernardodiasc.github.io/projects/1).
+
+## Close the loops!
 
 I hope this helps if you have lots of ideas and want them to become articles. I started recently and it's helping me way more than any other method I used before.
 
