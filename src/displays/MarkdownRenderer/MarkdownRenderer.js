@@ -10,6 +10,7 @@ import Image from 'displays/Image'
 import Codepen from 'displays/Codepen'
 import Animation from 'displays/Animation'
 import Video from 'displays/Video'
+import SankeyChart from 'displays/SankeyChart'
 
 const CodeBlock = (node) => {
   const props = node.children.props
@@ -38,6 +39,7 @@ class MarkdownRenderer extends PureComponent {
             Codepen,
             Animation,
             Video,
+            SankeyChart,
             pre: {
               component: CodeBlock
             },

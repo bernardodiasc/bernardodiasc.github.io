@@ -41,6 +41,7 @@ module.exports = {
       "error",
       "never"
     ],
+    "array-callback-return": 0,
     "react/jsx-uses-react": "error",
     "react/jsx-uses-vars": "error",
     "react/no-children-prop": 0,

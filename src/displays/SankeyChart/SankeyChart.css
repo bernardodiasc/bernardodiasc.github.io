@@ -1,0 +1,28 @@
+.SankeyChart .node rect {
+  cursor: move;
+  shape-rendering: crispEdges;
+}
+
+.SankeyChart .node text {
+  pointer-events: none;
+  text-shadow: 1px 1px 2px #fff;
+  font-size: 0.8em;
+  font-family: sans-serif;
+}
+
+.SankeyChart #tooltip {
+  position: absolute;
+  pointer-events: none;
+  font-size: 0.7em;
+  font-family: sans-serif;
+  padding: 3px;
+  width: auto;
+  height: auto;
+  background-color: #f2f2f2;
+  box-shadow: 0 0 5px rbga(0, 0, 0, 0.4);
+}
+
+.SankeyChart .value {
+  white-space: pre-line;
+  margin: 0;
+}

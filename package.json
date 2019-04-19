@@ -33,7 +33,6 @@
   "lint-staged": {
     "src/**/*.js": [
       "eslint --fix",
-      "test:staged",
       "git add"
     ],
     "src/**/*.css": [
@@ -46,6 +45,7 @@
   },
   "dependencies": {
     "classnames": "^2.2.5",
+    "d3": "^3.5.17",
     "disqus-react": "^1.0.4",
     "fecha": "^2.3.3",
     "filestojson": "^1.0.2",
