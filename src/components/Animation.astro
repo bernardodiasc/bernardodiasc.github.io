@@ -1,0 +1,42 @@
+---
+interface Props {
+  animation: string;
+  width?: string;
+  height?: string;
+  loop?: boolean;
+  autoplay?: boolean;
+}
+
+const { animation, width = '100%', height = '300px' } = Astro.props;
+
+const lottieUrls: Record<string, string> = {
+  favouriteAppIcon: 'https://assets2.lottiefiles.com/datafiles/FnDJnGqjYlMbEeY/data.json',
+  reyUpdated: 'https://assets2.lottiefiles.com/datafiles/k1MFWbGaYSJLXKa/data.json',
+  legoLoader: 'https://assets2.lottiefiles.com/datafiles/DUUxR2mK1skeLVf/data.json',
+};
+
+const src = lottieUrls[animation] || '';
+---
+
+{src ? (
+  <div class="animation" style={`max-width: ${width}; height: ${height};`}>
+    <dotlottie-player
+      src={src}
+      background="transparent"
+      speed="1"
+      style="width: 100%; height: 100%;"
+      loop
+      autoplay
+    ></dotlottie-player>
+  </div>
+) : (
+  <p><em>Animation: {animation}</em></p>
+)}
+
+<script is:inline src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+
+<style>
+  .animation {
+    margin-bottom: 20px;
+  }
+</style>
