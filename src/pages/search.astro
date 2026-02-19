@@ -4,7 +4,7 @@ import Layout from '../layouts/Layout.astro';
 import PageContent from '../components/PageContent.astro';
 import TextBlock from '../components/TextBlock.astro';
 
-const posts = await getCollection('posts');
+const posts = await getCollection('posts', ({ data }) => !data.draft);
 const categories = await getCollection('categories');
 
 const allCategories = [...new Set(posts.map((p) => p.data.category).filter(Boolean))];
