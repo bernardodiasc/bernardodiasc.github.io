@@ -1,0 +1,51 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import Layout from '../../../../layouts/Layout.astro';
+import PostDetails from '../../../../components/PostDetails.astro';
+import Disqus from '../../../../components/Disqus.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => {
+    const [year, month, day, ...rest] = post.id.split('-');
+    return {
+      params: { year, month, day, title: rest.join('-') },
+      props: { post },
+    };
+  });
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const categoryEntry = post.data.category
+  ? await getEntry('categories', post.data.category)
+  : null;
+
+const category = categoryEntry
+  ? { id: categoryEntry.id, title: categoryEntry.data.title, icon: categoryEntry.data.icon }
+  : undefined;
+
+const thumbnail = post.data.excerpt ? '' : '';
+const siteUrl = 'https://bernardodiasdacruz.com';
+const pageUrl = `${siteUrl}${Astro.url.pathname}`;
+---
+
+<Layout
+  title={post.data.title}
+  description={post.data.excerpt}
+>
+  <PostDetails
+    title={post.data.title}
+    date={post.data.date}
+    category={category}
+    url={pageUrl}
+  >
+    <Content />
+  </PostDetails>
+  <Disqus
+    identifier={post.id}
+    title={post.data.title}
+    url={pageUrl}
+  />
+</Layout>

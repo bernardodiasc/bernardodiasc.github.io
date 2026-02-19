@@ -1,0 +1,115 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  mode?: 'listing' | 'details' | '';
+  title: string;
+  date?: Date;
+  excerpt?: string;
+  category?: {
+    id: string;
+    title: string;
+    icon: string;
+  };
+}
+
+const { mode = '', title, date, excerpt, category } = Astro.props;
+
+function formatDate(d: Date): string {
+  return d.toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}
+---
+
+{title && (
+  <div class:list={['post-header', mode && `post-header--${mode}`]}>
+    {mode === 'details' && category?.title && (
+      <p class="post-header__category">
+        <a href={`/category/${category.id}`} class="post-header__category-link">
+          {category.icon && (
+            <span class="post-header__icon">
+              <Icon icon={category.icon} />
+            </span>
+          )}
+          {category.title}
+        </a>
+      </p>
+    )}
+    <h1 class="post-header__title">
+      {mode === 'listing' && category?.icon && (
+        <span class="post-header__icon">
+          <Icon icon={category.icon} />
+        </span>
+      )}
+      {title}
+    </h1>
+    {date && (
+      <p class="post-header__meta">{formatDate(date)}</p>
+    )}
+    {excerpt && (
+      <p class="post-header__excerpt">{excerpt}</p>
+    )}
+  </div>
+)}
+
+<style>
+  .post-header {
+    font-size: var(--text-size);
+  }
+
+  .post-header__title {
+    color: var(--heading-color);
+    font-size: var(--heading-level1-size);
+    margin: 0 0 0.3em;
+  }
+
+  .post-header--listing .post-header__title {
+    font-size: var(--heading-level2-size);
+  }
+
+  .post-header--listing:hover .post-header__title {
+    text-decoration: underline;
+  }
+
+  .post-header__icon {
+    flex-shrink: 0;
+    display: inline-block;
+    height: 0.8em;
+    width: 0.8em;
+    margin: 0 4px 0 0;
+    transform: translateY(3px);
+  }
+
+  .post-header--details .post-header__icon {
+    height: 1em;
+    width: 1em;
+    margin: 0 5px 0 0;
+  }
+
+  .post-header__meta {
+    color: var(--meta-color);
+    font-size: var(--meta-size);
+    margin: 0 0 1em;
+  }
+
+  .post-header__category {
+    margin: 0 0 0.5em;
+  }
+
+  .post-header__category-link {
+    color: var(--heading-color);
+  }
+
+  .post-header__category-link:hover {
+    color: var(--text-color);
+    text-decoration: underline;
+  }
+
+  .post-header__excerpt {
+    color: var(--text-color);
+  }
+</style>

@@ -1,0 +1,218 @@
+---
+---
+
+<div class="text-block">
+  <slot />
+</div>
+
+<style is:global>
+  .text-block {
+    font-size: var(--text-size);
+    width: 100%;
+    overflow: inherit;
+  }
+
+  .text-block h1,
+  .text-block h2,
+  .text-block h3,
+  .text-block h4,
+  .text-block h5,
+  .text-block h6 {
+    font-family: var(--heading-family);
+    color: var(--heading-color);
+    font-weight: var(--heading-weight);
+    line-height: var(--heading-line);
+  }
+
+  .text-block h1 {
+    font-size: var(--heading-level1-size);
+    margin: var(--heading-level1-margins);
+  }
+
+  .text-block h2 {
+    font-size: var(--heading-level2-size);
+    margin: var(--heading-level2-margins);
+    padding-bottom: 0.3em;
+    border-bottom: 1px solid var(--line-light);
+  }
+
+  .text-block h3 {
+    font-size: var(--heading-level3-size);
+    margin: var(--heading-level3-margins);
+    text-transform: uppercase;
+  }
+
+  .text-block h4 {
+    font-size: var(--heading-level4-size);
+    margin: var(--heading-level4-margins);
+    font-weight: var(--heading-weight-bold);
+  }
+
+  .text-block h5 {
+    font-size: var(--heading-level5-size);
+    margin: var(--heading-level5-margins);
+  }
+
+  .text-block h6 {
+    font-size: var(--heading-level6-size);
+    margin: var(--heading-level6-margins);
+  }
+
+  .text-block p {
+    font-family: var(--text-family);
+    color: var(--text-color);
+    font-size: var(--text-size);
+    font-weight: var(--text-weight);
+    line-height: var(--text-line);
+    word-wrap: break-word;
+    margin: 0 0 1em;
+    text-align: justify;
+    hyphens: auto;
+  }
+
+  .text-block a {
+    color: inherit;
+    background-image: linear-gradient(to bottom, transparent 37%, var(--link-background) 37%);
+    background-size: 100% 300%;
+    background-position: 0 10%;
+    transition-property: background-position;
+    transition-duration: 0.4s;
+    outline: none;
+  }
+
+  .text-block a:hover {
+    background-position: 0 100%;
+  }
+
+  .text-block blockquote {
+    border-left: 10px solid var(--code-background);
+    margin: 30px 0;
+    padding: 0 0 0 25px;
+  }
+
+  .text-block pre {
+    background: var(--pre-background);
+    color: var(--pre-color);
+    padding: 1.3em 2em;
+    margin: 0.5em -2em 1.2em;
+    line-height: 1;
+    overflow-x: auto;
+  }
+
+  .text-block code {
+    background: var(--code-background);
+    padding: 0.1em 0.3em 0.2em;
+    color: var(--code-color);
+    border-radius: 2px;
+    font-size: 0.9em;
+  }
+
+  .text-block pre code {
+    background: unset;
+    color: inherit;
+    padding: 0;
+    font-size: 0.8em;
+    white-space: pre;
+  }
+
+  .text-block ul,
+  .text-block ol {
+    font-family: var(--text-family);
+    color: var(--text-color);
+    font-size: var(--text-size);
+    font-weight: var(--text-weight);
+    line-height: var(--text-line);
+    margin: 0.5em 0 1.2em 1em;
+    padding: 0 0 0 1em;
+  }
+
+  .text-block ul {
+    list-style: initial;
+  }
+
+  .text-block ol {
+    list-style: decimal;
+  }
+
+  .text-block ul ul,
+  .text-block ol ol {
+    margin-bottom: 0.5em;
+  }
+
+  .text-block li {
+    margin: 0;
+  }
+
+  .text-block ul ul li {
+    list-style: circle;
+  }
+
+  .text-block ul ul ul li {
+    list-style: square;
+  }
+
+  .text-block hr {
+    margin: 3rem 0;
+    height: 1px;
+    border: none;
+    border-bottom: 1px solid var(--line-heavy);
+  }
+
+  .text-block table {
+    display: block;
+    width: 100%;
+    overflow: auto;
+  }
+
+  .text-block table tr {
+    background-color: #fff;
+    border-top: 1px solid var(--line-heavy);
+  }
+
+  .text-block table tr:nth-child(2n) {
+    background-color: #f8f8f8;
+  }
+
+  .text-block table th {
+    font-weight: 600;
+  }
+
+  .text-block table th,
+  .text-block table td {
+    padding: 0.5em 1em;
+    border: 1px solid var(--line-light);
+  }
+
+  .text-block table td {
+    font-weight: var(--text-weight);
+  }
+
+  .text-block img {
+    max-width: 100%;
+  }
+
+  .text-block figure {
+    margin: 1.5em 0;
+    text-align: center;
+  }
+
+  .text-block figcaption {
+    font-size: var(--meta-size);
+    color: var(--meta-color);
+    font-style: italic;
+    text-align: center;
+  }
+
+  .text-block iframe {
+    margin: 2em auto;
+    display: block;
+  }
+
+  .text-block > :first-child {
+    margin-top: 0;
+  }
+
+  .text-block > :last-child {
+    margin-bottom: 0;
+  }
+</style>

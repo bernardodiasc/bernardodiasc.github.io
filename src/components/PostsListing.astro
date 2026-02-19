@@ -1,0 +1,63 @@
+---
+import PostHeader from './PostHeader.astro';
+
+interface PostItem {
+  id: string;
+  title: string;
+  date: Date;
+  excerpt: string;
+  category?: {
+    id: string;
+    title: string;
+    icon: string;
+  };
+  tags: string[];
+}
+
+interface Props {
+  items: PostItem[];
+}
+
+const { items } = Astro.props;
+
+function postUrl(id: string): string {
+  const [year, month, day, ...rest] = id.split('-');
+  return `/${year}/${month}/${day}/${rest.join('-')}`;
+}
+---
+
+<div class="posts-listing">
+  {items.map((item) => (
+    <section class="posts-listing__each">
+      <a href={postUrl(item.id)} class="posts-listing__link">
+        <PostHeader
+          mode="listing"
+          title={item.title}
+          date={item.date}
+          excerpt={item.excerpt}
+          category={item.category}
+        />
+      </a>
+    </section>
+  ))}
+</div>
+
+<style>
+  .posts-listing {
+    font-size: var(--text-size);
+  }
+
+  .posts-listing__each {
+    margin: 0 0 2em;
+  }
+
+  .posts-listing__each:last-of-type {
+    margin: 0;
+  }
+
+  .posts-listing__link {
+    display: block;
+    position: relative;
+    color: inherit;
+  }
+</style>

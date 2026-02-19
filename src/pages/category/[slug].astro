@@ -1,0 +1,51 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import PageContent from '../../components/PageContent.astro';
+import CategoryDetails from '../../components/CategoryDetails.astro';
+import PostsListing from '../../components/PostsListing.astro';
+
+export async function getStaticPaths() {
+  const categories = await getCollection('categories');
+  return categories.map((cat) => ({
+    params: { slug: cat.id },
+    props: { category: cat },
+  }));
+}
+
+const { category } = Astro.props;
+const { Content } = await render(category);
+
+const allPosts = await getCollection('posts');
+const categoryPosts = allPosts
+  .filter((p) => p.data.category === category.id)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const items = await Promise.all(
+  categoryPosts.map(async (post) => {
+    const catEntry = post.data.category
+      ? await getEntry('categories', post.data.category)
+      : null;
+    return {
+      id: post.id,
+      title: post.data.title,
+      date: post.data.date,
+      excerpt: post.data.excerpt,
+      tags: post.data.tags,
+      category: catEntry
+        ? { id: catEntry.id, title: catEntry.data.title, icon: catEntry.data.icon }
+        : undefined,
+    };
+  })
+);
+---
+
+<Layout
+  title={`Category: ${category.data.title}`}
+  description={category.data.title}
+>
+  <PageContent>
+    <CategoryDetails title={category.data.title} />
+    <PostsListing items={items} />
+  </PageContent>
+</Layout>

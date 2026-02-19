@@ -1,0 +1,75 @@
+---
+import Icon from './Icon.astro';
+
+const currentPath = Astro.url.pathname;
+
+function isActive(path: string) {
+  if (path === '/') return currentPath === '/';
+  return currentPath.startsWith(path);
+}
+---
+
+<ul class="tabs">
+  <li class="tabs__tab">
+    <a href="/" title="Latest posts" class:list={['tabs__link', { 'tabs__link--active': isActive('/') }]}>
+      <Icon icon="home" />
+    </a>
+  </li>
+  <li class="tabs__tab">
+    <a href="/search" title="Search for content" class:list={['tabs__link', { 'tabs__link--active': isActive('/search') }]}>
+      <Icon icon="explore" />
+    </a>
+  </li>
+  <li class="tabs__tab">
+    <a href="/archive" title="Content archive" class:list={['tabs__link', { 'tabs__link--active': isActive('/archive') }]}>
+      <Icon icon="calendar" />
+    </a>
+  </li>
+  <li class="tabs__tab">
+    <a href="/about-me" title="About me" class:list={['tabs__link', { 'tabs__link--active': isActive('/about-me') }]}>
+      <Icon icon="guy-fawkes-mask" />
+    </a>
+  </li>
+</ul>
+
+<style>
+  .tabs {
+    font-size: var(--text-size);
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .tabs__tab {
+    display: inline-block;
+    background: var(--content-background);
+    margin: 0 0 0 5px;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+  }
+
+  .tabs__tab:first-of-type {
+    margin: 0;
+  }
+
+  .tabs__link {
+    display: block;
+    width: 18px;
+    height: 18px;
+    color: var(--meta-color);
+    transition: color 0.3s ease;
+    padding: 0.3em 0.8em;
+    box-sizing: content-box;
+    box-shadow: 0 -1px 3px 0 rgba(45, 45, 45, 0.4) inset;
+  }
+
+  .tabs__link:hover {
+    color: var(--text-color);
+  }
+
+  .tabs__link--active {
+    color: var(--heading-color);
+    box-shadow: none;
+  }
+</style>

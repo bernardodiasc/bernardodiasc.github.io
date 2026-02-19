@@ -1,0 +1,33 @@
+---
+interface Props {
+  identifier: string;
+  title: string;
+  url: string;
+}
+
+const { identifier, title, url } = Astro.props;
+---
+
+<div class="disqus" id="disqus_thread"></div>
+
+<script define:vars={{ identifier, title, url }}>
+  if (window.location.hostname !== 'localhost') {
+    window.disqus_config = function () {
+      this.page.url = url;
+      this.page.identifier = identifier;
+      this.page.title = title;
+    };
+    const d = document;
+    const s = d.createElement('script');
+    s.src = 'https://bernardodiasc.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', String(+new Date()));
+    (d.head || d.body).appendChild(s);
+  }
+</script>
+
+<style>
+  .disqus {
+    font-size: var(--text-size);
+    padding: 2em;
+  }
+</style>

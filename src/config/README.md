@@ -1,3 +1,0 @@
-# Config
-
-Application configuration files.

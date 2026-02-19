@@ -1,0 +1,32 @@
+::selection {
+  background-color: var(--text-color);
+  color: var(--content-background);
+}
+
+html,
+body {
+  min-height: 100vh;
+  margin: 0;
+}
+
+body {
+  font-family: var(--text-family);
+  color: var(--text-color);
+  font-size: var(--text-size);
+  font-weight: var(--text-weight);
+  line-height: var(--text-line);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--heading-family);
+  font-weight: var(--heading-weight);
+  line-height: var(--heading-line);
+}
+
+a {
+  text-decoration: none;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}

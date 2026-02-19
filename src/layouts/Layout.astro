@@ -1,0 +1,166 @@
+---
+import '../styles/variables.css';
+import '../styles/base.css';
+import Tabs from '../components/Tabs.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+
+const siteName = 'Bernardo Dias da Cruz';
+const siteUrl = 'https://bernardodiasdacruz.com';
+
+const {
+  title,
+  description = '',
+  image,
+} = Astro.props;
+
+const pageTitle = title ? `${title} - ${siteName}` : siteName;
+const ogImage = image ? `${siteUrl}${image}` : `${siteUrl}/images/thumbnail.png`;
+const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <meta name="twitter:site" content="@bernardodiasc" />
+    <meta name="twitter:title" content={title || siteName} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:creator" content="@bernardodiasc" />
+    <meta name="twitter:image" content={ogImage} />
+    <meta property="og:title" content={title || siteName} />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content={siteName} />
+
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta name="google-site-verification" content="w8owtTJwheQ0pp3DJ-bwIKX67nyi2bdCZs8fLs-r-Wc" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=IBM+Plex+Serif:wght@400&family=Permanent+Marker&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <main class="layout">
+      <header class="layout__header">
+        <h1 class="layout__header-title">
+          <a href="/">Random Thoughts</a>
+        </h1>
+        <Tabs />
+      </header>
+      <article class="layout__content">
+        <div class="layout__content-inner">
+          <slot />
+        </div>
+      </article>
+    </main>
+    <script is:inline>
+      if (window.location.hostname !== 'localhost') {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-10219275-4');
+      }
+    </script>
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=UA-10219275-4"></script>
+  </body>
+</html>
+
+<style>
+  .layout {
+    font-size: var(--text-size);
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    min-height: 100vh;
+    margin: 0 auto;
+    background-image: url(/images/blueprint.jpg);
+    background-color: var(--main-background);
+    background-size: cover;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-position: center top;
+  }
+
+  .layout__content {
+    flex: 1;
+    width: 100%;
+    max-width: 70rem;
+    padding: 0 5em 8em;
+    margin: 0 auto;
+  }
+
+  .layout__content-inner {
+    background: var(--content-background);
+    box-shadow: var(--box-shadow);
+    border-radius: 4px;
+    overflow-x: auto;
+  }
+
+  .layout__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    padding: 2em 6em 0;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 70rem;
+  }
+
+  .layout__header-title {
+    color: white;
+    font-family: 'Permanent Marker', cursive;
+    font-size: 3em;
+    font-weight: var(--heading-weight);
+    margin: 0 0 0.5em;
+    letter-spacing: 1px;
+    text-shadow:
+      0 1px 0 #ccc,
+      1px 2px 0 #bbb,
+      2px 3px 0 #aaa,
+      0 6px 1px rgba(0, 0, 0, 0.1),
+      0 0 5px rgba(0, 0, 0, 0.1),
+      0 1px 3px rgba(0, 0, 0, 0.3),
+      0 3px 5px rgba(0, 0, 0, 0.2),
+      0 5px 10px rgba(0, 0, 0, 0.25),
+      0 10px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  .layout__header-title a,
+  .layout__header-title a:visited {
+    color: inherit;
+  }
+
+  @media only screen and (max-width: 1023px) {
+    .layout {
+      background-size: initial;
+      background-attachment: initial;
+      background-repeat: repeat;
+    }
+
+    .layout__content {
+      padding: 0 1em 8em;
+    }
+
+    .layout__header {
+      padding: 1em 2em 0;
+    }
+
+    .layout__header-title {
+      font-size: 2em;
+    }
+  }
+</style>

@@ -1,0 +1,36 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import PageContent from '../components/PageContent.astro';
+import PostsListing from '../components/PostsListing.astro';
+
+const posts = await getCollection('posts');
+
+const sortedPosts = posts.sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+
+const items = await Promise.all(
+  sortedPosts.map(async (post) => {
+    const categoryEntry = post.data.category
+      ? await getEntry('categories', post.data.category)
+      : null;
+    return {
+      id: post.id,
+      title: post.data.title,
+      date: post.data.date,
+      excerpt: post.data.excerpt,
+      tags: post.data.tags,
+      category: categoryEntry
+        ? { id: categoryEntry.id, title: categoryEntry.data.title, icon: categoryEntry.data.icon }
+        : undefined,
+    };
+  })
+);
+---
+
+<Layout title="Random Thoughts" description="A web developer and thinker.">
+  <PageContent>
+    <PostsListing items={items} />
+  </PageContent>
+</Layout>

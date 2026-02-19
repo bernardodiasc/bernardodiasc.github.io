@@ -1,0 +1,17 @@
+---
+import { getEntry, render } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import PageContent from '../components/PageContent.astro';
+import TextBlock from '../components/TextBlock.astro';
+
+const article = await getEntry('articles', 'about-me');
+const { Content } = await render(article);
+---
+
+<Layout title={article.data.title} description={article.data.excerpt}>
+  <PageContent>
+    <TextBlock>
+      <Content />
+    </TextBlock>
+  </PageContent>
+</Layout>
