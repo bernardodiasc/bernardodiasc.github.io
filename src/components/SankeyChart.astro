@@ -1,17 +1,230 @@
 ---
+const { nodes = [], links = [] } = Astro.props;
 ---
 
 <div class="sankey-chart">
-  <p>
-    <em>Interactive D3.js Sankey chart — see the
-    <a href="https://github.com/bernardodiasc/hello-world/tree/master/my-d3-diagrams">source code on GitHub</a></em>
+  <div
+    class="sankey-container"
+    data-nodes={JSON.stringify(nodes)}
+    data-links={JSON.stringify(links)}
+  ></div>
+  <p class="sankey-caption">
+    <em>Hover over nodes to trace all connected paths through the flow.</em>
   </p>
 </div>
 
 <style>
   .sankey-chart {
-    padding: 1em 0;
+    margin: 2em 0;
+    width: 100%;
+  }
+  .sankey-container {
+    width: 100%;
+    overflow-x: auto;
+  }
+  .sankey-container svg {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    height: auto;
+  }
+  .sankey-caption {
     text-align: center;
-    color: var(--meta-color);
+    color: var(--meta-color, #888);
+    font-size: 0.85em;
+    margin-top: 0.5em;
   }
 </style>
+
+<script>
+  import * as d3 from "d3";
+  import {
+    sankey as d3Sankey,
+    sankeyLinkHorizontal,
+    sankeyLeft,
+  } from "d3-sankey";
+
+  const LINK_COLOR = "#b3b3b3";
+  const INFLOW_COLOR = "#2E86D1";
+  const OUTFLOW_COLOR = "#D63028";
+
+  const OPACITY = {
+    NODE_DEFAULT: 0.9,
+    NODE_FADED: 0.1,
+    NODE_HIGHLIGHT: 0.8,
+    LINK_DEFAULT: 0.6,
+    LINK_FADED: 0.05,
+    LINK_HIGHLIGHT: 0.9,
+  };
+
+  document.querySelectorAll(".sankey-container").forEach((container) => {
+    const nodes = JSON.parse(container.dataset.nodes || "[]");
+    const links = JSON.parse(container.dataset.links || "[]");
+    if (!nodes.length || !links.length) return;
+
+    const width = 860;
+    const height = Math.max(300, nodes.length * 32);
+    const margin = { top: 16, right: 120, bottom: 16, left: 16 };
+
+    const stageColor = d3
+      .scaleOrdinal()
+      .domain([0, 1, 2, 3, 4, 5, 6, 7, 8])
+      .range([
+        "#4e79a7",
+        "#59a14f",
+        "#9c755f",
+        "#f28e2b",
+        "#e15759",
+        "#76b7b2",
+        "#b07aa1",
+        "#ff9da7",
+        "#edc948",
+      ]);
+
+    const sankeyLayout = d3Sankey()
+      .nodeId((d) => d.id)
+      .nodeWidth(16)
+      .nodePadding(14)
+      .nodeAlign(sankeyLeft)
+      .extent([
+        [margin.left, margin.top],
+        [width - margin.right, height - margin.bottom],
+      ]);
+
+    const graph = sankeyLayout({
+      nodes: nodes.map((d) => ({ ...d })),
+      links: links.map((d) => ({ ...d })),
+    });
+
+    const svg = d3
+      .select(container)
+      .append("svg")
+      .attr("viewBox", `0 0 ${width} ${height}`)
+      .attr("preserveAspectRatio", "xMidYMid meet");
+
+    const linkSelection = svg
+      .append("g")
+      .attr("fill", "none")
+      .selectAll("path")
+      .data(graph.links)
+      .join("path")
+      .attr("d", sankeyLinkHorizontal())
+      .attr("stroke", LINK_COLOR)
+      .attr("stroke-opacity", OPACITY.LINK_DEFAULT)
+      .attr("stroke-width", (d) => Math.max(1.5, d.width));
+
+    linkSelection
+      .append("title")
+      .text((d) => `${d.source.name} → ${d.target.name}`);
+
+    const nodeSelection = svg
+      .append("g")
+      .selectAll("g")
+      .data(graph.nodes)
+      .join("g")
+      .attr("transform", (d) => `translate(${d.x0},${d.y0})`)
+      .style("cursor", "default");
+
+    nodeSelection
+      .append("rect")
+      .attr("height", (d) => d.y1 - d.y0)
+      .attr("width", (d) => d.x1 - d.x0)
+      .attr("fill", (d) => stageColor(d.depth))
+      .attr("stroke", (d) => d3.rgb(stageColor(d.depth)).darker(0.4))
+      .attr("stroke-width", 0.5)
+      .attr("rx", 2)
+      .attr("fill-opacity", OPACITY.NODE_DEFAULT);
+
+    nodeSelection
+      .append("text")
+      .attr("x", (d) => (d.x0 < width / 2 ? d.x1 - d.x0 + 8 : -8))
+      .attr("y", (d) => (d.y1 - d.y0) / 2)
+      .attr("dy", "0.35em")
+      .attr("text-anchor", (d) => (d.x0 < width / 2 ? "start" : "end"))
+      .attr("font-size", "12px")
+      .attr("font-family", "inherit")
+      .attr("fill", "currentColor")
+      .text((d) => d.name);
+
+    function getConnected(node) {
+      const forwardLinks = new Set();
+      const backwardLinks = new Set();
+      const connectedNodes = new Set([node]);
+
+      function traceForward(n) {
+        graph.links.forEach((l) => {
+          if (l.source === n && !forwardLinks.has(l)) {
+            forwardLinks.add(l);
+            connectedNodes.add(l.target);
+            traceForward(l.target);
+          }
+        });
+      }
+
+      function traceBackward(n) {
+        graph.links.forEach((l) => {
+          if (l.target === n && !backwardLinks.has(l)) {
+            backwardLinks.add(l);
+            connectedNodes.add(l.source);
+            traceBackward(l.source);
+          }
+        });
+      }
+
+      traceForward(node);
+      traceBackward(node);
+      return { forwardLinks, backwardLinks, connectedNodes };
+    }
+
+    function restoreLinksAndNodes() {
+      linkSelection
+        .transition()
+        .duration(300)
+        .attr("stroke", LINK_COLOR)
+        .attr("stroke-opacity", OPACITY.LINK_DEFAULT);
+      nodeSelection
+        .select("rect")
+        .transition()
+        .duration(300)
+        .attr("fill-opacity", OPACITY.NODE_DEFAULT)
+        .attr("fill", (d) => stageColor(d.depth));
+      nodeSelection.select("text").transition().duration(300).attr("opacity", 1);
+    }
+
+    nodeSelection
+      .on("mouseenter", (event, d) => {
+        const { forwardLinks, backwardLinks, connectedNodes } = getConnected(d);
+
+        linkSelection
+          .transition()
+          .duration(200)
+          .attr("stroke", (l) => {
+            if (forwardLinks.has(l)) return OUTFLOW_COLOR;
+            if (backwardLinks.has(l)) return INFLOW_COLOR;
+            return LINK_COLOR;
+          })
+          .attr("stroke-opacity", (l) =>
+            forwardLinks.has(l) || backwardLinks.has(l)
+              ? OPACITY.LINK_DEFAULT
+              : OPACITY.LINK_FADED,
+          );
+
+        nodeSelection
+          .select("rect")
+          .transition()
+          .duration(200)
+          .attr("fill-opacity", (n) =>
+            connectedNodes.has(n) ? OPACITY.NODE_HIGHLIGHT : OPACITY.NODE_FADED,
+          );
+
+        nodeSelection
+          .select("text")
+          .transition()
+          .duration(200)
+          .attr("opacity", (n) =>
+            connectedNodes.has(n) ? 1 : OPACITY.NODE_FADED,
+          );
+      })
+      .on("mouseleave", restoreLinksAndNodes);
+  });
+</script>
