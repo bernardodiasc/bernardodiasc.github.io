@@ -2,18 +2,13 @@
 import { getCollection, getEntry } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import PageContent from '../components/PageContent.astro';
-import PostsListing from '../components/PostsListing.astro';
+import PostHeader from '../components/PostHeader.astro';
 
 const posts = await getCollection('posts', ({ data }) => !data.draft);
 
 const sortedPosts = posts.sort(
   (a, b) => b.data.date.getTime() - a.data.date.getTime()
 );
-
-type YearGroup = {
-  year: number;
-  posts: typeof items;
-};
 
 const items = await Promise.all(
   sortedPosts.map(async (post) => {
@@ -33,6 +28,11 @@ const items = await Promise.all(
   })
 );
 
+function postUrl(id: string): string {
+  const [year, month, day, ...rest] = id.split('-');
+  return `/${year}/${month}/${day}/${rest.join('-')}`;
+}
+
 const grouped = items.reduce<Record<number, typeof items>>((acc, item) => {
   const year = item.date.getFullYear();
   if (!acc[year]) acc[year] = [];
@@ -43,15 +43,333 @@ const grouped = items.reduce<Record<number, typeof items>>((acc, item) => {
 const years = Object.keys(grouped)
   .map(Number)
   .sort((a, b) => b - a);
+
+const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+const monthsByYear: Record<number, number[]> = {};
+for (const year of years) {
+  const months = [...new Set(grouped[year].map((item) => item.date.getMonth()))].sort((a, b) => a - b);
+  monthsByYear[year] = months;
+}
 ---
 
 <Layout title="Archive of content">
   <PageContent>
-    {years.map((year) => (
-      <section>
-        <h2>{year}</h2>
-        <PostsListing items={grouped[year]} />
-      </section>
-    ))}
+    <div class="archive-page">
+      <details class="collapsible" id="calendar-panel" open>
+        <summary class="collapsible__header">
+          <h2 class="section-title">Filter by date</h2>
+          <span class="collapsible__selection" id="calendar-selection"></span>
+          <span class="collapsible__chevron"></span>
+        </summary>
+        <div class="calendar-filter">
+          <div class="calendar-years">
+            <button class="year-btn year-btn--active" data-year="all" type="button">All</button>
+            {years.map((year) => (
+              <button class="year-btn" data-year={year} type="button">{year}</button>
+            ))}
+          </div>
+          <div class="calendar-months" id="months-row" style="display: none;">
+            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((m) => (
+              <button class="month-btn" data-month={m} type="button">{monthNames[m]}</button>
+            ))}
+          </div>
+        </div>
+      </details>
+
+      <div id="archive-content">
+        {years.map((year) => (
+          <section class="archive-year" data-year={year}>
+            <h2 class="archive-year__title">{year}</h2>
+            <div class="posts-listing">
+              {grouped[year].map((item) => (
+                <section class="posts-listing__each" data-month={item.date.getMonth()}>
+                  <a href={postUrl(item.id)} class="posts-listing__link">
+                    <PostHeader
+                      mode="listing"
+                      title={item.title}
+                      date={item.date}
+                      excerpt={item.excerpt}
+                      category={item.category}
+                    />
+                  </a>
+                </section>
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
+
+      <p class="no-results" id="no-results" style="display: none;">No posts in this period.</p>
+    </div>
   </PageContent>
 </Layout>
+
+<script is:inline define:vars={{ monthsByYear, monthNames }}>
+  var yearBtns = document.querySelectorAll('.year-btn');
+  var monthBtns = document.querySelectorAll('.month-btn');
+  var monthsRow = document.getElementById('months-row');
+  var yearSections = document.querySelectorAll('.archive-year');
+  var calendarSelection = document.getElementById('calendar-selection');
+  var noResults = document.getElementById('no-results');
+
+  var activeYear = 'all';
+  var activeMonth = null;
+
+  function updateFilter() {
+    var availableMonths = activeYear !== 'all' ? (monthsByYear[activeYear] || []) : [];
+
+    monthBtns.forEach(function (btn) {
+      var m = parseInt(btn.getAttribute('data-month'));
+      if (activeYear === 'all') {
+        btn.style.display = 'none';
+      } else {
+        btn.style.display = availableMonths.indexOf(m) !== -1 ? '' : 'none';
+        btn.classList.toggle('month-btn--active', activeMonth === m);
+      }
+    });
+
+    monthsRow.style.display = activeYear === 'all' ? 'none' : '';
+
+    var visibleCount = 0;
+
+    yearSections.forEach(function (section) {
+      var sectionYear = section.getAttribute('data-year');
+
+      if (activeYear !== 'all' && sectionYear !== String(activeYear)) {
+        section.style.display = 'none';
+        return;
+      }
+
+      section.style.display = '';
+      var postItems = section.querySelectorAll('.posts-listing__each');
+
+      postItems.forEach(function (item) {
+        if (activeMonth !== null) {
+          var itemMonth = parseInt(item.getAttribute('data-month'));
+          if (itemMonth !== activeMonth) {
+            item.style.display = 'none';
+            return;
+          }
+        }
+        item.style.display = '';
+        visibleCount++;
+      });
+
+      var anyVisible = Array.from(postItems).some(function (item) {
+        return item.style.display !== 'none';
+      });
+
+      if (!anyVisible) {
+        section.style.display = 'none';
+      }
+    });
+
+    noResults.style.display = visibleCount === 0 ? '' : 'none';
+
+    if (activeYear !== 'all') {
+      var label = String(activeYear);
+      if (activeMonth !== null) label += ' · ' + monthNames[activeMonth];
+      calendarSelection.innerHTML = '<span class="selection-badge">' + label + '</span>';
+    } else {
+      calendarSelection.innerHTML = '';
+    }
+  }
+
+  yearBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var val = btn.getAttribute('data-year');
+      activeYear = val === 'all' ? 'all' : parseInt(val);
+      activeMonth = null;
+      yearBtns.forEach(function (b) { b.classList.remove('year-btn--active'); });
+      btn.classList.add('year-btn--active');
+      monthBtns.forEach(function (b) { b.classList.remove('month-btn--active'); });
+      updateFilter();
+    });
+  });
+
+  monthBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var m = parseInt(btn.getAttribute('data-month'));
+      if (activeMonth === m) {
+        activeMonth = null;
+        btn.classList.remove('month-btn--active');
+      } else {
+        activeMonth = m;
+        monthBtns.forEach(function (b) { b.classList.remove('month-btn--active'); });
+        btn.classList.add('month-btn--active');
+      }
+      updateFilter();
+    });
+  });
+</script>
+
+<style>
+  .archive-page {
+    font-size: var(--text-size);
+  }
+
+  .collapsible {
+    margin-bottom: 2em;
+    border: 1px solid var(--line-light);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .collapsible__header {
+    display: flex;
+    align-items: center;
+    gap: 0.75em;
+    padding: 0.8em 1em;
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+    background: #fafafa;
+    border-bottom: 1px solid transparent;
+    transition: background 0.15s ease;
+  }
+
+  .collapsible__header::-webkit-details-marker {
+    display: none;
+  }
+
+  .collapsible__header:hover {
+    background: #f0f0f0;
+  }
+
+  .collapsible[open] > .collapsible__header {
+    border-bottom-color: var(--line-light);
+  }
+
+  .collapsible__chevron {
+    margin-left: auto;
+    flex-shrink: 0;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid var(--meta-color);
+    transition: transform 0.2s ease;
+  }
+
+  .collapsible[open] .collapsible__chevron {
+    transform: rotate(180deg);
+  }
+
+  .collapsible__selection {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35em;
+    align-items: center;
+  }
+
+  .section-title {
+    font-family: var(--heading-family);
+    font-weight: var(--heading-weight-bold);
+    color: var(--heading-color);
+    font-size: var(--heading-level2-size);
+    margin: 0;
+  }
+
+  .calendar-filter {
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75em;
+  }
+
+  .calendar-years,
+  .calendar-months {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+  }
+
+  .year-btn,
+  .month-btn {
+    padding: 0.4em 1em;
+    font-size: 0.9em;
+    font-family: var(--heading-family);
+    font-weight: var(--heading-weight-bold);
+    background: #f0f0f0;
+    border: 1px solid var(--line-light);
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--text-color);
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .year-btn:hover,
+  .month-btn:hover {
+    background: #e0e0e0;
+    border-color: var(--meta-color);
+  }
+
+  .year-btn--active,
+  .month-btn--active {
+    background: var(--heading-color);
+    color: white;
+    border-color: var(--heading-color);
+  }
+
+  .year-btn--active:hover,
+  .month-btn--active:hover {
+    background: var(--heading-color);
+    border-color: var(--heading-color);
+  }
+
+  .archive-year__title {
+    font-family: var(--heading-family);
+    font-weight: var(--heading-weight-bold);
+    color: var(--heading-color);
+    font-size: var(--heading-level2-size);
+    margin: 0 0 0.8em;
+    padding-bottom: 0.3em;
+    border-bottom: 1px solid var(--line-light);
+  }
+
+  .archive-year {
+    margin-bottom: 2.5em;
+  }
+
+  .archive-year:last-child {
+    margin-bottom: 0;
+  }
+
+  .posts-listing {
+    font-size: var(--text-size);
+  }
+
+  .posts-listing__each {
+    margin: 0 0 2em;
+  }
+
+  .posts-listing__each:last-of-type {
+    margin: 0;
+  }
+
+  .posts-listing__link {
+    display: block;
+    position: relative;
+    color: inherit;
+  }
+
+  .no-results {
+    color: var(--meta-color);
+    font-style: italic;
+  }
+</style>
+
+<style is:global>
+  .selection-badge {
+    display: inline-block;
+    padding: 0.15em 0.6em;
+    font-size: 0.75em;
+    font-family: var(--heading-family);
+    background: var(--heading-color);
+    color: white;
+    border-radius: 12px;
+    white-space: nowrap;
+    line-height: 1.4;
+  }
+</style>
