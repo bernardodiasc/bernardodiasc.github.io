@@ -2,6 +2,7 @@
 title: Back from the future, with AI
 date: 2026-02-19
 category: this-blog
+thumbnail: /content/posts/2026-02-19-back-from-the-future-with-ai/ChatGPT-Image-Feb-19-2026-10_51_05-PM.png 
 tags:
   - astro
   - migration
@@ -11,6 +12,10 @@ tags:
   - ai-generated
 excerpt: After years away, I'm reviving this blog with the help of AI — and the entire tech stack got a fresh start.
 ---
+
+<figure>
+  <img alt="Back from the future, with AI" src="/content/posts/2026-02-19-back-from-the-future-with-ai/ChatGPT-Image-Feb-19-2026-10_51_05-PM.png" />
+</figure>
 
 It's been a while. Almost seven years since the last post here. Life happened, priorities shifted, and this little corner of the internet sat quietly collecting dust. But today, something changed.
 
