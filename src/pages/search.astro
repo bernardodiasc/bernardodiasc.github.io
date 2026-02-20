@@ -1,45 +1,543 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import PageContent from '../components/PageContent.astro';
-import TextBlock from '../components/TextBlock.astro';
+import Icon from '../components/Icon.astro';
 
 const posts = await getCollection('posts', ({ data }) => !data.draft);
 const categories = await getCollection('categories');
 
-const allCategories = [...new Set(posts.map((p) => p.data.category).filter(Boolean))];
+const sortedPosts = posts.sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+
+function postUrl(id: string): string {
+  const [year, month, day, ...rest] = id.split('-');
+  return `/${year}/${month}/${day}/${rest.join('-')}`;
+}
+
+const items = await Promise.all(
+  sortedPosts.map(async (post) => {
+    const catEntry = post.data.category
+      ? await getEntry('categories', post.data.category)
+      : null;
+    return {
+      url: postUrl(post.id),
+      title: post.data.title,
+      date: post.data.date.toISOString(),
+      dateFormatted: post.data.date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      }),
+      excerpt: post.data.excerpt,
+      tags: post.data.tags,
+      categoryId: post.data.category,
+      categoryTitle: catEntry?.data.title || '',
+      categoryIcon: catEntry?.data.icon || '',
+    };
+  })
+);
+
 const allTags = [...new Set(posts.flatMap((p) => p.data.tags))].sort();
+
+const categoriesWithCount = categories.map((cat) => ({
+  id: cat.id,
+  title: cat.data.title,
+  icon: cat.data.icon,
+  count: posts.filter((p) => p.data.category === cat.id).length,
+})).filter((c) => c.count > 0);
 ---
 
-<Layout title="Filter content">
+<Layout title="Search" description="Search and filter posts by text, category, or tag.">
   <PageContent>
-    <TextBlock>
-      {allCategories.length > 0 && (
-        <nav>
-          <h3>Categories</h3>
-          <ul>
-            {allCategories.map((cat) => {
-              const catData = categories.find((c) => c.id === cat);
-              return (
-                <li>
-                  <a href={`/category/${cat}`}>{catData?.data.title || cat}</a>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-      )}
+    <div class="search-page">
+      <div class="search-box">
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Search posts..."
+          autocomplete="off"
+        />
+      </div>
 
-      {allTags.length > 0 && (
-        <nav>
-          <h3>Tags</h3>
-          <ul>
-            {allTags.map((tag) => (
-              <li>{tag}</li>
-            ))}
-          </ul>
-        </nav>
-      )}
-    </TextBlock>
+      <details class="collapsible" id="categories-panel" open>
+        <summary class="collapsible__header">
+          <h2 class="section-title">Categories</h2>
+          <span class="collapsible__selection" id="categories-selection"></span>
+          <span class="collapsible__chevron"></span>
+        </summary>
+        <div class="categories-grid">
+          {categoriesWithCount.map((cat) => (
+            <button
+              class="category-card"
+              data-category={cat.id}
+              data-title={cat.title}
+              type="button"
+            >
+              <span class="category-card__icon">
+                <Icon icon={cat.icon} />
+              </span>
+              <span class="category-card__title">{cat.title}</span>
+              <span class="category-card__count">{cat.count} posts</span>
+            </button>
+          ))}
+        </div>
+      </details>
+
+      <details class="collapsible" id="tags-panel" open>
+        <summary class="collapsible__header">
+          <h2 class="section-title">Tags</h2>
+          <span class="collapsible__selection" id="tags-selection"></span>
+          <span class="collapsible__chevron"></span>
+        </summary>
+        <div class="tags-cloud">
+          {allTags.map((tag) => (
+            <button class="tag-chip" data-tag={tag} type="button">
+              {tag}
+            </button>
+          ))}
+        </div>
+      </details>
+
+      <section class="results-section" id="results-section" style="display: none;">
+        <div class="results-header">
+          <h2 class="section-title" id="results-title">Results</h2>
+          <button class="clear-button" id="clear-filters" type="button">Clear filters</button>
+        </div>
+        <div id="results-list" class="results-list"></div>
+        <p id="no-results" class="no-results" style="display: none;">No posts match your search.</p>
+      </section>
+    </div>
   </PageContent>
 </Layout>
+
+<script is:inline define:vars={{ items }}>
+  const searchInput = document.getElementById('search-input');
+  const resultsSection = document.getElementById('results-section');
+  const resultsList = document.getElementById('results-list');
+  const resultsTitle = document.getElementById('results-title');
+  const noResults = document.getElementById('no-results');
+  const clearButton = document.getElementById('clear-filters');
+  const categoryCards = document.querySelectorAll('.category-card');
+  const tagChips = document.querySelectorAll('.tag-chip');
+
+  var categoriesPanel = document.getElementById('categories-panel');
+  var tagsPanel = document.getElementById('tags-panel');
+  var categoriesSelection = document.getElementById('categories-selection');
+  var tagsSelection = document.getElementById('tags-selection');
+
+  let activeCategory = null;
+  let activeTag = null;
+
+  function updateSelectionBadges() {
+    if (activeCategory) {
+      var card = document.querySelector('.category-card[data-category="' + activeCategory + '"]');
+      var title = card ? card.getAttribute('data-title') : activeCategory;
+      categoriesSelection.innerHTML = '<span class="selection-badge">' + title + '</span>';
+    } else {
+      categoriesSelection.innerHTML = '';
+    }
+
+    if (activeTag) {
+      tagsSelection.innerHTML = '<span class="selection-badge">' + activeTag + '</span>';
+    } else {
+      tagsSelection.innerHTML = '';
+    }
+  }
+
+  function renderResults(filtered, label) {
+    resultsSection.style.display = '';
+    resultsTitle.textContent = label;
+
+    if (filtered.length === 0) {
+      resultsList.innerHTML = '';
+      noResults.style.display = '';
+      return;
+    }
+
+    noResults.style.display = 'none';
+    resultsList.innerHTML = filtered.map(function (item) {
+      return '<a href="' + item.url + '" class="result-item">' +
+        '<h3 class="result-item__title">' +
+          (item.categoryIcon
+            ? '<span class="result-item__icon"><svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet"><use href="#icon-' + item.categoryIcon + '" /></svg></span>'
+            : '') +
+          item.title +
+        '</h3>' +
+        '<span class="result-item__meta">' + item.dateFormatted +
+          (item.categoryTitle ? ' · ' + item.categoryTitle : '') +
+        '</span>' +
+        (item.excerpt ? '<p class="result-item__excerpt">' + item.excerpt + '</p>' : '') +
+      '</a>';
+    }).join('');
+  }
+
+  function clearAll() {
+    activeCategory = null;
+    activeTag = null;
+    searchInput.value = '';
+    resultsSection.style.display = 'none';
+    categoryCards.forEach(function (c) { c.classList.remove('category-card--active'); });
+    tagChips.forEach(function (t) { t.classList.remove('tag-chip--active'); });
+    updateSelectionBadges();
+  }
+
+  function applyFilters() {
+    var query = searchInput.value.trim().toLowerCase();
+    var hasFilter = query || activeCategory || activeTag;
+
+    if (!hasFilter) {
+      resultsSection.style.display = 'none';
+      return;
+    }
+
+    var filtered = items;
+    var labels = [];
+
+    if (activeCategory) {
+      filtered = filtered.filter(function (item) {
+        return item.categoryId === activeCategory;
+      });
+      var cat = items.find(function (i) { return i.categoryId === activeCategory; });
+      labels.push(cat ? cat.categoryTitle : activeCategory);
+    }
+
+    if (activeTag) {
+      filtered = filtered.filter(function (item) {
+        return item.tags.indexOf(activeTag) !== -1;
+      });
+      labels.push('#' + activeTag);
+    }
+
+    if (query) {
+      filtered = filtered.filter(function (item) {
+        return item.title.toLowerCase().indexOf(query) !== -1 ||
+               item.excerpt.toLowerCase().indexOf(query) !== -1 ||
+               item.tags.some(function (t) { return t.toLowerCase().indexOf(query) !== -1; }) ||
+               item.categoryTitle.toLowerCase().indexOf(query) !== -1;
+      });
+      labels.push('"' + searchInput.value.trim() + '"');
+    }
+
+    var label = filtered.length + ' result' + (filtered.length !== 1 ? 's' : '');
+    if (labels.length) label += ' for ' + labels.join(' + ');
+
+    renderResults(filtered, label);
+  }
+
+  searchInput.addEventListener('input', applyFilters);
+
+  categoryCards.forEach(function (card) {
+    card.addEventListener('click', function () {
+      var id = card.getAttribute('data-category');
+      if (activeCategory === id) {
+        activeCategory = null;
+        card.classList.remove('category-card--active');
+      } else {
+        activeCategory = id;
+        categoryCards.forEach(function (c) { c.classList.remove('category-card--active'); });
+        card.classList.add('category-card--active');
+      }
+      updateSelectionBadges();
+      applyFilters();
+    });
+  });
+
+  tagChips.forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      var tag = chip.getAttribute('data-tag');
+      if (activeTag === tag) {
+        activeTag = null;
+        chip.classList.remove('tag-chip--active');
+      } else {
+        activeTag = tag;
+        tagChips.forEach(function (t) { t.classList.remove('tag-chip--active'); });
+        chip.classList.add('tag-chip--active');
+      }
+      updateSelectionBadges();
+      applyFilters();
+    });
+  });
+
+  clearButton.addEventListener('click', clearAll);
+</script>
+
+<style>
+  .search-page {
+    font-size: var(--text-size);
+  }
+
+  .search-box {
+    margin-bottom: 2.5em;
+  }
+
+  #search-input {
+    width: 100%;
+    padding: 0.75em 1em;
+    font-size: 1em;
+    font-family: var(--heading-family);
+    border: 2px solid var(--line-light);
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.2s ease;
+    box-sizing: border-box;
+  }
+
+  #search-input:focus {
+    border-color: var(--heading-color);
+  }
+
+  #search-input::placeholder {
+    color: var(--meta-color);
+  }
+
+  .section-title {
+    font-family: var(--heading-family);
+    font-weight: var(--heading-weight-bold);
+    color: var(--heading-color);
+    font-size: var(--heading-level2-size);
+    margin: 0;
+  }
+
+  .collapsible {
+    margin-bottom: 1.5em;
+    border: 1px solid var(--line-light);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .collapsible__header {
+    display: flex;
+    align-items: center;
+    gap: 0.75em;
+    padding: 0.8em 1em;
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+    background: #fafafa;
+    border-bottom: 1px solid transparent;
+    transition: background 0.15s ease;
+  }
+
+  .collapsible__header::-webkit-details-marker {
+    display: none;
+  }
+
+  .collapsible__header:hover {
+    background: #f0f0f0;
+  }
+
+  .collapsible[open] > .collapsible__header {
+    border-bottom-color: var(--line-light);
+  }
+
+  .collapsible__chevron {
+    margin-left: auto;
+    flex-shrink: 0;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid var(--meta-color);
+    transition: transform 0.2s ease;
+  }
+
+  .collapsible[open] .collapsible__chevron {
+    transform: rotate(180deg);
+  }
+
+  .collapsible__selection {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35em;
+    align-items: center;
+  }
+
+  .categories-grid {
+    padding: 1em;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1em;
+  }
+
+  .category-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4em;
+    padding: 1.2em 1em;
+    background: var(--content-background);
+    border: 2px solid var(--line-light);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    font-family: var(--heading-family);
+    text-align: center;
+  }
+
+  .category-card:hover {
+    border-color: var(--heading-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  .category-card--active {
+    border-color: var(--heading-color);
+    background: #e8f0fe;
+  }
+
+  .category-card__icon {
+    display: block;
+    width: 32px;
+    height: 32px;
+    color: var(--heading-color);
+  }
+
+  .category-card__title {
+    font-weight: var(--heading-weight-bold);
+    color: var(--text-color);
+    font-size: 0.95em;
+  }
+
+  .category-card__count {
+    font-size: 0.8em;
+    color: var(--meta-color);
+  }
+
+  .tags-cloud {
+    padding: 1em;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+  }
+
+  .tag-chip {
+    display: inline-block;
+    padding: 0.35em 0.85em;
+    font-size: 0.85em;
+    font-family: var(--heading-family);
+    background: #f0f0f0;
+    border: 1px solid var(--line-light);
+    border-radius: 20px;
+    cursor: pointer;
+    color: var(--text-color);
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+
+  .tag-chip:hover {
+    background: #e0e0e0;
+    border-color: var(--meta-color);
+  }
+
+  .tag-chip--active {
+    background: var(--heading-color);
+    color: white;
+    border-color: var(--heading-color);
+  }
+
+  .results-section {
+    border-top: 1px solid var(--line-light);
+    padding-top: 1.5em;
+  }
+
+  .results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    margin-bottom: 0.5em;
+  }
+
+  .results-header .section-title {
+    margin: 0;
+  }
+
+  .clear-button {
+    font-family: var(--heading-family);
+    font-size: 0.85em;
+    color: var(--heading-color);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+  }
+
+  .clear-button:hover {
+    color: var(--text-color);
+  }
+
+  .no-results {
+    color: var(--meta-color);
+    font-style: italic;
+  }
+</style>
+
+<style is:global>
+  .selection-badge {
+    display: inline-block;
+    padding: 0.15em 0.6em;
+    font-size: 0.75em;
+    font-family: var(--heading-family);
+    background: var(--heading-color);
+    color: white;
+    border-radius: 12px;
+    white-space: nowrap;
+    line-height: 1.4;
+  }
+
+  .results-list {
+    font-size: var(--text-size);
+  }
+
+  .result-item {
+    display: block;
+    padding: 1em 0;
+    border-bottom: 1px solid var(--line-light);
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .result-item:last-child {
+    border-bottom: none;
+  }
+
+  .result-item:hover .result-item__title {
+    text-decoration: underline;
+  }
+
+  .result-item__title {
+    font-family: var(--heading-family);
+    font-weight: var(--heading-weight-bold);
+    color: var(--heading-color);
+    font-size: var(--heading-level3-size);
+    margin: 0 0 0.2em;
+  }
+
+  .result-item__icon {
+    display: inline-block;
+    width: 0.8em;
+    height: 0.8em;
+    margin-right: 4px;
+    transform: translateY(2px);
+  }
+
+  .result-item__icon svg {
+    fill: currentColor;
+    width: 100%;
+    height: 100%;
+  }
+
+  .result-item__meta {
+    display: block;
+    font-size: var(--meta-size);
+    color: var(--meta-color);
+    margin-bottom: 0.3em;
+  }
+
+  .result-item__excerpt {
+    color: var(--text-color);
+    margin: 0;
+  }
+</style>
