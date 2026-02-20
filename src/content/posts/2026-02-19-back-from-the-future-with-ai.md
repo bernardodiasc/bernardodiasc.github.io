@@ -17,7 +17,7 @@ excerpt: After years away, I'm reviving this blog with the help of AI — and th
   <img alt="Back from the future, with AI" src="/content/posts/2026-02-19-back-from-the-future-with-ai/ChatGPT-Image-Feb-19-2026-10_51_05-PM.png" />
 </figure>
 
-It's been a while. Almost seven years since the last post here. Life happened, priorities shifted, and this little corner of the internet sat quietly collecting dust. But today, something changed.
+It's been a while. Almost eight years since the last post here. Life happened, priorities shifted, and this little corner of the internet sat quietly collecting dust. But today, something changed.
 
 ## The migration
 
