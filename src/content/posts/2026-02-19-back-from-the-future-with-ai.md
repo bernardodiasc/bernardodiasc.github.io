@@ -8,6 +8,7 @@ tags:
   - ai
   - static-site
   - developer-experience
+  - ai-generated
 excerpt: After years away, I'm reviving this blog with the help of AI — and the entire tech stack got a fresh start.
 ---
 
@@ -38,6 +39,6 @@ This blog sat dormant for years partly because the idea of modernizing the stack
 
 I'm excited to be back. There are things I want to write about — frontend architecture, developer tools, the evolving role of AI in software development, and whatever else crosses my mind.
 
-And yes, the **search** and **archive** pages are still waiting to be properly built. They've been placeholders since 2018. Maybe it's finally their time too.
+And yes, the **search** and **archive** pages have been placeholders since 2018. Maybe it's finally their time too.
 
 Let's see where this goes.
