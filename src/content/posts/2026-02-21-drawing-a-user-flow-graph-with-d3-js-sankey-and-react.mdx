@@ -107,6 +107,44 @@ Each stage flows into the next, and the branching pattern reveals how a single e
 
 Notice how the diagram reads like time itself. The user who browses and then signs in arrives at the credit card form in a different state of mind than the one who searched and checked out as a guest — even though they're looking at the same screen. The Sankey captures this: they are on different paths, with different histories, arriving at what only appears to be the same place. The position in the diagram is not just a screen — it's a moment in someone's experience.
 
+Here's the checkout flow example in action:
+
+export const checkoutNodes = [
+  { id: "visit", name: "Visit Store" },
+  { id: "search", name: "Search" },
+  { id: "browse", name: "Browse" },
+  { id: "product", name: "Product Page" },
+  { id: "cart", name: "Add to Cart" },
+  { id: "guest", name: "Guest Checkout" },
+  { id: "signin", name: "Sign In" },
+  { id: "register", name: "Register" },
+  { id: "card", name: "Credit Card" },
+  { id: "paypal", name: "PayPal" },
+  { id: "confirmed", name: "Order Confirmed" },
+  { id: "declined", name: "Payment Declined" },
+];
+
+export const checkoutLinks = [
+  { source: "visit", target: "search", value: 5 },
+  { source: "visit", target: "browse", value: 3 },
+  { source: "search", target: "product", value: 5 },
+  { source: "browse", target: "product", value: 3 },
+  { source: "product", target: "cart", value: 8 },
+  { source: "cart", target: "guest", value: 3 },
+  { source: "cart", target: "signin", value: 4 },
+  { source: "cart", target: "register", value: 1 },
+  { source: "guest", target: "card", value: 2 },
+  { source: "guest", target: "paypal", value: 1 },
+  { source: "signin", target: "card", value: 3 },
+  { source: "signin", target: "paypal", value: 1 },
+  { source: "register", target: "card", value: 1 },
+  { source: "card", target: "confirmed", value: 5 },
+  { source: "card", target: "declined", value: 1 },
+  { source: "paypal", target: "confirmed", value: 2 },
+];
+
+<SankeyChart nodes={checkoutNodes} links={checkoutLinks} />
+
 ## D3.js and d3-sankey
 
 For the implementation, I started experimenting with [D3.js](https://d3js.org/) and the [biHiSankey plugin by Neilos](https://github.com/Neilos/bihisankey), which supports hierarchical collapsible nodes and bi-directional links. That was a great proof of concept, but for a clean uni-directional user flow, the standard [d3-sankey](https://github.com/d3/d3-sankey) module turned out to be a better fit — simpler API, better maintained, and designed exactly for left-to-right flow layouts. And conceptually, stripping away the bi-directional capability felt right. The user's experience doesn't flow backwards. Neither should the diagram.
@@ -159,44 +197,6 @@ The d3-sankey layout handles positioning automatically, arranging nodes in colum
 One of the coolest things about rendering this with D3 is the interactivity. Hovering over a node highlights all connected paths — tracing the full flow both upstream and downstream — while fading everything else. This makes it really easy to answer questions like "what happens after the user clicks Sign In?" or "which paths lead to a declined payment?"
 
 In a way, the hover interaction lets you do something the user never can: travel back in time. You pick a moment in the flow and instantly see everything that led to it and everything that follows. The user lived it forward, one step at a time. You get to see the whole story at once.
-
-Here's the checkout flow example in action:
-
-export const checkoutNodes = [
-  { id: "visit", name: "Visit Store" },
-  { id: "search", name: "Search" },
-  { id: "browse", name: "Browse" },
-  { id: "product", name: "Product Page" },
-  { id: "cart", name: "Add to Cart" },
-  { id: "guest", name: "Guest Checkout" },
-  { id: "signin", name: "Sign In" },
-  { id: "register", name: "Register" },
-  { id: "card", name: "Credit Card" },
-  { id: "paypal", name: "PayPal" },
-  { id: "confirmed", name: "Order Confirmed" },
-  { id: "declined", name: "Payment Declined" },
-];
-
-export const checkoutLinks = [
-  { source: "visit", target: "search", value: 5 },
-  { source: "visit", target: "browse", value: 3 },
-  { source: "search", target: "product", value: 5 },
-  { source: "browse", target: "product", value: 3 },
-  { source: "product", target: "cart", value: 8 },
-  { source: "cart", target: "guest", value: 3 },
-  { source: "cart", target: "signin", value: 4 },
-  { source: "cart", target: "register", value: 1 },
-  { source: "guest", target: "card", value: 2 },
-  { source: "guest", target: "paypal", value: 1 },
-  { source: "signin", target: "card", value: 3 },
-  { source: "signin", target: "paypal", value: 1 },
-  { source: "register", target: "card", value: 1 },
-  { source: "card", target: "confirmed", value: 5 },
-  { source: "card", target: "declined", value: 1 },
-  { source: "paypal", target: "confirmed", value: 2 },
-];
-
-<SankeyChart nodes={checkoutNodes} links={checkoutLinks} />
 
 ## The component
 
