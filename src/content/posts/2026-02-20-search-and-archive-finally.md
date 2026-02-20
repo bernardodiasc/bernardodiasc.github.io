@@ -2,6 +2,7 @@
 title: Search and archive pages, finally
 date: 2026-02-20
 category: this-blog
+thumbnail: /content/posts/2026-02-20-search-and-archive-finally/ChatGPT-Image-Feb-19-2026-10_30_59-PM.png
 tags:
   - ai
   - developer-experience

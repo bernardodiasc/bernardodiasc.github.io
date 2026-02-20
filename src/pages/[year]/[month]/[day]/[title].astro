@@ -26,7 +26,6 @@ const category = categoryEntry
   ? { id: categoryEntry.id, title: categoryEntry.data.title, icon: categoryEntry.data.icon }
   : undefined;
 
-const thumbnail = post.data.excerpt ? '' : '';
 const siteUrl = 'https://bernardodiasdacruz.com';
 const pageUrl = `${siteUrl}${Astro.url.pathname}`;
 ---
@@ -34,6 +33,7 @@ const pageUrl = `${siteUrl}${Astro.url.pathname}`;
 <Layout
   title={post.data.title}
   description={post.data.excerpt}
+  image={post.data.thumbnail || undefined}
 >
   <PostDetails
     title={post.data.title}
