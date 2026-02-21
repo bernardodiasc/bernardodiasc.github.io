@@ -1,11 +1,12 @@
 ---
 import { getCollection, getEntry } from 'astro:content';
-import Layout from '../layouts/Layout.astro';
-import PageContent from '../components/PageContent.astro';
-import PostsListing from '../components/PostsListing.astro';
-import { isEnglishPost } from '../i18n/utils';
+import Layout from '../../layouts/Layout.astro';
+import PageContent from '../../components/PageContent.astro';
+import PostsListing from '../../components/PostsListing.astro';
+import { isPortuguesePost } from '../../i18n/utils';
+import { t } from '../../i18n/translations';
 
-const posts = await getCollection('posts', ({ id, data }) => !data.draft && isEnglishPost(id));
+const posts = await getCollection('posts', ({ id, data }) => !data.draft && isPortuguesePost(id));
 
 const sortedPosts = posts.sort(
   (a, b) => b.data.date.getTime() - a.data.date.getTime()
@@ -30,8 +31,8 @@ const items = await Promise.all(
 );
 ---
 
-<Layout title="Random Thoughts" description="A web developer and thinker.">
+<Layout title={t('pt', 'home.title')} description={t('pt', 'home.description')}>
   <PageContent>
-    <PostsListing items={items} />
+    <PostsListing items={items} lang="pt" />
   </PageContent>
 </Layout>

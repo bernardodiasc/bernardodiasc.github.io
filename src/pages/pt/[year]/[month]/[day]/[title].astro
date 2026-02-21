@@ -1,14 +1,15 @@
 ---
 import { getCollection, getEntry, render } from 'astro:content';
-import Layout from '../../../../layouts/Layout.astro';
-import PostDetails from '../../../../components/PostDetails.astro';
-import Disqus from '../../../../components/Disqus.astro';
-import { isEnglishPost } from '../../../../i18n/utils';
+import Layout from '../../../../../layouts/Layout.astro';
+import PostDetails from '../../../../../components/PostDetails.astro';
+import Disqus from '../../../../../components/Disqus.astro';
+import { isPortuguesePost, getPostBaseId } from '../../../../../i18n/utils';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('posts', ({ id, data }) => !data.draft && isEnglishPost(id));
+  const posts = await getCollection('posts', ({ id, data }) => !data.draft && isPortuguesePost(id));
   return posts.map((post) => {
-    const [year, month, day, ...rest] = post.id.split('-');
+    const baseId = getPostBaseId(post.id);
+    const [year, month, day, ...rest] = baseId.split('-');
     return {
       params: { year, month, day, title: rest.join('-') },
       props: { post },
@@ -45,7 +46,7 @@ const pageUrl = `${siteUrl}${Astro.url.pathname}`;
     <Content />
   </PostDetails>
   <Disqus
-    identifier={post.id}
+    identifier={`pt-${getPostBaseId(post.id)}`}
     title={post.data.title}
     url={pageUrl}
   />

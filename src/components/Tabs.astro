@@ -1,32 +1,36 @@
 ---
 import Icon from './Icon.astro';
+import { getLangFromUrl } from '../i18n/utils';
+import { t } from '../i18n/translations';
 
 const currentPath = Astro.url.pathname;
+const lang = getLangFromUrl(currentPath);
+const prefix = lang === 'pt' ? '/pt' : '';
 
 function isActive(path: string) {
-  if (path === '/') return currentPath === '/';
+  if (path === prefix + '/' || path === prefix) return currentPath === prefix + '/' || currentPath === prefix;
   return currentPath.startsWith(path);
 }
 ---
 
 <ul class="tabs">
   <li class="tabs__tab">
-    <a href="/" title="Latest posts" class:list={['tabs__link', { 'tabs__link--active': isActive('/') }]}>
+    <a href={`${prefix}/`} title={t(lang, 'nav.home')} class:list={['tabs__link', { 'tabs__link--active': isActive(`${prefix}/`) }]}>
       <Icon icon="home" />
     </a>
   </li>
   <li class="tabs__tab">
-    <a href="/search" title="Search for content" class:list={['tabs__link', { 'tabs__link--active': isActive('/search') }]}>
+    <a href={`${prefix}/search`} title={t(lang, 'nav.search')} class:list={['tabs__link', { 'tabs__link--active': isActive(`${prefix}/search`) }]}>
       <Icon icon="explore" />
     </a>
   </li>
   <li class="tabs__tab">
-    <a href="/archive" title="Content archive" class:list={['tabs__link', { 'tabs__link--active': isActive('/archive') }]}>
+    <a href={`${prefix}/archive`} title={t(lang, 'nav.archive')} class:list={['tabs__link', { 'tabs__link--active': isActive(`${prefix}/archive`) }]}>
       <Icon icon="calendar" />
     </a>
   </li>
   <li class="tabs__tab">
-    <a href="/about-me" title="About me" class:list={['tabs__link', { 'tabs__link--active': isActive('/about-me') }]}>
+    <a href={`${prefix}/about-me`} title={t(lang, 'nav.about')} class:list={['tabs__link', { 'tabs__link--active': isActive(`${prefix}/about-me`) }]}>
       <Icon icon="guy-fawkes-mask" />
     </a>
   </li>

@@ -1,0 +1,382 @@
+---
+title: Desenhando um gráfico de fluxo do usuário com D3.js Sankey e React
+date: 2026-02-21
+category: frontend
+lang: pt
+tags:
+  - react
+  - d3
+  - user-flow
+  - graph
+  - javascript
+  - data-visualization
+  - ux
+  - user-experience
+  - ui
+  - bdd
+  - documentation
+  - charts
+  - ai-generated
+  - ai
+excerpt: Usando diagramas Sankey para documentar comportamento de software, onde cada variação no fluxo do usuário cria ramificações.
+thumbnail: /content/posts/2026-02-21-drawing-a-user-flow-graph-with-d3-js-sankey-and-react/ChatGPT-Image-Feb-20-2026-05_33_50-PM.png
+---
+
+<figure>
+  <img alt="Desenhando um gráfico de fluxo do usuário com D3.js Sankey e React" src="/content/posts/2026-02-21-drawing-a-user-flow-graph-with-d3-js-sankey-and-react/ChatGPT-Image-Feb-20-2026-05_33_50-PM.png" />
+</figure>
+
+> Este post estava como rascunho desde o início de 2019. Começou como um projeto paralelo — um experimento sobre usar diagramas Sankey para documentar comportamento de software. Eu construí uma prova de conceito rudimentar com D3.js, escrevi metade de um blog post sobre isso, e então a vida aconteceu. A ideia nunca saiu da minha cabeça, mas eu nunca consegui terminar. Avançando para agora, a IA me ajudou a finalizar — construindo o componente, elaborando os exemplos, terminando a escrita. Ainda é muito experimental e cheio de arestas, mas é bom finalmente publicar algo que estava acumulando poeira há quase sete anos.
+
+Você já tentou documentar como os usuários navegam por uma funcionalidade na sua aplicação? Fluxogramas e árvores de decisão funcionam bem para casos simples, mas quando você começa a mapear todos os caminhos possíveis — com confirmações, casos extremos e resultados se ramificando — as coisas ficam bagunçadas rapidamente.
+
+Tenho experimentado com diagramas Sankey como uma forma alternativa de representar fluxos de usuário, e os resultados são bem interessantes. Aqui está um exemplo — um pipeline de CI/CD onde um único push de código se expande em verificações paralelas, converge no build, se ramifica novamente em testes de staging, e flui pela revisão até a produção:
+
+export const ciNodes = [
+  { id: "commit", name: "Code Push" },
+  { id: "lint", name: "Lint" },
+  { id: "unit", name: "Unit Tests" },
+  { id: "types", name: "Type Check" },
+  { id: "security", name: "Security Scan" },
+  { id: "build", name: "Build" },
+  { id: "preview", name: "Preview Deploy" },
+  { id: "staging", name: "Staging Deploy" },
+  { id: "e2e", name: "E2E Tests" },
+  { id: "smoke", name: "Smoke Tests" },
+  { id: "perf", name: "Load Tests" },
+  { id: "review", name: "Code Review" },
+  { id: "approved", name: "Approved" },
+  { id: "rejected", name: "Changes Needed" },
+  { id: "production", name: "Production Deploy" },
+  { id: "canary", name: "Canary (10%)" },
+  { id: "full", name: "Full Rollout" },
+  { id: "monitor", name: "Monitoring" },
+];
+
+export const ciLinks = [
+  { source: "commit", target: "lint", value: 2 },
+  { source: "commit", target: "unit", value: 3 },
+  { source: "commit", target: "types", value: 2 },
+  { source: "commit", target: "security", value: 1 },
+  { source: "lint", target: "build", value: 2 },
+  { source: "unit", target: "build", value: 3 },
+  { source: "types", target: "build", value: 2 },
+  { source: "security", target: "build", value: 1 },
+  { source: "build", target: "preview", value: 2 },
+  { source: "build", target: "staging", value: 6 },
+  { source: "staging", target: "e2e", value: 3 },
+  { source: "staging", target: "smoke", value: 2 },
+  { source: "staging", target: "perf", value: 1 },
+  { source: "e2e", target: "review", value: 3 },
+  { source: "smoke", target: "review", value: 2 },
+  { source: "perf", target: "review", value: 1 },
+  { source: "preview", target: "review", value: 2 },
+  { source: "review", target: "approved", value: 6 },
+  { source: "review", target: "rejected", value: 2 },
+  { source: "approved", target: "production", value: 6 },
+  { source: "production", target: "canary", value: 2 },
+  { source: "production", target: "full", value: 4 },
+  { source: "canary", target: "monitor", value: 2 },
+  { source: "full", target: "monitor", value: 4 },
+];
+
+<SankeyChart nodes={ciNodes} links={ciLinks} />
+
+## Por que diagramas Sankey?
+
+Diagramas Sankey são tradicionalmente usados para visualizar fluxos de energia, materiais ou dinheiro — onde a largura de cada link representa a magnitude do fluxo. Mas se você pensar bem, fluxos de usuários através de software são estruturalmente similares: há um ponto de entrada, uma série de ações possíveis e múltiplos resultados. Variações no comportamento naturalmente criam ramificações.
+
+O que torna o Sankey particularmente útil para documentar comportamento de software é que você pode ver todos os caminhos possíveis de uma vez, da inicialização ao resultado final. Diferente de um fluxograma onde você segue um caminho por vez, um diagrama Sankey te dá a visão completa: onde os fluxos convergem, onde divergem, e como diferentes ações levam a diferentes resultados.
+
+A experiência do usuário é fundamentalmente sobre um ser humano se movendo através do tempo e espaço. Uma pessoa senta em frente a uma tela, e daquele momento em diante, cada toque, clique ou rolagem é um passo em uma jornada que só se move em uma direção. Ela pode apertar o botão de voltar, claro. Pode retornar à tela inicial. Mas não é mais a mesma pessoa que era antes — ela já viu coisas, fez escolhas, formou expectativas. O estado da interface pode parecer idêntico, mas o momento no tempo é diferente. A experiência nunca rebobina.
+
+Isso é algo que tendemos a ignorar quando modelamos comportamento de software. Desenhamos diagramas com setas indo e voltando, como se o usuário estivesse pulando entre estados em um espaço atemporal. Mas a verdade está mais perto de um rio: ele pode se ramificar, pode se alargar, pode se dividir ao redor de obstáculos, mas a água nunca flui rio acima. Diagramas Sankey são tradicionalmente usados para fluxos bidirecionais — energia circulando por um sistema, dinheiro circulando entre contas. Mas para experiência do usuário, o fluxo é unidirecional. O tempo só avança, e assim também avança a jornada de cada usuário por um sistema. Esse é o insight chave por trás de usar Sankey dessa forma: cada caminho pelo diagrama representa uma experiência possível se desdobrando no tempo, da esquerda para a direita, do início ao fim.
+
+## O conceito
+
+Tome um checkout de e-commerce como exemplo. Da página inicial da loja, os usuários podem descobrir produtos através de busca ou navegação. Após visualizar um produto e adicioná-lo ao carrinho, eles escolhem como se autenticar — checkout como visitante, fazer login ou se registrar. Então escolhem um método de pagamento, e o fluxo termina com um pedido confirmado ou um pagamento recusado. Um diagrama Sankey unidirecional mapeia isso bem através das etapas:
+
+1. **Entrada** — O ponto de partida (visitar a loja)
+2. **Descoberta** — Como o usuário encontra o que quer (busca, navegação)
+3. **Interesse** — Engajando com o produto
+4. **Carrinho** — Se comprometendo com uma compra
+5. **Conta** — Escolhendo um caminho de autenticação
+6. **Pagamento** — Selecionando um método de pagamento
+7. **Resultado** — Sucesso ou falha
+
+Cada etapa flui para a próxima, e o padrão de ramificação revela como um único ponto de entrada se expande em múltiplos estados finais possíveis. Você imediatamente vê quais caminhos convergem (busca e navegação ambos levam à página do produto), onde divergem (três opções de autenticação), e como diferentes escolhas ultimamente levam aos mesmos resultados.
+
+Perceba como o diagrama se lê como o próprio tempo. O usuário que navega e depois faz login chega ao formulário de cartão de crédito em um estado mental diferente daquele que buscou e fez checkout como visitante — mesmo olhando para a mesma tela. O Sankey captura isso: eles estão em caminhos diferentes, com histórias diferentes, chegando ao que apenas aparenta ser o mesmo lugar. A posição no diagrama não é apenas uma tela — é um momento na experiência de alguém.
+
+Aqui está o exemplo do fluxo de checkout em ação:
+
+export const checkoutNodes = [
+  { id: "visit", name: "Visit Store" },
+  { id: "search", name: "Search" },
+  { id: "browse", name: "Browse" },
+  { id: "product", name: "Product Page" },
+  { id: "cart", name: "Add to Cart" },
+  { id: "guest", name: "Guest Checkout" },
+  { id: "signin", name: "Sign In" },
+  { id: "register", name: "Register" },
+  { id: "card", name: "Credit Card" },
+  { id: "paypal", name: "PayPal" },
+  { id: "confirmed", name: "Order Confirmed" },
+  { id: "declined", name: "Payment Declined" },
+];
+
+export const checkoutLinks = [
+  { source: "visit", target: "search", value: 5 },
+  { source: "visit", target: "browse", value: 3 },
+  { source: "search", target: "product", value: 5 },
+  { source: "browse", target: "product", value: 3 },
+  { source: "product", target: "cart", value: 8 },
+  { source: "cart", target: "guest", value: 3 },
+  { source: "cart", target: "signin", value: 4 },
+  { source: "cart", target: "register", value: 1 },
+  { source: "guest", target: "card", value: 2 },
+  { source: "guest", target: "paypal", value: 1 },
+  { source: "signin", target: "card", value: 3 },
+  { source: "signin", target: "paypal", value: 1 },
+  { source: "register", target: "card", value: 1 },
+  { source: "card", target: "confirmed", value: 5 },
+  { source: "card", target: "declined", value: 1 },
+  { source: "paypal", target: "confirmed", value: 2 },
+];
+
+<SankeyChart nodes={checkoutNodes} links={checkoutLinks} />
+
+## D3.js e d3-sankey
+
+Para a implementação, eu comecei experimentando com [D3.js](https://d3js.org/) e o [plugin biHiSankey do Neilos](https://github.com/Neilos/bihisankey), que suporta nós hierárquicos colapsáveis e links bidirecionais. Foi uma ótima prova de conceito, mas para um fluxo de usuário unidirecional limpo, o módulo padrão [d3-sankey](https://github.com/d3/d3-sankey) se mostrou uma escolha melhor — API mais simples, melhor manutenção, e projetado exatamente para layouts de fluxo da esquerda para a direita. E conceitualmente, remover a capacidade bidirecional pareceu certo. A experiência do usuário não flui para trás. O diagrama também não deveria.
+
+O modelo de dados é direto. Nós representam estados ou ações, e links os conectam:
+
+```javascript
+const data = {
+  nodes: [
+    { id: "visit", name: "Visit Store" },
+    { id: "search", name: "Search" },
+    { id: "browse", name: "Browse" },
+    { id: "product", name: "Product Page" },
+    { id: "cart", name: "Add to Cart" },
+    { id: "guest", name: "Guest Checkout" },
+    { id: "signin", name: "Sign In" },
+    { id: "register", name: "Register" },
+    { id: "card", name: "Credit Card" },
+    { id: "paypal", name: "PayPal" },
+    { id: "confirmed", name: "Order Confirmed" },
+    { id: "declined", name: "Payment Declined" },
+  ],
+  links: [
+    { source: "visit", target: "search", value: 5 },
+    { source: "visit", target: "browse", value: 3 },
+    { source: "search", target: "product", value: 5 },
+    { source: "browse", target: "product", value: 3 },
+    { source: "product", target: "cart", value: 8 },
+    { source: "cart", target: "guest", value: 3 },
+    { source: "cart", target: "signin", value: 4 },
+    { source: "cart", target: "register", value: 1 },
+    { source: "guest", target: "card", value: 2 },
+    { source: "guest", target: "paypal", value: 1 },
+    { source: "signin", target: "card", value: 3 },
+    { source: "signin", target: "paypal", value: 1 },
+    { source: "register", target: "card", value: 1 },
+    { source: "card", target: "confirmed", value: 5 },
+    { source: "card", target: "declined", value: 1 },
+    { source: "paypal", target: "confirmed", value: 2 },
+  ],
+};
+```
+
+Cada nó recebe um `id` e um `name` legível por humanos. Links definem o fluxo entre nós, e a propriedade `value` controla a espessura de cada conexão — você poderia usar valores uniformes para focar puramente na estrutura, ou valores proporcionais para representar volume real de tráfego.
+
+O layout d3-sankey lida com o posicionamento automaticamente, organizando nós em colunas pela sua profundidade (distância da origem) e desenhando caminhos curvos entre eles.
+
+## Funcionalidades interativas
+
+Uma das coisas mais legais sobre renderizar isso com D3 é a interatividade. Ao passar o mouse sobre um nó, todos os caminhos conectados são destacados — traçando o fluxo completo tanto para cima quanto para baixo — enquanto esmaece todo o resto. Isso torna muito fácil responder perguntas como "o que acontece depois que o usuário clica em Sign In?" ou "quais caminhos levam a um pagamento recusado?"
+
+De certa forma, a interação de hover te permite fazer algo que o usuário nunca pode: viajar de volta no tempo. Você escolhe um momento no fluxo e instantaneamente vê tudo que levou até ele e tudo que segue. O usuário viveu isso para frente, um passo de cada vez. Você vê a história toda de uma vez.
+
+## O componente
+
+Configurar o layout Sankey com d3-sankey é bem limpo. Você configura os parâmetros do layout e deixa ele calcular as posições dos nós e caminhos dos links:
+
+```javascript
+import { sankey, sankeyLinkHorizontal, sankeyLeft } from "d3-sankey";
+
+const sankeyLayout = sankey()
+  .nodeId(d => d.id)
+  .nodeWidth(16)
+  .nodePadding(14)
+  .nodeAlign(sankeyLeft)
+  .extent([[margin.left, margin.top], [width - margin.right, height - margin.bottom]]);
+
+const graph = sankeyLayout({
+  nodes: data.nodes.map(d => ({ ...d })),
+  links: data.links.map(d => ({ ...d })),
+});
+```
+
+Para a interação de hover, eu traço recursivamente todos os links conectados em ambas as direções a partir do nó sob o mouse:
+
+```javascript
+function getConnected(node) {
+  const connectedLinks = new Set();
+  const connectedNodes = new Set([node]);
+
+  function traceForward(n) {
+    graph.links.forEach(l => {
+      if (l.source === n && !connectedLinks.has(l)) {
+        connectedLinks.add(l);
+        connectedNodes.add(l.target);
+        traceForward(l.target);
+      }
+    });
+  }
+
+  function traceBackward(n) {
+    graph.links.forEach(l => {
+      if (l.target === n && !connectedLinks.has(l)) {
+        connectedLinks.add(l);
+        connectedNodes.add(l.source);
+        traceBackward(l.source);
+      }
+    });
+  }
+
+  traceForward(node);
+  traceBackward(node);
+  return { connectedLinks, connectedNodes };
+}
+```
+
+Depois é só uma questão de ajustar opacidades no hover para esmaecer os elementos não conectados e destacar os conectados.
+
+## Onde isso pode chegar
+
+Os exemplos de checkout e CI/CD acima são apenas pontos de partida. Uma vez que você começa a pensar sobre comportamento de software como um fluxo através do tempo, quase qualquer sistema pode ser mapeado dessa forma. Aqui estão algumas direções que eu acho empolgantes:
+
+**Especificações de funcionalidades e análise de complexidade.** Antes de escrever uma única linha de código, mapeie todos os caminhos possíveis do usuário através de uma funcionalidade. O diagrama revela imediatamente complexidade oculta — casos extremos que você não havia considerado, estados mais difíceis de alcançar, caminhos que convergem de formas inesperadas. É tanto uma ferramenta de design quanto de documentação.
+
+**QA e cobertura de testes.** Sobreponha dados de cobertura de testes no fluxo. Quais caminhos têm testes automatizados? Quais são cobertos apenas por QA manual? Quais nunca foram testados? O visual torna as lacunas óbvias de uma forma que uma porcentagem de cobertura nunca conseguiria.
+
+**Analytics e dados reais de usuários.** Substitua os valores de exemplo por números reais de tráfego. De repente você vê não apenas o que os usuários podem fazer, mas o que eles realmente fazem — quais caminhos são rodovias, quais são estradas de terra, e quais são becos sem saída que ninguém usa. A espessura de cada link conta uma história sobre comportamento humano real.
+
+**Pipelines de resposta a incidentes.** Desde o disparo do alerta passando por triagem, investigação, mitigação e post-mortem. Múltiplas fontes de monitoramento alimentam a classificação de severidade, se ramificam por trilhas de investigação paralelas, e convergem na resolução. Todo incidente é uma jornada no tempo, e nenhum segue exatamente o mesmo caminho.
+
+**Fulfillment de pedidos de e-commerce.** O ciclo de vida completo desde a colocação do pedido passando por verificações de fraude, roteamento de estoque, picking no armazém, seleção de transportadora, e resultados de entrega. Um único pedido se ramifica dependendo da disponibilidade de estoque, método de envio, e uma dúzia de outras variáveis — cada ramificação representando uma experiência diferente para o cliente esperando do outro lado.
+
+**Ciclo de vida de uma requisição de API.** Uma única requisição HTTP fluindo por toda sua stack — desde o tipo de cliente passando por CDN, load balancer, autenticação, rate limiting, tratamento de rotas, fontes de dados e montagem da resposta. Cada requisição é uma pequena jornada no tempo, e o Sankey revela quantos caminhos diferentes existem através do que parece ser uma simples chamada de API.
+
+**Publicação e moderação de conteúdo.** Desde a criação do conteúdo passando por verificações automatizadas, revisão humana, preparação, distribuição multicanal, e rastreamento de engajamento. Diferentes tipos de conteúdo seguem caminhos diferentes pela moderação, convergem no agendamento, se expandem pelos canais de distribuição, e fluem para métricas de engajamento. Aqui está como isso se parece com 36 nós:
+
+export const pubNodes = [
+  { id: "article", name: "Write Article" },
+  { id: "video", name: "Upload Video" },
+  { id: "image", name: "Upload Image" },
+  { id: "comment", name: "Post Comment" },
+  { id: "ai-scan", name: "AI Content Scan" },
+  { id: "spam", name: "Spam Filter" },
+  { id: "nsfw", name: "NSFW Detection" },
+  { id: "plagiarism", name: "Plagiarism Check" },
+  { id: "auto-ok", name: "Auto-Approved" },
+  { id: "flagged", name: "Flagged for Review" },
+  { id: "auto-reject", name: "Auto-Rejected" },
+  { id: "editorial", name: "Editorial Review" },
+  { id: "legal", name: "Legal Review" },
+  { id: "community", name: "Community Mod" },
+  { id: "senior", name: "Senior Editor" },
+  { id: "approved", name: "Approved" },
+  { id: "revision", name: "Revision Requested" },
+  { id: "rejected", name: "Rejected" },
+  { id: "seo", name: "SEO Optimization" },
+  { id: "thumbnail", name: "Thumbnail Generation" },
+  { id: "transcode", name: "Transcoding" },
+  { id: "schedule", name: "Scheduling" },
+  { id: "website", name: "Website" },
+  { id: "email", name: "Email Newsletter" },
+  { id: "rss", name: "RSS Feed" },
+  { id: "social", name: "Social Media" },
+  { id: "push", name: "Push Notification" },
+  { id: "views", name: "Views & Reads" },
+  { id: "likes", name: "Likes & Shares" },
+  { id: "comments", name: "Comments" },
+  { id: "saves", name: "Saves & Bookmarks" },
+  { id: "trending", name: "Trending" },
+  { id: "steady", name: "Steady Performance" },
+  { id: "low", name: "Low Engagement" },
+  { id: "violation", name: "Violation Reported" },
+  { id: "archived", name: "Content Archived" },
+];
+
+export const pubLinks = [
+  { source: "article", target: "ai-scan", value: 5 },
+  { source: "article", target: "plagiarism", value: 5 },
+  { source: "video", target: "ai-scan", value: 3 },
+  { source: "video", target: "nsfw", value: 3 },
+  { source: "image", target: "nsfw", value: 4 },
+  { source: "image", target: "ai-scan", value: 2 },
+  { source: "comment", target: "spam", value: 6 },
+  { source: "comment", target: "ai-scan", value: 2 },
+  { source: "ai-scan", target: "auto-ok", value: 6 },
+  { source: "ai-scan", target: "flagged", value: 5 },
+  { source: "ai-scan", target: "auto-reject", value: 1 },
+  { source: "spam", target: "auto-ok", value: 3 },
+  { source: "spam", target: "auto-reject", value: 3 },
+  { source: "nsfw", target: "auto-ok", value: 3 },
+  { source: "nsfw", target: "flagged", value: 3 },
+  { source: "nsfw", target: "auto-reject", value: 1 },
+  { source: "plagiarism", target: "auto-ok", value: 3 },
+  { source: "plagiarism", target: "flagged", value: 2 },
+  { source: "auto-ok", target: "seo", value: 8 },
+  { source: "auto-ok", target: "thumbnail", value: 4 },
+  { source: "auto-ok", target: "transcode", value: 3 },
+  { source: "flagged", target: "editorial", value: 4 },
+  { source: "flagged", target: "legal", value: 2 },
+  { source: "flagged", target: "community", value: 3 },
+  { source: "flagged", target: "senior", value: 1 },
+  { source: "editorial", target: "approved", value: 3 },
+  { source: "editorial", target: "revision", value: 1 },
+  { source: "legal", target: "approved", value: 1 },
+  { source: "legal", target: "rejected", value: 1 },
+  { source: "community", target: "approved", value: 2 },
+  { source: "community", target: "rejected", value: 1 },
+  { source: "senior", target: "approved", value: 1 },
+  { source: "approved", target: "seo", value: 4 },
+  { source: "approved", target: "thumbnail", value: 2 },
+  { source: "approved", target: "transcode", value: 1 },
+  { source: "seo", target: "schedule", value: 12 },
+  { source: "thumbnail", target: "schedule", value: 6 },
+  { source: "transcode", target: "schedule", value: 4 },
+  { source: "schedule", target: "website", value: 8 },
+  { source: "schedule", target: "email", value: 5 },
+  { source: "schedule", target: "rss", value: 3 },
+  { source: "schedule", target: "social", value: 4 },
+  { source: "schedule", target: "push", value: 2 },
+  { source: "website", target: "views", value: 6 },
+  { source: "website", target: "comments", value: 2 },
+  { source: "email", target: "views", value: 3 },
+  { source: "email", target: "likes", value: 2 },
+  { source: "rss", target: "views", value: 2 },
+  { source: "rss", target: "saves", value: 1 },
+  { source: "social", target: "likes", value: 3 },
+  { source: "social", target: "views", value: 1 },
+  { source: "push", target: "views", value: 1 },
+  { source: "push", target: "saves", value: 1 },
+  { source: "views", target: "trending", value: 4 },
+  { source: "views", target: "steady", value: 6 },
+  { source: "views", target: "low", value: 3 },
+  { source: "likes", target: "trending", value: 3 },
+  { source: "likes", target: "steady", value: 2 },
+  { source: "comments", target: "steady", value: 1 },
+  { source: "comments", target: "violation", value: 1 },
+  { source: "saves", target: "steady", value: 2 },
+  { source: "low", target: "archived", value: 3 },
+  { source: "violation", target: "archived", value: 1 },
+];
+
+<SankeyChart nodes={pubNodes} links={pubLinks} />
+
+Você pode conferir o experimento original em D3 v3 aqui: [Hello World: D3.js](https://github.com/bernardodiasc/hello-world/tree/master/my-d3-diagrams). O componente embutido neste post usa o módulo mais moderno d3-sankey, que eu acho ser a melhor escolha para este caso de uso.

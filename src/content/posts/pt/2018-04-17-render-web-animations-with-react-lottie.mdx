@@ -1,0 +1,171 @@
+---
+title: Renderizar animações web com React Lottie
+date: 2018-04-17
+category: this-blog
+lang: pt
+tags:
+  - react
+  - lottie
+  - adobe-after-effects
+  - bodymovin
+  - svg
+  - canvas
+  - json
+  - animation
+  - web
+  - native
+excerpt: Como renderizar animações do Adobe After Effects usando Bodymovin/Lottie e React web.
+---
+
+Então eu ouvi que você gosta de animações? Eu também! :D
+
+> Talvez você tenha chegado aqui vindo do universo React-Native procurando melhorar sua experiência do usuário com belas animações. Bem, neste post eu vou focar em animações para web, mas tudo é baseado nas mesmas fundações, portanto, o conteúdo pode ajudar em qualquer um dos casos.
+
+## A experiência do usuário
+
+Só um pouquinho de contexto, eu sempre gosto de compartilhar esta talk quando o assunto é sobre tornar as coisas mais interessantes:
+
+<Video id="Fy0aCDmgnxg" />
+
+Vamos partir da ideia: "adicionando suco a jogos ou apps ou websites". Isso é sobre melhorar a experiência. Fazer algo estático parecer mais vivo e alcançar emoções através de interações. Não estamos mais no papel, esta é a experiência digital! Cada pequeno detalhe conta para engajar nosso usuário.
+
+## Animações para a web
+
+<Animation animation="reyUpdated" />
+
+Lembra dos tempos do Macromedia/Adobe Flash? Eu lembro muito. Ah, nostalgia. Eu construí tantos sites totalmente animados e até pequenas peças de animações ou apenas vídeos animados por diversão. Hoje em dia nós, desenvolvedores web e de apps, não usamos mais o Flash, na maioria das vezes. Bem, não tanto quanto usávamos antes e não para os mesmos propósitos. Mas o que substituiu aquela ferramenta incrível?
+
+Sim, essa é uma boa pergunta! Primeiramente, havia razões válidas para o Flash cair em desuso. Razões como ir contra a web aberta, vergonha do SWF. Mas vamos deixar claro que as capacidades do software Flash por si só não eram uma das razões. Eu posso te garantir. E agora que não usamos mais essas ferramentas, o que usamos para criar animações?
+
+Vou te dizer a verdade: eu não sei exatamente qual é o novo padrão! Acho que não existe nenhum padrão definitivo atualmente. Existem simplesmente muitas maneiras hoje em dia. Animações CSS/SVG/JS estão ficando mais fortes e suas capacidades melhorando cada vez mais com o tempo. Dezenas de bibliotecas JS por aí que fazem um ótimo trabalho suportando animações. ¯\\\_(ツ)\_/¯
+
+## Bodymovin & Lottie
+
+A questão é que o código-fonte das animações não é tudo. Em muitos casos, precisamos de software poderoso com uma interface completa e funcionalidades. E aqui brilha o [Adobe After Effects](https://www.adobe.com/products/aftereffects.html). Este software existe não apenas hoje em dia, mas já há muito tempo. Tantos ótimos efeitos de vídeo podem ser feitos. Mas sim, vamos voltar para a web!
+
+Existe um plugin para o After Effects chamado [Bodymovin](https://github.com/airbnb/lottie-web) que pode exportar animações em formato JSON, que pode ser usado na web e em apps nativos!
+
+Assista este passo a passo sobre como exportar o JSON da animação do seu projeto After Effects:
+
+<Video id="5XMUJdjI0L8" />
+
+Bem fácil! Agora, se você quiser renderizar a animação no seu projeto web/nativo como formato SVG/Canvas/HTML, tudo que você precisa é a biblioteca [AirBnb's Lottie web](https://github.com/airbnb/lottie-web) (a documentação é boa se você estiver procurando instruções: http://airbnb.io/lottie/).
+
+E se você quiser aproveitar o caso de uso aqui para um site React, você pode usar o componente https://github.com/chenqingspring/react-lottie. Ele simplifica a adoção muito bem, confira algumas demos:
+
+<Animation animation="legoLoader" height="340" />
+
+Sim, Lego... Componentes... entendeu? Haha. Essa é uma animação infinita com loop, mas o Bodymovin suporta outros eventos também. Confira o exemplo abaixo da animação de "favorito" clicando nela:
+
+<Animation
+  animation="favouriteAppIcon"
+  width="200"
+  height="200"
+/>
+
+### Meu componente React
+
+Certo, se você está curioso sobre como eu incluí a animação Lottie web no conteúdo deste blog, então primeiro dê uma olhada neste post que eu escrevi: [Markdown renderer component that can render other React components](https://bernardodiasdacruz.com/2018/04/09/markdown-renderer-component-that-can-render-other-react-components).
+
+Para o meu caso de uso eu criei o componente `<Animation />`:
+
+```jsx
+import React, { PureComponent } from 'react'
+import Lottie from 'react-lottie'
+import animations from './animations'
+import './Animation.css'
+
+class Animation extends PureComponent {
+  static defaultProps = {
+    animation: '',
+    width: '100%',
+    height: '100%',
+    loop: true,
+    autoPlay: true,
+  }
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      isStopped: !this.props.autoPlay,
+      isPaused: !this.props.autoPlay,
+      isComplete: false,
+    }
+  }
+
+  handleClick = () => {
+    this.setState({ isPaused: !this.state.isPaused })
+  }
+
+  handleEvent = (obj) => {
+    if (!this.props.loop) {
+      if (obj.currentTime === (obj.totalTime - 1)) {
+        if (this.state.isComplete) {
+          this.setState({ isStopped: true, isComplete: false })
+        } else {
+          this.setState({ isStopped: false, isComplete: true })
+        }
+      }
+    }
+  }
+
+  render() {
+    const animation = animations[this.props.animation]
+    const defaultOptions = {
+      loop: this.props.loop,
+      autoplay: this.props.autoPlay,
+      animationData: animation,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice',
+      }
+    }
+    const makeValidNumber = (value) =>
+      value.substr(value.length - 1) === '%' ? value : Number(value)
+
+    return (
+      <div className="Animation">
+        <Lottie
+          onClick={this.handleClick}
+          options={defaultOptions}
+          width={makeValidNumber(this.props.width)}
+          height={makeValidNumber(this.props.height)}
+          isStopped={this.state.isStopped}
+          isPaused={this.state.isPaused}
+          eventListeners={
+            [
+              {
+                eventName: 'enterFrame',
+                callback: obj => this.handleEvent(obj),
+              },
+            ]
+          }
+        />
+      </div>
+    )
+  }
+}
+
+export default Animation
+```
+
+Você sempre pode conferir o código-fonte deste site também: [Animation](https://github.com/bernardodiasc/bernardodiasc.github.io/blob/3e4289e5d8aedb72d44cc82a559eec20fae7372c/src/displays/Animation/Animation.js)
+
+### Créditos das animações:
+
+- Rey updated: https://www.lottiefiles.com/82-rey-updated
+- Lego loader: https://www.lottiefiles.com/410-lego-loader
+- Favoutire app icon: https://www.lottiefiles.com/72-favourite-app-icon
+
+Existem muitos mais exemplos legais no site https://www.lottiefiles.com/!
+
+## Mais sobre animações!1!!
+
+Já que vimos as maravilhas do Lottie web, deixe-me contar sobre uma desvantagem que tive que lidar recentemente. Sabe, é bom ser realista sobre escolhas técnicas, nem tudo são flores.
+
+O caso foi: Em um projeto Meteor que eu estava trabalhando, eu precisei incluir uma animação e nosso time decidiu usar o Lottie web. O problema é que a biblioteca depende do objeto `window` que não está disponível para SSR. Server-side rendering é uma funcionalidade padrão em apps Meteor. Até a data deste post, essa issue não foi resolvida, embora seja um problema conhecido e eu acredito que será endereçado em breve.
+
+Como eu disse antes, existem muitas maneiras de criar animações interativas para a web e para este caso particular eu decidi ir com CSS keyframes, o resultado ficou como esperado, você pode dar uma olhada aqui:
+
+<Codepen title="Rocket animation" hash="QmPybv" height="350" />
+
+Espero voltar ao tópico de animações muito mais frequentemente em posts futuros do blog. Tenho usado várias abordagens diferentes e ainda não consigo dizer qual é a melhor. Meu palpite é que existem casos e casos que vão depender de soluções diferentes. Até mais!

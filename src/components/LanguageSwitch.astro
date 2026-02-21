@@ -1,0 +1,67 @@
+---
+import { getLangFromUrl, getAlternateUrl } from '../i18n/utils';
+import { t } from '../i18n/translations';
+
+const lang = getLangFromUrl(Astro.url.pathname);
+const alternateUrl = getAlternateUrl(Astro.url.pathname);
+const switchLabel = t(lang, 'lang.switch');
+---
+
+<a href={alternateUrl} class="lang-switch" title={switchLabel}>
+  <span class="lang-switch__current">{lang === 'en' ? 'EN' : 'PT'}</span>
+  <span class="lang-switch__separator">/</span>
+  <span class="lang-switch__other">{lang === 'en' ? 'PT' : 'EN'}</span>
+</a>
+
+<style>
+  .lang-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    font-family: var(--heading-family);
+    font-size: 0.65em;
+    font-weight: var(--heading-weight-bold);
+    color: var(--meta-color);
+    text-decoration: none;
+    padding: 0.3em 0.8em;
+    background: var(--content-background);
+    border-radius: 5px;
+    box-shadow: 0 -1px 3px 0 rgba(45, 45, 45, 0.4) inset;
+    transition: color 0.3s ease;
+    margin-left: 5px;
+    letter-spacing: 0.5px;
+    position: absolute;
+    top: -75px;
+    right: 0;
+  }
+
+  @media only screen and (max-width: 1023px) {
+    .lang-switch {
+      font-size: 0.55em;
+      margin-bottom: 3px;
+      position: relative;
+      top: unset;
+      right: unset;
+    }
+  }
+
+  .lang-switch:hover {
+    color: var(--text-color);
+  }
+
+  .lang-switch__current {
+    color: var(--heading-color);
+  }
+
+  .lang-switch__separator {
+    opacity: 0.4;
+  }
+
+  .lang-switch__other {
+    opacity: 0.6;
+  }
+
+  .lang-switch:hover .lang-switch__other {
+    opacity: 1;
+  }
+</style>

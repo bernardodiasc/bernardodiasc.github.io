@@ -1,5 +1,6 @@
 ---
 import PostHeader from './PostHeader.astro';
+import { getPostUrl } from '../i18n/utils';
 
 interface PostItem {
   id: string;
@@ -16,13 +17,13 @@ interface PostItem {
 
 interface Props {
   items: PostItem[];
+  lang?: 'en' | 'pt';
 }
 
-const { items } = Astro.props;
+const { items, lang = 'en' } = Astro.props;
 
 function postUrl(id: string): string {
-  const [year, month, day, ...rest] = id.split('-');
-  return `/${year}/${month}/${day}/${rest.join('-')}`;
+  return getPostUrl(id);
 }
 ---
 

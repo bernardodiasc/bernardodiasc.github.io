@@ -11,6 +11,7 @@ const posts = defineCollection({
     tags: z.array(z.string()).optional().default([]),
     excerpt: z.string().optional().default(''),
     thumbnail: z.string().optional().default(''),
+    lang: z.enum(['en', 'pt']).optional().default('en'),
   }),
 });
 

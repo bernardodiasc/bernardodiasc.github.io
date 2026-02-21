@@ -1,11 +1,12 @@
 ---
 import { getCollection, getEntry } from 'astro:content';
-import Layout from '../layouts/Layout.astro';
-import PageContent from '../components/PageContent.astro';
-import PostHeader from '../components/PostHeader.astro';
-import { isEnglishPost } from '../i18n/utils';
+import Layout from '../../layouts/Layout.astro';
+import PageContent from '../../components/PageContent.astro';
+import PostHeader from '../../components/PostHeader.astro';
+import { isPortuguesePost, getPostBaseId } from '../../i18n/utils';
+import { t } from '../../i18n/translations';
 
-const posts = await getCollection('posts', ({ id, data }) => !data.draft && isEnglishPost(id));
+const posts = await getCollection('posts', ({ id, data }) => !data.draft && isPortuguesePost(id));
 
 const sortedPosts = posts.sort(
   (a, b) => b.data.date.getTime() - a.data.date.getTime()
@@ -30,8 +31,9 @@ const items = await Promise.all(
 );
 
 function postUrl(id: string): string {
-  const [year, month, day, ...rest] = id.split('-');
-  return `/${year}/${month}/${day}/${rest.join('-')}`;
+  const baseId = getPostBaseId(id);
+  const [year, month, day, ...rest] = baseId.split('-');
+  return `/pt/${year}/${month}/${day}/${rest.join('-')}`;
 }
 
 const grouped = items.reduce<Record<number, typeof items>>((acc, item) => {
@@ -45,7 +47,7 @@ const years = Object.keys(grouped)
   .map(Number)
   .sort((a, b) => b - a);
 
-const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
 
 const monthsByYear: Record<number, number[]> = {};
 for (const year of years) {
@@ -54,19 +56,19 @@ for (const year of years) {
 }
 ---
 
-<Layout title="Archive of content">
+<Layout title={t('pt', 'archive.title')}>
   <PageContent>
     <div class="archive-page">
-      <h1 class="page-title">Archive</h1>
+      <h1 class="page-title">{t('pt', 'archive.heading')}</h1>
       <details class="collapsible" id="calendar-panel" open>
         <summary class="collapsible__header">
-          <h2 class="section-title">Filter by date</h2>
+          <h2 class="section-title">{t('pt', 'archive.filterByDate')}</h2>
           <span class="collapsible__selection" id="calendar-selection"></span>
           <span class="collapsible__chevron"></span>
         </summary>
         <div class="calendar-filter">
           <div class="calendar-years">
-            <button class="year-btn year-btn--active" data-year="all" type="button">All</button>
+            <button class="year-btn year-btn--active" data-year="all" type="button">{t('pt', 'archive.all')}</button>
             {years.map((year) => (
               <button class="year-btn" data-year={year} type="button">{year}</button>
             ))}
@@ -102,7 +104,7 @@ for (const year of years) {
         ))}
       </div>
 
-      <p class="no-results" id="no-results" style="display: none;">No posts in this period.</p>
+      <p class="no-results" id="no-results" style="display: none;">{t('pt', 'archive.noResults')}</p>
     </div>
   </PageContent>
 </Layout>

@@ -2,6 +2,8 @@
 import '../styles/variables.css';
 import '../styles/base.css';
 import Tabs from '../components/Tabs.astro';
+import LanguageSwitch from '../components/LanguageSwitch.astro';
+import { getLangFromUrl } from '../i18n/utils';
 
 interface Props {
   title?: string;
@@ -18,13 +20,14 @@ const {
   image,
 } = Astro.props;
 
+const lang = getLangFromUrl(Astro.url.pathname);
 const pageTitle = title ? `${title} - ${siteName}` : siteName;
 const ogImage = image ? `${siteUrl}${image}` : `${siteUrl}/images/thumbnail.png`;
 const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -55,9 +58,12 @@ const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
     <main class="layout">
       <header class="layout__header">
         <h1 class="layout__header-title">
-          <a href="/">Random Thoughts</a>
+          <a href={lang === 'pt' ? '/pt/' : '/'}>Random Thoughts</a>
         </h1>
-        <Tabs />
+        <nav class="layout__nav">
+          <Tabs />
+          <LanguageSwitch />
+        </nav>
       </header>
       <article class="layout__content">
         <div class="layout__content-inner">
@@ -118,6 +124,12 @@ const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
     margin: 0 auto;
     width: 100%;
     max-width: 70rem;
+  }
+
+  .layout__nav {
+    display: flex;
+    align-items: flex-end;
+    position: relative;
   }
 
   .layout__header-title {
