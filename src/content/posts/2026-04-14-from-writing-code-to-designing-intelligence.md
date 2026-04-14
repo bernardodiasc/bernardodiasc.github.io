@@ -2,6 +2,7 @@
 title: From writing code to designing intelligence
 date: 2026-04-14
 category: ai-work
+thumbnail: /content/posts/2026-04-14-from-writing-code-to-designing-intelligence/from-writing-code-to-designing-intelligence.png
 tags:
   - ai
   - ai-agents
@@ -17,6 +18,10 @@ tags:
   - pydantic
 excerpt: AI at work is often framed as a productivity hack or a risk — a convenient reduction of something structural. Here’s a sharper read on what’s changing, what broke when I pushed into unfamiliar territory, and why human validation still drew the line.
 ---
+
+<figure>
+  <img alt="Human and robotic hands typing at keyboards, surrounded by floating code panes with errors and success states" src="/content/posts/2026-04-14-from-writing-code-to-designing-intelligence/collaboration-chaotic-code-creation.png" />
+</figure>
 
 There’s a growing tendency to frame AI usage in the workplace as either a productivity hack or a looming risk. Both interpretations are incomplete.
 
@@ -35,6 +40,10 @@ It’s tempting to reduce this to productivity, but that framing doesn’t hold 
 To make this concrete, I deliberately stepped into a domain that sits outside my core experience. I’m a frontend developer by background, and I chose to work on Python backend systems — services, APIs, server-side logic — not because it was the most efficient path, but because it created enough friction to expose what was actually happening when AI is introduced into the process.
 
 At the beginning, the results were uneven in a way that is hard to hide. I was generating code that I couldn’t fully explain, reviews were difficult, and in a shared codebase without a proper staging environment, mistakes had immediate consequences. Some work had to be discarded and restarted, which from the outside can look like inefficiency, but was in practice the mechanism that prevented the experiment from degrading the system around it. That phase made something very clear: AI doesn’t remove the need for judgment — it increases the cost of not having it.
+
+<figure>
+  <img alt="Robotic hand with a warning panel and human hand with a verified panel, facing a figure walking toward light in a digital landscape" src="/content/posts/2026-04-14-from-writing-code-to-designing-intelligence/human-ai-collaboration-in-code.png" />
+</figure>
 
 There is another layer here that became impossible to ignore over time. Without the support of someone experienced in backend and infrastructure, I would not have been able to make meaningful progress, regardless of how much I was using AI. The issue wasn’t just generating code — it was evaluating whether that code made sense in the context of the system. In a stack where I already have fluency, like JavaScript, I can direct and correct AI outputs with a reasonable level of confidence. In Python, at least at the beginning, I didn’t have that baseline. The presence of someone who could review, reject, and explain what was wrong was not just helpful — it was structurally necessary. AI expanded my reach, but human validation defined the boundary of what could actually be trusted.
 

@@ -3,6 +3,7 @@ title: De escrever código a desenhar inteligência
 date: 2026-04-14
 category: ai-work
 lang: pt
+thumbnail: /content/posts/2026-04-14-from-writing-code-to-designing-intelligence/from-writing-code-to-designing-intelligence.png
 tags:
   - ai
   - ai-agents
@@ -18,6 +19,10 @@ tags:
   - pydantic
 excerpt: Cada vez mais se enquadra o uso de IA no trabalho como atalho de produtividade ou como risco inevitável — uma redução conveniente de algo estrutural. Aqui vai uma leitura mais nítida do que está mudando, do que quebrou quando mergulhei em território desconhecido, e por que a validação humana ainda definiu o limite do que era confiável.
 ---
+
+<figure>
+  <img alt="Mãos humana e robótica digitando em teclados, com painéis de código flutuantes mostrando erros e sucesso" src="/content/posts/2026-04-14-from-writing-code-to-designing-intelligence/collaboration-chaotic-code-creation.png" />
+</figure>
 
 Há uma tendência crescente de enquadrar o uso de IA no trabalho como um atalho de produtividade ou como um risco iminente. Ambas as interpretações são incompletas.
 
@@ -36,6 +41,10 @@ Nos últimos meses, tenho empurrado de propósito os limites de como a IA pode s
 Para tornar isso concreto, dei de propósito um passo para fora do que é meu núcleo de experiência. Sou desenvolvedor frontend de formação, e escolhi trabalhar em sistemas backend em **Python** — serviços, APIs, lógica no servidor — não porque fosse o caminho mais eficiente, mas porque gerava atrito suficiente para expor o que de fato acontece quando a IA entra no processo.
 
 No começo, os resultados eram irregulares de um jeito difícil de esconder. Eu gerava código que não sabia explicar por completo, as revisões eram difíceis e, numa base de código compartilhada sem um ambiente de staging adequado, erros tinham consequências imediatas. Parte do trabalho precisou ser descartada e refeita — o que por fora pode parecer ineficiência, mas na prática foi o mecanismo que impediu o experimento de degradar o sistema em volta. Essa fase deixou algo muito claro: a IA não elimina a necessidade de julgamento — ela aumenta o custo de não tê-lo.
+
+<figure>
+  <img alt="Mão robótica com painel de alerta e mão humana com painel verificado, com uma figura caminhando em direção à luz numa paisagem digital" src="/content/posts/2026-04-14-from-writing-code-to-designing-intelligence/human-ai-collaboration-in-code.png" />
+</figure>
 
 Há outra camada aqui que com o tempo ficou impossível ignorar. Sem o apoio de alguém com experiência em backend e infraestrutura, eu não teria conseguido progresso de verdade, não importava o quanto usasse IA. O problema não era só gerar código — era avaliar se aquele código fazia sentido no contexto do sistema. Numa stack em que já tenho fluência, como **JavaScript**, consigo direcionar e corrigir saídas da IA com um nível razoável de confiança. Em **Python**, pelo menos no início, eu não tinha essa base. A presença de alguém que pudesse revisar, rejeitar e explicar o que estava errado não foi só uma ajuda — foi estruturalmente necessária. A IA ampliou meu alcance, mas a validação humana definiu o limite do que de fato podia ser confiável.
 
