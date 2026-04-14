@@ -33,6 +33,11 @@ It’s tempting to reduce this to productivity, but that framing doesn’t hold 
 
 ## Using discomfort to see what actually breaks
 
+<figure>
+  <img alt="Human and robotic hands typing at keyboards, surrounded by floating code panes with errors and success states" src="/content/posts/2026-04-14-from-writing-code-to-designing-intelligence/collaboration-chaotic-code-creation.png" />
+  <figcaption>Nothing fails in private anymore — uncomfortable, unless what you’re measuring is accountability, not just throughput.</figcaption>
+</figure>
+
 To make this concrete, I deliberately stepped into a domain that sits outside my core experience. I’m a frontend developer by background, and I chose to work on Python backend systems — services, APIs, server-side logic — not because it was the most efficient path, but because it created enough friction to expose what was actually happening when AI is introduced into the process.
 
 At the beginning, the results were uneven in a way that is hard to hide. I was generating code that I couldn’t fully explain, reviews were difficult, and in a shared codebase without a proper staging environment, mistakes had immediate consequences. Some work had to be discarded and restarted, which from the outside can look like inefficiency, but was in practice the mechanism that prevented the experiment from degrading the system around it. That phase made something very clear: AI doesn’t remove the need for judgment — it increases the cost of not having it.
