@@ -1,7 +1,7 @@
 ---
 title: From writing code to designing intelligence
 date: 2026-04-14
-category: this-blog
+category: ai-work
 tags:
   - ai
   - ai-agents
@@ -18,7 +18,7 @@ tags:
 excerpt: AI at work is often framed as a productivity hack or a risk — a convenient reduction of something structural. Here’s a sharper read on what’s changing, what broke when I pushed into unfamiliar territory, and why human validation still drew the line.
 ---
 
-There’s a growing tendency to frame AI usage in the workplace as either a productivity hack or a looming risk. Both interpretations are incomplete in a way that almost feels convenient — they reduce something structural to something tactical.
+There’s a growing tendency to frame AI usage in the workplace as either a productivity hack or a looming risk. Both interpretations are incomplete.
 
 What’s happening is closer to a broader paradigm shift in how knowledge work is structured and executed. These shifts tend to follow a familiar pattern: initial resistance, partial adoption, and eventually a reorganization of how people operate at a fundamental level. They don’t just change tools — they reshape how information flows, how knowledge is built and shared, how communication happens, and how intelligence is applied. AI is starting to affect all of these layers at once, including how code itself is generated and validated.
 
