@@ -19,10 +19,6 @@ tags:
 excerpt: AI at work is often framed as a productivity hack or a risk — a convenient reduction of something structural. Here’s a sharper read on what’s changing, what broke when I pushed into unfamiliar territory, and why human validation still drew the line.
 ---
 
-<figure>
-  <img alt="Human and robotic hands typing at keyboards, surrounded by floating code panes with errors and success states" src="/content/posts/2026-04-14-from-writing-code-to-designing-intelligence/collaboration-chaotic-code-creation.png" />
-</figure>
-
 There’s a growing tendency to frame AI usage in the workplace as either a productivity hack or a looming risk. Both interpretations are incomplete.
 
 What’s happening is closer to a broader paradigm shift in how knowledge work is structured and executed. These shifts tend to follow a familiar pattern: initial resistance, partial adoption, and eventually a reorganization of how people operate at a fundamental level. They don’t just change tools — they reshape how information flows, how knowledge is built and shared, how communication happens, and how intelligence is applied. AI is starting to affect all of these layers at once, including how code itself is generated and validated.
@@ -42,10 +38,16 @@ To make this concrete, I deliberately stepped into a domain that sits outside my
 At the beginning, the results were uneven in a way that is hard to hide. I was generating code that I couldn’t fully explain, reviews were difficult, and in a shared codebase without a proper staging environment, mistakes had immediate consequences. Some work had to be discarded and restarted, which from the outside can look like inefficiency, but was in practice the mechanism that prevented the experiment from degrading the system around it. That phase made something very clear: AI doesn’t remove the need for judgment — it increases the cost of not having it.
 
 <figure>
-  <img alt="Robotic hand with a warning panel and human hand with a verified panel, facing a figure walking toward light in a digital landscape" src="/content/posts/2026-04-14-from-writing-code-to-designing-intelligence/human-ai-collaboration-in-code.png" />
+  <img alt="Human and robotic hands typing at keyboards, surrounded by floating code panes with errors and success states" src="/content/posts/2026-04-14-from-writing-code-to-designing-intelligence/collaboration-chaotic-code-creation.png" />
+  <figcaption>Nothing fails in private anymore — uncomfortable, unless what you’re measuring is accountability, not just throughput.</figcaption>
 </figure>
 
 There is another layer here that became impossible to ignore over time. Without the support of someone experienced in backend and infrastructure, I would not have been able to make meaningful progress, regardless of how much I was using AI. The issue wasn’t just generating code — it was evaluating whether that code made sense in the context of the system. In a stack where I already have fluency, like JavaScript, I can direct and correct AI outputs with a reasonable level of confidence. In Python, at least at the beginning, I didn’t have that baseline. The presence of someone who could review, reject, and explain what was wrong was not just helpful — it was structurally necessary. AI expanded my reach, but human validation defined the boundary of what could actually be trusted.
+
+<figure>
+  <img alt="Robotic hand with a warning panel and human hand with a verified panel, facing a figure walking toward light in a digital landscape" src="/content/posts/2026-04-14-from-writing-code-to-designing-intelligence/human-ai-collaboration-in-code.png" />
+  <figcaption>When automated signals and your own bar disagree, merging isn’t a shortcut — it’s someone’s call to own.</figcaption>
+</figure>
 
 ## Where iteration replaces blind reliance
 
