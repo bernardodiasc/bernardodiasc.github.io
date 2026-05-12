@@ -49,16 +49,7 @@
 <p>A skill at this stage is small — a paragraph or two of context, the command, a list of flags. Maybe an example output if it’s the kind of thing that needs interpreting. It takes ten minutes to write. The cost is real but trivial.</p>
 <p>The threshold matters for the inverse reason too. <strong>If a thing has only ever been done once, do not write a skill for it.</strong> I tried that early and it produced a graveyard of skills I never used. Skills are caching. If you cache a thing you’ll never look up again, you’re just paying the storage cost.</p>
 <h2 id="why-thirty-three-is-roughly-the-right-number">Why thirty-three is roughly the right number</h2>
-<p>That number isn’t a goal. It’s where I happened to land for the project I was working on, and looking back, it makes sense.</p>
-<p>The project has a few natural surfaces:</p>
-<ul>
-<li><strong>Live state</strong> — what the agent is currently thinking. Skills for inspecting checkpoints, decoding graph state, reading the message thread the agent is responding to.</li>
-<li><strong>Configuration / cache</strong> — what’s been computed before. Skills for reading and clearing cached evaluations, looking up rate limits, checking timing.</li>
-<li><strong>External systems</strong> — the third-party platforms the agent talks to. Skills for fetching a record by ID, running a search query, posting a message back.</li>
-<li><strong>Internal procedures</strong> — repeatable multi-step changes. Skills that walk the agent through “add a new search filter” or “wire a new intent through the pipeline.”</li>
-<li><strong>Quality assurance</strong> — replaying scenarios, capturing outputs, regression checks.</li>
-</ul>
-<p>Each surface produces somewhere between three and ten skills as the project matures. Multiply by five surfaces and you land somewhere in the high twenties or low thirties. That’s not magic — it’s the natural shape of a non-trivial system that one person plus an AI agent operates on.</p>
+<p>That number isn’t a goal. It’s where I happened to land for the project I was working on. The useful observation is not the count; it’s that different surfaces of a system naturally produce different skills: live state, configuration, external systems, internal procedures, and QA.</p>
 <h2 id="when-a-skill-beats-a-rule">When a skill beats a rule</h2>
 <p>This was the thing I had to get straight in my own head. Rules and skills look similar from the outside — both are Markdown files in a folder, both are loaded into the agent’s context. They do different things.</p>
 <p>A <strong>rule</strong> loads automatically when you’re working on a matching file. It’s ambient. The agent reads it whether or not you ask. Rules are good for steady-state guidance: voice, conventions, safety policies, things that should always shape the agent’s behavior on a given file type.</p>
@@ -87,9 +78,7 @@
 <p><strong>Skills aged better than I expected.</strong> I assumed each skill would rot when the underlying code changed. Some did. But many of them were stable — a script that lists records by ID isn’t going to change much. The ones that aged poorly were the ones tightly coupled to internal logic; those got rewritten or deleted. The boring ones survived.</p>
 <p><strong>The hardest skills to write were the procedural ones.</strong> Skills that just run a command are easy. Skills that walk the agent through a multi-file change (“add a new filter to the pipeline”) were much harder, because the procedure is the kind of thing that lives in a senior engineer’s head. Writing those forced me to actually understand the procedure, which had value beyond the skill itself.</p>
 <h2 id="should-you-have-thirty-three">Should you have thirty-three?</h2>
-<p>Probably not. Probably you should have however many your project naturally produces, written one at a time, with the threshold I described above: <em>if I do this twice, I capture it.</em></p>
-<p>Some projects are well-served by five skills. Some by fifty. The number is downstream of the system’s complexity and how often you operate on it. Counting your skills is roughly as informative as counting your test cases — useful as a smell, not as a target.</p>
-<p>The pattern that holds across project sizes is the simpler one: when an AI coding agent operates on the same project repeatedly, <strong>its memory of the project ends up in your repo</strong>. Some of that memory ends up in rules, which steer behavior on file edits. The rest ends up in skills, which let the agent run procedures on demand. Both compound. Both are cheap to write the first time, and most of them keep paying you back for as long as the project lives.</p>
+<p>Probably not. You should have however many your project naturally produces, written one at a time, with the threshold from above: <em>if I do this twice, I capture it.</em> The number is useful as a smell, not as a target.</p>
 <p>That’s what made me keep writing them. Not a plan. Just the steady realization that yesterday’s twenty-minute debugging session is now today’s thirty-second skill invocation.</p>   </div>  </div>  <div class="disqus" id="disqus_thread" data-astro-cid-r2x3s5wt></div> <script>(function(){const identifier = "2026-04-25-ai-agent-skills-why-i-wrote-33-of-them";
 const title = "AI agent skills — why I wrote 33 of them";
 const url = "https://bernardodiasdacruz.com/2026/04/25/ai-agent-skills-why-i-wrote-33-of-them/";

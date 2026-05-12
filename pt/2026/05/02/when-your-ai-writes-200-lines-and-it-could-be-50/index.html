@@ -21,7 +21,6 @@
 <p>Um engenheiro sênior diria que isso é complicado demais?</p>
 </blockquote>
 <p>Esse é o check. Está no arquivo de rule always-on que o agente carrega no início de toda conversa. A maioria do que segue são apenas formas específicas nas quais, quando você olha o código resultante, a resposta é claramente <em>sim</em>.</p>
-<p>O check funciona porque engenheiros sêniores — do tipo que mantiveram codebases ao longo de anos — têm uma alergia forte a código que faz mais do que o momento exige. Eles já viram helpers abstraídos com elegância se calcificarem em legado. Já debugaram testes que mockam tudo. Sabem que 50 linhas que qualquer um consegue ler vencem 200 linhas que só o autor original consegue estender.</p>
 <p>O agente, quando instruído a aplicar esse check ao seu próprio output, fica razoavelmente bom em simplificar. Não perfeito, mas razoavelmente bom.</p>
 <figure class="image-figure"> <img alt="Folha de estudos sumi-e sobre papel de arroz creme com bordas artesanais, em composição vertical de paisagem. Sete pequenos estudos individuais em tinta estão dispostos pela página em uma grade relaxada — três acima, três abaixo, um deslocado — cada um contido em sua própria área tranquila de papel com generoso espaço entre os estudos. Cada estudo é um tema natural diferente renderizado em economia extrema de pincel de um a três traços apenas, todos compartilhando a mesma linguagem de tinta sumi-e: um único caule de bambu em três traços; um único círculo enso aberto desenhado em uma varredura contínua de pincel com uma pequena abertura no ponto de fechamento; um único pico de montanha em silhueta em um traço ondulado; um único peixe em movimento sugerido por dois traços curvos; uma única libélula em três marcas pequenas; uma única onda rolante com um pequeno floco de crista; e uma única folha de bétula com caule delicado e três hachuras de nervura. Os traços variam em umidade — alguns saturados com confiança, outros secos e esboçados — mas cada estudo honra o princípio sumi-e de dizer o máximo possível com o mínimo de tinta possível. Um único selo quadrado vermelho acentua o canto inferior direito da página. Sem texto ou caracteres legíveis em nenhum lugar da composição." src="/content/posts/2026-05-02-when-your-ai-writes-200-lines-and-it-could-be-50/overengineering-specimens.png"> <figcaption>Sete formas recorrentes. Uma vez que consegue nomeá-las, consegue identificá-las em segundos — e recusá-las.</figcaption> </figure> 
 <h2 id="padrão-um-uma-classe-para-uma-única-função">Padrão um: uma classe para uma única função</h2>
@@ -204,26 +203,14 @@
 <p>Um teste. Usa o <code>tmp_path</code> do pytest para escrever um arquivo real. Chama a função real. Asserta os outputs reais. Se <code>parse_config</code> regredir, este teste pega. Os testes com mock não teriam pego.</p>
 <p>A regra: <strong>teste o comportamento que o usuário se importa, não a implementação que o produz.</strong> Mocks são uma ferramenta para isolar coisas que você não consegue alcançar (rede, tempo, aleatoriedade), não para provar que o código chama as funções que você espera que ele chame.</p>
 <h2 id="padrão-seis-comentários-que-narram-o-código">Padrão seis: comentários que narram o código</h2>
-<p>Um pequeno, mas que se acumula. O agente tem uma tendência a adicionar comentários que simplesmente reafirmam o que a próxima linha de código faz.</p>
-<p>A primeira versão:</p>
+<p>Um pequeno, mas que se acumula: o agente adiciona comentários que repetem a próxima linha de código.</p>
 <pre class="astro-code one-dark-pro" style="background-color:#282c34;color:#abb2bf;overflow-x:auto" tabindex="0" data-language="python"><code><span class="line"><span style="color:#7F848E;font-style:italic"># Open the config file</span></span>
 <span class="line"><span style="color:#C678DD">with</span><span style="color:#56B6C2"> open</span><span style="color:#ABB2BF">(path) </span><span style="color:#C678DD">as</span><span style="color:#ABB2BF"> f:</span></span>
-<span class="line"><span style="color:#7F848E;font-style:italic">    # Read the contents</span></span>
 <span class="line"><span style="color:#ABB2BF">    content </span><span style="color:#56B6C2">=</span><span style="color:#ABB2BF"> f.</span><span style="color:#61AFEF">read</span><span style="color:#ABB2BF">()</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#7F848E;font-style:italic"># Parse the YAML</span></span>
-<span class="line"><span style="color:#ABB2BF">data </span><span style="color:#56B6C2">=</span><span style="color:#ABB2BF"> yaml.</span><span style="color:#61AFEF">safe_load</span><span style="color:#ABB2BF">(content)</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#7F848E;font-style:italic"># Return a Config instance</span></span>
-<span class="line"><span style="color:#C678DD">return</span><span style="color:#61AFEF"> Config</span><span style="color:#ABB2BF">(**data)</span></span></code></pre>
-<p>Todo comentário é verdadeiro. Todo comentário também é redundante. Um leitor desse código consegue ver que <code>with open(path) as f</code> abre o arquivo de configuração. Dizer de novo num comentário adiciona linhas, não entendimento.</p>
-<p>A simplificação: apenas remova os comentários.</p>
-<pre class="astro-code one-dark-pro" style="background-color:#282c34;color:#abb2bf;overflow-x:auto" tabindex="0" data-language="python"><code><span class="line"><span style="color:#C678DD">with</span><span style="color:#56B6C2"> open</span><span style="color:#ABB2BF">(path) </span><span style="color:#C678DD">as</span><span style="color:#ABB2BF"> f:</span></span>
-<span class="line"><span style="color:#ABB2BF">    content </span><span style="color:#56B6C2">=</span><span style="color:#ABB2BF"> f.</span><span style="color:#61AFEF">read</span><span style="color:#ABB2BF">()</span></span>
-<span class="line"><span style="color:#ABB2BF">data </span><span style="color:#56B6C2">=</span><span style="color:#ABB2BF"> yaml.</span><span style="color:#61AFEF">safe_load</span><span style="color:#ABB2BF">(content)</span></span>
-<span class="line"><span style="color:#C678DD">return</span><span style="color:#61AFEF"> Config</span><span style="color:#ABB2BF">(**data)</span></span></code></pre>
-<p>A regra, no arquivo de rule always-on: <em>não adicione comentários que apenas narram o que o código faz.</em> Comentários devem explicar <em>por que</em>, não <em>o que</em>. O <em>o que</em> está ali mesmo no código. O <em>por que</em> — a restrição que não é visível no código, o tradeoff que foi considerado, a pegadinha que pegou alguém uma vez — é para isso que comentários servem.</p>
-<p>Code review sênior consistentemente marca comentários narrativos como ruído. A rule codifica esse sinal para que o agente não os gere em primeiro lugar.</p>
+<span class="line"><span style="color:#ABB2BF">data </span><span style="color:#56B6C2">=</span><span style="color:#ABB2BF"> yaml.</span><span style="color:#61AFEF">safe_load</span><span style="color:#ABB2BF">(content)</span></span></code></pre>
+<p>Um leitor consegue ver o que <code>open</code> e <code>yaml.safe_load</code> fazem. A regra é simples: comentários devem explicar <em>por que</em>, não <em>o que</em>. O <em>o que</em> já está no código.</p>
 <h2 id="padrão-sete-o-pior-deles-a-feature-não-solicitada">Padrão sete: o pior deles, a feature não solicitada</h2>
 <p>O overengineering mais caro não é estrutural. É scope creep. Você pediu uma coisa; o agente fez sete.</p>
 <p>Uma versão disso apareceu quando pedi ao agente para adicionar uma flag <code>draft: true</code> a um único post de blog. A primeira versão incluiu:</p>
@@ -243,10 +230,9 @@
 <span class="line"><span style="color:#98C379"><span style="user-select:none">+</span>draft: true</span></span>
 <span class="line"><span style="color:#ABB2BF"> ---</span></span></code></pre>
 <p>Uma linha. O post agora tem o campo. Se filtragem e alertas forem necessários, são mudanças <em>separadas</em> com seu próprio escopo, sua própria revisão, sua própria mensagem de commit. Juntar tudo no diff de “adicionar flag de draft” torna esse diff mais difícil de revisar e mais difícil de reverter.</p>
-<p>Esse padrão é difícil de pegar porque cada adição individual parece útil. A correção é a rule de mudanças cirúrgicas do post anterior: <em>cada linha alterada deve rastrear diretamente ao pedido do usuário.</em> Linhas que não rastreiam de volta ao pedido — mesmo boas linhas, mesmo linhas bem-intencionadas — não pertencem ao diff.</p>
+<p>Esse padrão é difícil de pegar porque cada adição individual parece útil. A correção é o teste de mudanças cirúrgicas: <em>cada linha alterada deve rastrear diretamente ao pedido do usuário.</em></p>
 <h2 id="como-é-o-pushback-na-prática">Como é o pushback na prática</h2>
-<p>O arquivo de rule é necessário mas não suficiente. Mesmo com a rule carregada, o agente às vezes vai produzir output com overengineering, especialmente na primeira passada. O trabalho restante é meu: eu tenho que realmente fazer pushback quando vejo um desses padrões.</p>
-<p>Como o pushback se parece, na prática, é curto e direto.</p>
+<p>O arquivo de rule é necessário mas não suficiente. Eu ainda preciso fazer pushback quando vejo um desses padrões. Na prática, o pushback é curto e direto.</p>
 <ul>
 <li><em>“Isso não precisa de uma classe. Faça como função.”</em></li>
 <li><em>“Remova todos os parâmetros de configuração exceto os dois que usamos.”</em></li>
@@ -254,7 +240,7 @@
 <li><em>“Remova a classe base abstrata e a única implementação concreta. Apenas inline a função.”</em></li>
 <li><em>“Eu pedi uma mudança. Reduza o diff a essa mudança.”</em></li>
 </ul>
-<p>O agente sempre obedece. A próxima iteração é sempre mais enxuta. O custo de uma rodada de pushback é pequeno. O custo de aceitar a versão com overengineering é que você agora fez o commit, e remover depois é mais caro do que recusar adicionar agora.</p>
+<p>A próxima iteração quase sempre é mais enxuta. Uma rodada de pushback é mais barata do que commitar a versão com overengineering e remover depois.</p>
 <h2 id="o-efeito-composto">O efeito composto</h2>
 <p>Cada um desses padrões, individualmente, custa talvez dez minutos de revisão e um parágrafo de pushback. Nenhum deles é uma catástrofe.</p>
 <p>O efeito composto, ao longo de alguns meses trabalhando com um agente de IA de programação, é que o codebase ou se mantém limpo ou começa a acumular inchaço. Codebases que acumulam inchaço fazem compounding do jeito errado — cada nova adição é mais difícil que a anterior, cada refactor é maior do que deveria, a superfície de trabalho vira legado em meses em vez de anos.</p>

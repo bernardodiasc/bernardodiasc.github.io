@@ -21,7 +21,6 @@
 <p>Would a senior engineer say this is overcomplicated?</p>
 </blockquote>
 <p>That’s the check. It’s in the always-on rule file the agent loads at the start of every conversation. Most of what follows is just specific shapes that, when you look at the resulting code, the answer is clearly <em>yes</em>.</p>
-<p>The check works because senior engineers — the kind who’ve maintained codebases over years — have a strong allergy to code that does more than the moment requires. They’ve seen too many cleverly-abstracted helpers calcify into legacy. They’ve debugged too many mock-everything tests. They know that 50 lines that anyone can read beats 200 lines that only the original author can extend.</p>
 <p>The agent, asked to apply that check to its own output, becomes pretty good at simplifying. Not perfect, but pretty good.</p>
 <figure class="image-figure"> <img alt="Sumi-e study sheet on cream rice paper with hand-deckled edges, in a vertical landscape composition. Seven small individual ink studies are arranged across the page in a relaxed grid — three above, three below, one offset — each contained in its own quiet area of paper with generous breathing room between studies. Each study is a different natural subject rendered in extreme brush-economy of one to three strokes only, all sharing the same sumi-e ink language: a single bamboo stalk in three strokes; a single open enso circle drawn in one continuous brush sweep with a small gap at its closing point; a single mountain peak silhouette in one rolling stroke; a single fish in motion suggested by two curling strokes; a single dragonfly in three small marks; a single rolling wave with a tiny crest fleck; and a single birch leaf with a delicate stem and three vein hatches. The strokes vary in wetness — some confidently saturated, some dry-brushed and sketchy — but each study honors the sumi-e principle of saying as much as possible with as little ink as possible. A single small red square seal-stamp accents the lower-right corner of the page like an artist's signature. No readable text or characters anywhere in the composition." src="/content/posts/2026-05-02-when-your-ai-writes-200-lines-and-it-could-be-50/overengineering-specimens.png"> <figcaption>Seven recurring shapes. Once you can name them, you can spot them in seconds — and refuse them.</figcaption> </figure> 
 <h2 id="pattern-one-a-class-for-a-single-function">Pattern one: a class for a single function</h2>
@@ -204,26 +203,14 @@
 <p>One test. Uses pytest’s <code>tmp_path</code> to write a real file. Calls the real function. Asserts the real outputs. If <code>parse_config</code> regresses, this test catches it. The mocked tests would not have.</p>
 <p>The rule: <strong>test the behavior the user cares about, not the implementation that produces it.</strong> Mocks are a tool for isolating things you can’t reach (network, time, randomness), not for proving the code calls the functions you expect it to call.</p>
 <h2 id="pattern-six-comments-that-narrate-the-code">Pattern six: comments that narrate the code</h2>
-<p>A small one, but it adds up. The agent has a tendency to add comments that simply restate what the next line of code does.</p>
-<p>The first take:</p>
+<p>A small one, but it adds up: the agent adds comments that restate the next line of code.</p>
 <pre class="astro-code one-dark-pro" style="background-color:#282c34;color:#abb2bf;overflow-x:auto" tabindex="0" data-language="python"><code><span class="line"><span style="color:#7F848E;font-style:italic"># Open the config file</span></span>
 <span class="line"><span style="color:#C678DD">with</span><span style="color:#56B6C2"> open</span><span style="color:#ABB2BF">(path) </span><span style="color:#C678DD">as</span><span style="color:#ABB2BF"> f:</span></span>
-<span class="line"><span style="color:#7F848E;font-style:italic">    # Read the contents</span></span>
 <span class="line"><span style="color:#ABB2BF">    content </span><span style="color:#56B6C2">=</span><span style="color:#ABB2BF"> f.</span><span style="color:#61AFEF">read</span><span style="color:#ABB2BF">()</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#7F848E;font-style:italic"># Parse the YAML</span></span>
-<span class="line"><span style="color:#ABB2BF">data </span><span style="color:#56B6C2">=</span><span style="color:#ABB2BF"> yaml.</span><span style="color:#61AFEF">safe_load</span><span style="color:#ABB2BF">(content)</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#7F848E;font-style:italic"># Return a Config instance</span></span>
-<span class="line"><span style="color:#C678DD">return</span><span style="color:#61AFEF"> Config</span><span style="color:#ABB2BF">(**data)</span></span></code></pre>
-<p>Every comment is true. Every comment is also redundant. A reader of this code can see that <code>with open(path) as f</code> opens the config file. Stating it again in a comment adds line count, not understanding.</p>
-<p>The simplification: just remove the comments.</p>
-<pre class="astro-code one-dark-pro" style="background-color:#282c34;color:#abb2bf;overflow-x:auto" tabindex="0" data-language="python"><code><span class="line"><span style="color:#C678DD">with</span><span style="color:#56B6C2"> open</span><span style="color:#ABB2BF">(path) </span><span style="color:#C678DD">as</span><span style="color:#ABB2BF"> f:</span></span>
-<span class="line"><span style="color:#ABB2BF">    content </span><span style="color:#56B6C2">=</span><span style="color:#ABB2BF"> f.</span><span style="color:#61AFEF">read</span><span style="color:#ABB2BF">()</span></span>
-<span class="line"><span style="color:#ABB2BF">data </span><span style="color:#56B6C2">=</span><span style="color:#ABB2BF"> yaml.</span><span style="color:#61AFEF">safe_load</span><span style="color:#ABB2BF">(content)</span></span>
-<span class="line"><span style="color:#C678DD">return</span><span style="color:#61AFEF"> Config</span><span style="color:#ABB2BF">(**data)</span></span></code></pre>
-<p>The rule, in the always-on rule file: <em>don’t add comments that just narrate what the code does.</em> Comments should explain <em>why</em>, not <em>what</em>. The <em>what</em> is right there in the code. The <em>why</em> — the constraint that’s not visible from the code, the trade-off that was considered, the gotcha that bit somebody once — is what comments are for.</p>
-<p>Senior code review consistently flags narration comments as noise. The rule encodes that signal so the agent doesn’t generate them in the first place.</p>
+<span class="line"><span style="color:#ABB2BF">data </span><span style="color:#56B6C2">=</span><span style="color:#ABB2BF"> yaml.</span><span style="color:#61AFEF">safe_load</span><span style="color:#ABB2BF">(content)</span></span></code></pre>
+<p>A reader can see what <code>open</code> and <code>yaml.safe_load</code> do. The rule is simple: comments should explain <em>why</em>, not <em>what</em>. The <em>what</em> is already in the code.</p>
 <h2 id="pattern-seven-the-worst-one-the-unrequested-feature">Pattern seven: the worst one, the unrequested feature</h2>
 <p>The most expensive overengineering isn’t structural. It’s scope creep. You asked for one thing; the agent did seven.</p>
 <p>A version of this came up when I asked the agent to add a <code>draft: true</code> flag to a single blog post. The first take included:</p>
@@ -243,10 +230,9 @@
 <span class="line"><span style="color:#98C379"><span style="user-select:none">+</span>draft: true</span></span>
 <span class="line"><span style="color:#ABB2BF"> ---</span></span></code></pre>
 <p>One line. The post now has the field. If filtering and warnings are needed, they’re <em>separate</em> changes with their own scope, their own review, their own commit message. Bundling them into the diff for “add draft flag” makes that diff harder to review and harder to revert.</p>
-<p>This pattern is hard to catch because each individual addition feels helpful. The fix is the surgical-changes rule from the previous post: <em>every changed line should trace directly to the user’s request.</em> Lines that don’t trace back to the request — even good lines, even well-intentioned lines — don’t belong in the diff.</p>
+<p>This pattern is hard to catch because each individual addition feels helpful. The fix is the surgical-changes test: <em>every changed line should trace directly to the user’s request.</em></p>
 <h2 id="what-pushback-actually-looks-like">What pushback actually looks like</h2>
-<p>The rule file is necessary but not sufficient. Even with the rule loaded, the agent will sometimes produce overengineered output, especially on the first pass. The remaining work is mine: I have to actually push back when I see one of these patterns.</p>
-<p>What pushback looks like, in practice, is short and direct.</p>
+<p>The rule file is necessary but not sufficient. I still have to push back when I see one of these patterns. In practice, the pushback is short and direct.</p>
 <ul>
 <li><em>“This doesn’t need a class. Make it a function.”</em></li>
 <li><em>“Drop all the configuration parameters except the two we use.”</em></li>
@@ -254,7 +240,7 @@
 <li><em>“Drop the abstract base class and the single concrete implementation. Just inline the function.”</em></li>
 <li><em>“I asked for one change. Reduce the diff to that change.”</em></li>
 </ul>
-<p>The agent always complies. The next iteration is always tighter. The cost of one round of pushback is small. The cost of accepting the overengineered version is that you’ve now committed it, and removing it later is more expensive than refusing to add it now.</p>
+<p>The next iteration is almost always tighter. One round of pushback is cheaper than committing the overengineered version and removing it later.</p>
 <h2 id="the-compound-effect">The compound effect</h2>
 <p>Each of these patterns, individually, costs maybe ten minutes of review and a paragraph of pushback. None of them is a catastrophe.</p>
 <p>The compound effect, across a few months of working with an AI coding agent, is that the codebase either stays clean or starts accumulating bloat. Codebases that accumulate bloat compound the wrong way — every new addition is harder than the last, every refactor is bigger than it should be, the working surface becomes legacy in months instead of years.</p>

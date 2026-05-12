@@ -23,9 +23,7 @@
 <li>Claude Code reads from a top-level <code>CLAUDE.md</code> plus a <code>.claude/</code> directory (with similar subfolders).</li>
 <li>Other agents have their own conventions, none of them harmonized.</li>
 </ul>
-<p>The naive approach is to have one set of files in one tool’s folder, and accept that switching tools means rewriting everything. That’s how most projects start.</p>
-<p>The slightly less naive approach is to maintain <em>two</em> copies — one in <code>.cursor/</code>, one in <code>.claude/</code> — and keep them in sync manually. That works for about three skills before it falls apart. By the tenth skill, the two folders have drifted, and you’re spending more time reconciling than writing.</p>
-<p>The actually-good approach is the one I’ll describe: pick one source-of-truth location, and have every tool’s expected directory symlink to it. One file edit, every tool sees the change.</p>
+<p>The common failure modes are either locking the files into one tool’s folder or maintaining duplicate copies across tools. The approach that has held up for me is simpler: pick one source-of-truth location, and have every tool’s expected directory symlink to it. One file edit, every tool sees the change.</p>
 <h2 id="the-layout">The layout</h2>
 <p>In any project where I want this portability, the layout looks like this:</p>
 <pre class="astro-code one-dark-pro" style="background-color:#282c34;color:#abb2bf;overflow-x:auto" tabindex="0" data-language="plaintext"><code><span class="line"><span>my-project/</span></span>
@@ -45,8 +43,7 @@
 <p>That’s the whole pattern.</p>
 <h2 id="why-src-and-not-the-tool-folders-directly">Why <code>src/</code> and not the tool folders directly</h2>
 <p>A few choices in this layout are doing more work than they look.</p>
-<p><strong><code>src/</code> is generic.</strong> It’s not named after any specific AI coding agent. If a new tool comes along that expects its config in <code>.someother/</code>, I add three more symlinks pointing at <code>src/</code> and the new tool starts working without any file moving.</p>
-<p><strong><code>src/</code> is on its own at the project root.</strong> It sits as a sibling of the tool-specific folders, not inside any of them. That’s deliberate. If I deleted <code>.cursor/</code> tomorrow — say I switched away from Cursor — <code>src/</code> is unaffected. The canonical content has no dependency on any one tool’s directory existing.</p>
+<p><strong><code>src/</code> is generic and independent.</strong> It’s not named after any specific AI coding agent, and it sits as a sibling of the tool-specific folders. If a new tool expects config in <code>.someother/</code>, I add three symlinks pointing at <code>src/</code>. If I delete <code>.cursor/</code> tomorrow, the canonical content is unaffected.</p>
 <p><strong>The symlinks are at the directory level, not the file level.</strong> Each tool folder has three symlinks (rules, skills, agents), not one symlink per skill file. This means I never have to update the symlinks when I add a new skill — the symlink is already pointing at the parent directory, so the new skill is visible immediately.</p>
 <p><strong>The symlinks are relative.</strong> <code>../src/rules</code>, not <code>/Users/me/projects/foo/src/rules</code>. Relative symlinks survive moving the project to a different folder, cloning to a new machine, or sharing with a teammate. Absolute paths would break the moment the project moved.</p>
 <p>These four small choices add up to a setup that’s almost completely passive — once configured, it doesn’t need maintenance.</p>

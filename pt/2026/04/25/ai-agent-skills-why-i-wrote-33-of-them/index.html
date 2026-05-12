@@ -49,19 +49,10 @@
 <p>Uma skill nesse estágio é pequena — um ou dois parágrafos de contexto, o comando, uma lista de flags. Talvez um exemplo de saída se for o tipo de coisa que precisa de interpretação. Leva dez minutos para escrever. O custo é real mas trivial.</p>
 <p>O limiar importa pelo motivo inverso também. <strong>Se algo só foi feito uma vez, não escreva uma skill pra isso.</strong> Tentei isso no começo e produzi um cemitério de skills que nunca usei. Skills são caching. Se você faz cache de algo que nunca vai consultar de novo, está só pagando o custo de armazenamento.</p>
 <h2 id="por-que-trinta-e-três-é-mais-ou-menos-o-número-certo">Por que trinta e três é mais ou menos o número certo</h2>
-<p>Esse número não é uma meta. É onde eu acabei chegando no projeto em que estava trabalhando, e olhando pra trás, faz sentido.</p>
-<p>O projeto tem algumas superfícies naturais:</p>
-<ul>
-<li><strong>Estado ao vivo</strong> — o que o agente está pensando no momento. Skills para inspecionar checkpoints, decodificar estado do grafo, ler a thread de mensagens que o agente está respondendo.</li>
-<li><strong>Configuração / cache</strong> — o que já foi computado antes. Skills para ler e limpar avaliações em cache, consultar rate limits, verificar timing.</li>
-<li><strong>Sistemas externos</strong> — as plataformas de terceiros com as quais o agente se comunica. Skills para buscar um registro por ID, executar uma query de busca, postar uma mensagem de volta.</li>
-<li><strong>Procedimentos internos</strong> — mudanças multi-step repetíveis. Skills que guiam o agente por “adicionar um novo filtro de busca” ou “conectar um novo intent pelo pipeline.”</li>
-<li><strong>Quality assurance</strong> — replay de cenários, captura de outputs, verificações de regressão.</li>
-</ul>
-<p>Cada superfície produz algo entre três e dez skills conforme o projeto amadurece. Multiplique por cinco superfícies e você chega em algum lugar entre vinte e poucos e trinta e poucos. Isso não é mágica — é a forma natural de um sistema não trivial que uma pessoa mais um agente de IA opera.</p>
+<p>Esse número não é uma meta. É onde eu acabei chegando no projeto em que estava trabalhando. A observação útil não é a contagem; é que superfícies diferentes de um sistema produzem skills diferentes: estado ao vivo, configuração, sistemas externos, procedimentos internos e QA.</p>
 <h2 id="quando-uma-skill-ganha-de-uma-rule">Quando uma skill ganha de uma rule</h2>
 <p>Essa foi a coisa que precisei acertar na minha própria cabeça. Rules e skills parecem similares por fora — ambas são arquivos Markdown numa pasta, ambas são carregadas no contexto do agente. Fazem coisas diferentes.</p>
-<p>Uma <strong>rule</strong> carrega automaticamente quando você está trabalhando num arquivo correspondente. É ambient. O agente lê quer você peça ou não. Rules servem para orientação de estado estável: voz, convenções, políticas de segurança, coisas que devem sempre moldar o comportamento do agente num determinado tipo de arquivo.</p>
+<p>Uma <strong>rule</strong> carrega automaticamente quando você está trabalhando num arquivo correspondente. É automática e silenciosa. O agente lê quer você peça ou não. Rules servem para orientação de estado estável: voz, convenções, políticas de segurança, coisas que devem sempre moldar o comportamento do agente num determinado tipo de arquivo.</p>
 <p>Uma <strong>skill</strong> carrega sob demanda, pelo nome. É invocada. O agente pega só quando você manda (ou quando a descrição corresponde à solicitação do usuário de forma suficientemente próxima). Skills servem para procedimentos: coisas que você às vezes faz, com input e output definidos.</p>
 <p>Dois testes práticos que uso:</p>
 <ul>
@@ -87,9 +78,7 @@
 <p><strong>Skills envelheceram melhor do que eu esperava.</strong> Eu presumia que cada skill ia apodrecer quando o código subjacente mudasse. Algumas apodreceram. Mas muitas eram estáveis — um script que lista registros por ID não vai mudar muito. As que envelheceram mal foram as fortemente acopladas à lógica interna; essas foram reescritas ou deletadas. As chatas sobreviveram.</p>
 <p><strong>As skills mais difíceis de escrever foram as procedurais.</strong> Skills que só executam um comando são fáceis. Skills que guiam o agente por uma mudança multi-arquivo (“adicionar um novo filtro ao pipeline”) foram muito mais difíceis, porque o procedimento é o tipo de coisa que mora na cabeça de um engenheiro sênior. Escrever essas me forçou a realmente entender o procedimento, o que teve valor além da skill em si.</p>
 <h2 id="você-deveria-ter-trinta-e-três">Você deveria ter trinta e três?</h2>
-<p>Provavelmente não. Provavelmente você deveria ter quantas o seu projeto produzir naturalmente, escritas uma de cada vez, com o limiar que descrevi acima: <em>se faço isso duas vezes, capturo.</em></p>
-<p>Alguns projetos são bem servidos por cinco skills. Outros por cinquenta. O número é consequência da complexidade do sistema e de quão frequentemente você opera nele. Contar suas skills é mais ou menos tão informativo quanto contar seus casos de teste — útil como cheiro, não como meta.</p>
-<p>O padrão que se sustenta entre tamanhos de projeto é o mais simples: quando um agente de código com IA opera no mesmo projeto repetidamente, <strong>a memória dele sobre o projeto acaba no seu repositório</strong>. Parte dessa memória acaba em rules, que direcionam comportamento em edições de arquivo. O resto acaba em skills, que permitem ao agente executar procedimentos sob demanda. Ambos se acumulam. Ambos são baratos de escrever na primeira vez, e a maioria deles continua se pagando enquanto o projeto viver.</p>
+<p>Provavelmente não. Você deveria ter quantas o seu projeto produzir naturalmente, escritas uma de cada vez, com o limiar de cima: <em>se faço isso duas vezes, capturo.</em> O número é útil como cheiro, não como meta.</p>
 <p>Isso é o que me fez continuar escrevendo. Não um plano. Só a percepção constante de que a sessão de debug de vinte minutos de ontem agora é a invocação de skill de trinta segundos de hoje.</p>   </div>  </div>  <div class="disqus" id="disqus_thread" data-astro-cid-r2x3s5wt></div> <script>(function(){const identifier = "pt-2026-04-25-ai-agent-skills-why-i-wrote-33-of-them";
 const title = "AI agent skills — por que escrevi 33";
 const url = "https://bernardodiasdacruz.com/pt/2026/04/25/ai-agent-skills-why-i-wrote-33-of-them/";

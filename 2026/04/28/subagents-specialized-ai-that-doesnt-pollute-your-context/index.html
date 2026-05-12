@@ -49,11 +49,9 @@
 <h1 id></h1>
 <h2 id="isolation">Isolation</h2>
 <p>The subagent’s context is its own. Whatever it reads, the parent doesn’t have to read. Whatever it concludes, the parent receives as a summary, not as the raw chain of reasoning. The parent’s context stays focused on the parent’s actual task.</p>
-<p>This sounds like a small thing. It is not. With long-running conversations on real projects, context budget is the bottleneck. Anything that reduces what’s in the parent’s context is buying you more useful work later in the same session.</p>
 <h1 id="-1"></h1>
 <h2 id="specialization">Specialization</h2>
 <p>Because the subagent has its own system prompt, it can be tuned for one specific job. The security-review subagent doesn’t have to be good at writing code or generating tests; it has to be good at reading rules and comparing implementations against them. The narrower the specialization, the cleaner the output.</p>
-<p>A general-purpose agent doing a security review is acceptable. A subagent dedicated to that one job, with rules baked into the prompt and a reporting format defined in advance, is reliably better at it.</p>
 <h1 id="-2"></h1>
 <h2 id="optional-read-only-mode">Optional read-only mode</h2>
 <p>Most subagents I write are flagged <code>readonly: true</code>. They can read files, run shell commands, browse the codebase — but they can’t write anything. That’s the right default for review and analysis work.</p>
@@ -69,7 +67,6 @@
 <p><strong>Don’t subagent trivial work.</strong> If the task takes one tool call and a paragraph of analysis, the subagent overhead — spawning, context-passing, summarization — is more cost than benefit. Just do the work in the parent.</p>
 <p><strong>Don’t subagent things you’ll need to follow up on.</strong> A subagent’s context evaporates after it returns. If you might want to ask “wait, why did you say X about that file?” two minutes later, the subagent isn’t there to answer. Use the parent for tasks that have a likely follow-up.</p>
 <p><strong>Don’t subagent for context you actually want polluted.</strong> Sometimes the “pollution” is exactly the point. If you’re trying to build up the parent’s understanding of a system, doing the reading in the parent is correct. The subagent gives you a summary; the parent gives you fluency. Different needs.</p>
-<p><strong>Don’t subagent to escape from a tough question.</strong> If the parent agent is struggling with something, sending it to a subagent doesn’t make the underlying problem easier. It just hides the struggle inside an opaque box.</p>
 <h2 id="what-the-parent-and-subagent-each-handle">What the parent and subagent each handle</h2>
 <p>The cleanest mental model I’ve found:</p>
 
@@ -132,16 +129,10 @@
 <li><strong>Skills</strong> are on-demand procedures the parent invokes by name. They run in the parent’s context.</li>
 <li><strong>Subagents</strong> are isolated AI instances spawned by the parent. They run in their own context.</li>
 </ul>
-<p>Each addresses a different need:</p>
-<ul>
-<li>Rules raise the floor on the parent’s behavior.</li>
-<li>Skills give the parent reusable procedures.</li>
-<li>Subagents give the parent reusable <em>colleagues</em> — specialized counterparts that handle the work the parent shouldn’t be doing.</li>
-</ul>
-<p>You’ll usually want all three on a non-trivial project. Rules make the parent better at the project. Skills make the parent faster at recurring tasks. Subagents take the heavy specialized work off the parent’s plate.</p>
+<p>You’ll usually want all three on a non-trivial project: rules raise the floor, skills give procedures, and subagents handle the heavy specialized work the parent shouldn’t keep in its own context.</p>
 <h2 id="a-small-piece-of-advice">A small piece of advice</h2>
-<p>If you’ve never written a subagent and you’re considering one, the first one I’d suggest writing is exactly the security-review pattern: read-only, narrow specialization, structured output. Tomorrow’s post is a walkthrough of one I actually use. The reason I’d suggest that one first is that it gives you immediate, visible value — you ask the parent “is this change safe?” and you get back a structured report that would have taken twenty minutes to assemble manually.</p>
-<p>Once you’ve felt how that’s different from doing the same review in the parent’s context, you’ll start spotting other tasks that fit the same shape. The drawer fills up the same way the skill drawer did, one specialized colleague at a time.</p>   </div>  </div>  <div class="disqus" id="disqus_thread" data-astro-cid-r2x3s5wt></div> <script>(function(){const identifier = "2026-04-28-subagents-specialized-ai-that-doesnt-pollute-your-context";
+<p>If you’ve never written a subagent, start with the security-review shape: read-only, narrow specialization, structured output. Tomorrow’s post walks through the one I actually use.</p>
+<p>Once you’ve felt how that’s different from doing the same review in the parent’s context, you’ll start spotting other tasks that fit the same shape.</p>   </div>  </div>  <div class="disqus" id="disqus_thread" data-astro-cid-r2x3s5wt></div> <script>(function(){const identifier = "2026-04-28-subagents-specialized-ai-that-doesnt-pollute-your-context";
 const title = "Subagents — specialized AI that doesn't pollute your context";
 const url = "https://bernardodiasdacruz.com/2026/04/28/subagents-specialized-ai-that-doesnt-pollute-your-context/";
 
