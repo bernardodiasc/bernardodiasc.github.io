@@ -145,18 +145,6 @@ Inline image pattern (use raw HTML, not Markdown):
 
 The reason that matters: the agent now writes posts with `<figure>` blocks pointing at image paths that don't exist yet. The `alt` is detailed enough for me to feed it directly into an image model. The `figcaption` is editorial. I generate the images in a separate pass, save them at the suggested paths, and the post is suddenly illustrated. The rule keeps the workflow consistent across every post.
 
-The required closing section is a small thing that compounds across the archive:
-
-```markdown
-Every post must end with a `
-
-## Further reading` section that links
-to 1–3 other posts on the blog. Genuinely relevant, not filler.
-Use the canonical post path:
-- EN: [Title](/YYYY/MM/DD/slug)
-- PT: [Título](/pt/YYYY/MM/DD/slug)
-```
-
 Three months from now, when posts in this series are scattered across the archive, the further-reading blocks turn the archive into a graph instead of a flat list. Small commitment now, big compounding effect later.
 
 <ImageFigure alt="Sumi-e ink-wash composition on cream rice paper, with two parallel horizontal bands stacked vertically and separated by generous negative space. The upper band is built from a sequence of short, loose, energetic brush gestures with varied lengths and irregular spacing — quick wet strokes, occasional ink splashes, deliberate gaps between them — capturing the rhythm of conversational, broken-line writing. The lower band is built from longer, more measured, smoother brush gestures with even spacing and steadier weight, capturing the cadence of slower, building prose. The two bands share the same brush-and-ink language but have visibly different temperaments — one staccato, one legato. A faint vertical tonal shift in the paper between the two bands reads as a quiet boundary. A small red square seal-stamp accents one corner. No letters, no characters, no readable text anywhere — purely gestural rhythm." src="/content/posts/2026-04-22-teaching-ai-how-to-write-like-me/two-registers-diagram.png" caption="Two registers, one author. The brushstrokes share a hand but breathe at different tempos." />
@@ -186,8 +174,3 @@ The other thing it doesn't fix is **what to say**. Voice rules govern *how* some
 Writing these three rule files took maybe an hour. Editing them as I went was another hour spread across a few sessions. They live in `.cursor/rules/` and they work for every post I'll ever write here. The cost is upfront and small. The benefit compounds across every draft, every translation, every quick fix.
 
 That's the pattern, more or less. Don't try to coach the agent voice in the chat window for every post. Write the coaching down once. Let the agent reread it on every file. Edit the rules when you spot a recurring failure. The conversation gets shorter and the output gets steadier.
-
-## Further reading
-
-- [Rules as project memory](/2026/04/24/rules-as-project-memory)
-- [Multi-language support, at last](/2026/02/22/multi-language-support-at-last)

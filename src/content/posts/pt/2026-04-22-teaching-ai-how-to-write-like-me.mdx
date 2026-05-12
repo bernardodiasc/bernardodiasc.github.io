@@ -146,18 +146,6 @@ Inline image pattern (use raw HTML, not Markdown):
 
 O motivo disso importar: o agente agora escreve posts com blocos `<figure>` apontando para caminhos de imagem que ainda não existem. O `alt` é detalhado o suficiente para eu alimentar diretamente num modelo de imagem. O `figcaption` é editorial. Eu gero as imagens numa passada separada, salvo nos caminhos sugeridos, e o post de repente está ilustrado. A rule mantém o fluxo consistente em cada post.
 
-A seção de encerramento obrigatória é uma coisa pequena que se compõe pelo arquivo inteiro:
-
-```markdown
-Every post must end with a `
-
-## Further reading` section that links
-to 1–3 other posts on the blog. Genuinely relevant, not filler.
-Use the canonical post path:
-- EN: [Title](/YYYY/MM/DD/slug)
-- PT: [Título](/pt/YYYY/MM/DD/slug)
-```
-
 Daqui a três meses, quando os posts desta série estiverem espalhados pelo arquivo, os blocos de leitura complementar transformam o arquivo num grafo em vez de uma lista plana. Compromisso pequeno agora, efeito composto grande depois.
 
 <ImageFigure alt="Composição sumi-e em nanquim sobre papel de arroz creme, com duas faixas horizontais paralelas empilhadas verticalmente e separadas por generoso espaço negativo. A faixa superior é construída a partir de uma sequência de gestos de pincel curtos, soltos e energéticos com comprimentos variados e espaçamento irregular — pinceladas úmidas rápidas, respingos ocasionais de tinta, intervalos deliberados entre elas — capturando o ritmo de uma escrita conversacional e entrecortada. A faixa inferior é construída a partir de gestos de pincel mais longos, medidos e suaves com espaçamento uniforme e peso mais estável, capturando a cadência de uma prosa mais lenta e construída. As duas faixas compartilham a mesma linguagem de pincel e tinta mas têm temperamentos visivelmente diferentes — uma staccato, outra legato. Uma leve mudança tonal vertical no papel entre as duas faixas se lê como uma fronteira silenciosa. Um pequeno selo quadrado vermelho acentua um canto. Sem letras, sem caracteres, sem texto legível em lugar nenhum — puramente ritmo gestual." src="/content/posts/2026-04-22-teaching-ai-how-to-write-like-me/two-registers-diagram.png" caption="Dois registros, um autor. As pinceladas compartilham a mesma mão mas respiram em tempos diferentes." />
@@ -187,8 +175,3 @@ A outra coisa que não resolve é **o que dizer**. Rules de voz governam *como* 
 Escrever esses três arquivos de rules levou talvez uma hora. Editá-los ao longo do caminho foi mais uma hora espalhada em algumas sessões. Eles ficam em `.cursor/rules/` e funcionam para cada post que eu escrever aqui. O custo é inicial e pequeno. O benefício se compõe em cada rascunho, cada tradução, cada ajuste rápido.
 
 Esse é o padrão, mais ou menos. Não tente coachear a voz do agente na janela de chat a cada post. Escreva o coaching uma vez. Deixe o agente reler a cada arquivo. Edite as rules quando identificar uma falha recorrente. A conversa fica mais curta e a saída fica mais estável.
-
-## Leitura complementar
-
-- [Rules como memória de projeto](/pt/2026/04/24/rules-as-project-memory)
-- [Suporte multi-idioma, finalmente](/pt/2026/02/22/multi-language-support-at-last)

@@ -109,12 +109,3 @@ Every post must reference a `thumbnail` in frontmatter and include a lead `<Imag
 - **Posts with `series`**: `<ImageFigure>` must come **after the first 2–3 paragraphs**, not at the top. The `SeriesList` component floats right at the top of the text block; an image placed before text gets pushed below the series box and breaks the layout. Always start with prose first.
 
 **Storage**: `public/content/posts/<slug>/<image-name>.png` → served at `/content/posts/<slug>/<image-name>.png`.
-
----
-
-## Further reading
-
-Every post ends with `## Further reading` linking to 1–3 other posts on the blog.
-
-- Links must be genuinely relevant. EN links use `[Title](/YYYY/MM/DD/slug)`, PT uses `[Título](/pt/YYYY/MM/DD/slug)`.
-- PT version links to PT versions of the recommended posts.

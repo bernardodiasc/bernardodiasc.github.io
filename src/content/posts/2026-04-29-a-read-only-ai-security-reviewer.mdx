@@ -256,8 +256,3 @@ It could be a function call to an external service, but writing one is a much bi
 The subagent is the right shape because the work is *isolated, read-heavy, specialized, and produces a small structured return*. Each of those properties points at the same conclusion: spawn a clean instance with its own context, give it a focused prompt, get a report back.
 
 That's the whole pattern. The instance isn't "smarter than the parent." It's the same model in a more focused configuration. The configuration is what does the work.
-
-## Further reading
-
-- [Org-wide standards as code](/2026/04/30/org-wide-standards-as-code)
-- [Subagents — specialized AI that doesn't pollute your context](/2026/04/28/subagents-specialized-ai-that-doesnt-pollute-your-context)
