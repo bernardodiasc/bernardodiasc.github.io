@@ -1,0 +1,210 @@
+<!DOCTYPE html><html lang="en" data-astro-cid-sckkx6r4> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="generator" content="Astro v5.18.1"><title>A read-only AI security reviewer - Bernardo Dias da Cruz</title><meta name="description" content="A subagent that reads your security rules, looks at the code you just wrote, and tells you what's wrong by severity — with citations. This is the actual definition file, the rule set it consults, the output it produces, and the small choices that make it useful instead of a noise generator."><meta name="robots" content="noindex, nofollow"><link rel="canonical" href="https://bernardodiasdacruz.com/2026/04/29/a-read-only-ai-security-reviewer/"><meta name="twitter:site" content="@bernardodiasc"><meta name="twitter:title" content="A read-only AI security reviewer"><meta name="twitter:description" content="A subagent that reads your security rules, looks at the code you just wrote, and tells you what's wrong by severity — with citations. This is the actual definition file, the rule set it consults, the output it produces, and the small choices that make it useful instead of a noise generator."><meta name="twitter:creator" content="@bernardodiasc"><meta name="twitter:image" content="https://bernardodiasdacruz.com/content/posts/2026-04-29-a-read-only-ai-security-reviewer/security-shield-review.png"><meta property="og:title" content="A read-only AI security reviewer"><meta property="og:type" content="article"><meta property="og:url" content="https://bernardodiasdacruz.com/2026/04/29/a-read-only-ai-security-reviewer/"><meta property="og:image" content="https://bernardodiasdacruz.com/content/posts/2026-04-29-a-read-only-ai-security-reviewer/security-shield-review.png"><meta property="og:description" content="A subagent that reads your security rules, looks at the code you just wrote, and tells you what's wrong by severity — with citations. This is the actual definition file, the rule set it consults, the output it produces, and the small choices that make it useful instead of a noise generator."><meta property="og:site_name" content="Bernardo Dias da Cruz"><link rel="shortcut icon" href="/favicon.ico"><meta name="google-site-verification" content="w8owtTJwheQ0pp3DJ-bwIKX67nyi2bdCZs8fLs-r-Wc"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=IBM+Plex+Serif:wght@400&family=Permanent+Marker&display=swap" rel="stylesheet"><link rel="stylesheet" href="/_astro/_title_.D_V8udgm.css">
+<style>.post-details[data-astro-cid-bangc7to]{font-size:var(--text-size);padding:2em 2em 4em}.disqus[data-astro-cid-r2x3s5wt]{font-size:var(--text-size);padding:2em}
+.icon[data-astro-cid-patnjmll]{fill:currentColor;width:100%;height:100%;display:block}
+.text-block{font-size:var(--text-size);width:100%;overflow:inherit}.text-block h1,.text-block h2,.text-block h3,.text-block h4,.text-block h5,.text-block h6{font-family:var(--heading-family);color:var(--heading-color);font-weight:var(--heading-weight);line-height:var(--heading-line)}.text-block h1{font-size:var(--heading-level1-size);margin:var(--heading-level1-margins)}.text-block h2{font-size:var(--heading-level2-size);margin:var(--heading-level2-margins);padding-bottom:.3em;border-bottom:1px solid var(--line-light)}.text-block h3{font-size:var(--heading-level3-size);margin:var(--heading-level3-margins);text-transform:uppercase}.text-block h4{font-size:var(--heading-level4-size);margin:var(--heading-level4-margins);font-weight:var(--heading-weight-bold)}.text-block h5{font-size:var(--heading-level5-size);margin:var(--heading-level5-margins)}.text-block h6{font-size:var(--heading-level6-size);margin:var(--heading-level6-margins)}.text-block p{font-family:var(--text-family);color:var(--text-color);font-size:var(--text-size);font-weight:var(--text-weight);line-height:var(--text-line);word-wrap:break-word;margin:0 0 1em;text-align:justify;hyphens:auto}.text-block a{color:inherit;background-image:linear-gradient(to bottom,transparent 37%,var(--link-background) 37%);background-size:100% 300%;background-position:0 10%;transition-property:background-position;transition-duration:.4s;outline:none}.text-block a:hover{background-position:0 100%}.text-block blockquote{border-left:10px solid var(--code-background);margin:30px 0;padding:0 0 0 25px}.text-block pre{background:var(--pre-background);color:var(--pre-color);padding:1.3em 2em;margin:.5em -2em 1.2em;line-height:1;overflow-x:auto}.text-block code{background:var(--code-background);padding:.1em .3em .2em;color:var(--code-color);border-radius:2px;font-size:.9em}.text-block pre code{background:unset;color:inherit;padding:0;font-size:.8em;white-space:pre}.text-block ul,.text-block ol{font-family:var(--text-family);color:var(--text-color);font-size:var(--text-size);font-weight:var(--text-weight);line-height:var(--text-line);margin:.5em 0 1.2em 1em;padding:0 0 0 1em}.text-block ul{list-style:initial}.text-block ol{list-style:decimal}.text-block ul ul,.text-block ol ol{margin-bottom:.5em}.text-block li{margin:0}.text-block ul ul li{list-style:circle}.text-block ul ul ul li{list-style:square}.text-block hr{margin:3rem 0;height:1px;border:none;border-bottom:1px solid var(--line-heavy)}.text-block table{display:block;width:100%;overflow:auto}.text-block table tr{background-color:#fff;border-top:1px solid var(--line-heavy)}.text-block table tr:nth-child(2n){background-color:#f8f8f8}.text-block table th{font-weight:600}.text-block table th,.text-block table td{padding:.5em 1em;border:1px solid var(--line-light)}.text-block table td{font-weight:var(--text-weight)}.text-block img{max-width:100%}.text-block figure{margin:1.5em 0;text-align:center}.text-block figcaption{font-size:var(--meta-size);color:var(--meta-color);font-style:italic;text-align:center}.text-block iframe{margin:2em auto;display:block}.text-block>:first-child{margin-top:0}.text-block>:last-child{margin-bottom:0}
+.post-header[data-astro-cid-yl355ysp]{font-size:var(--text-size);margin:0 0 1em}.post-header__title[data-astro-cid-yl355ysp]{color:var(--heading-color);font-size:var(--heading-level1-size);margin:0 0 .3em}.post-header--listing[data-astro-cid-yl355ysp] .post-header__title[data-astro-cid-yl355ysp]{font-size:var(--heading-level2-size)}.post-header--listing[data-astro-cid-yl355ysp]:hover .post-header__title[data-astro-cid-yl355ysp]{text-decoration:underline}.post-header__icon[data-astro-cid-yl355ysp]{flex-shrink:0;display:inline-block;height:.8em;width:.8em;margin:0 4px 0 0;transform:translateY(3px)}.post-header--details[data-astro-cid-yl355ysp] .post-header__icon[data-astro-cid-yl355ysp]{height:1em;width:1em;margin:0 5px 0 0}.post-header__meta[data-astro-cid-yl355ysp]{color:var(--meta-color);font-size:var(--meta-size);margin:0 0 1em}.post-header__category[data-astro-cid-yl355ysp]{margin:0 0 .5em}.post-header__category-link[data-astro-cid-yl355ysp]{color:var(--heading-color)}.post-header__category-link[data-astro-cid-yl355ysp]:hover{color:var(--text-color);text-decoration:underline}.post-header__excerpt[data-astro-cid-yl355ysp]{color:var(--text-color)}.post-header__tags[data-astro-cid-yl355ysp]{list-style:none;margin:1.2em 0 0;padding:0;display:flex;flex-wrap:wrap;gap:.4em}.post-header__tag[data-astro-cid-yl355ysp]{display:inline-block;padding:.25em .7em;font-size:.78em;font-family:var(--heading-family);background:#f0f0f0;border:1px solid var(--line-light);border-radius:20px;color:var(--text-color)}.post-header__tag--authorship[data-astro-cid-yl355ysp]{background:var(--heading-color);color:#fff;border-color:var(--heading-color);text-transform:uppercase;letter-spacing:.05em;font-size:.7em;font-weight:var(--heading-weight-bold)}
+</style></head> <body data-astro-cid-sckkx6r4> <main class="layout" data-astro-cid-sckkx6r4> <header class="layout__header" data-astro-cid-sckkx6r4> <h1 class="layout__header-title" data-astro-cid-sckkx6r4> <a href="/" data-astro-cid-sckkx6r4>Random Thoughts</a> </h1> <nav class="layout__nav" data-astro-cid-sckkx6r4> <ul class="tabs" data-astro-cid-xlvzfuxv> <li class="tabs__tab" data-astro-cid-xlvzfuxv> <a href="/" title="Latest posts" class="tabs__link" data-astro-cid-xlvzfuxv> <svg class="icon" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" data-astro-cid-patnjmll><path d="M10 20v-6h4v6h5v-8h3l-10-9-10 9h3v8z" data-astro-cid-patnjmll></path></svg> </a> </li> <li class="tabs__tab" data-astro-cid-xlvzfuxv> <a href="/search" title="Search for content" class="tabs__link" data-astro-cid-xlvzfuxv> <svg class="icon" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" data-astro-cid-patnjmll><path d="M12 10.9c-.61 0-1.1.49-1.1 1.1s.49 1.1 1.1 1.1c.61 0 1.1-.49 1.1-1.1s-.49-1.1-1.1-1.1zm0-8.9c-5.52 0-10 4.48-10 10s4.48 10 10 10 10-4.48 10-10-4.48-10-10-10zm2.19 12.19l-8.19 3.81 3.81-8.19 8.19-3.81-3.81 8.19z" data-astro-cid-patnjmll></path></svg> </a> </li> <li class="tabs__tab" data-astro-cid-xlvzfuxv> <a href="/archive" title="Content archive" class="tabs__link" data-astro-cid-xlvzfuxv> <svg class="icon" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" data-astro-cid-patnjmll><path d="M19,19H5V8H19M16,1V3H8V1H6V3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3H18V1M17,12H12V17H17V12Z" data-astro-cid-patnjmll></path></svg> </a> </li> <li class="tabs__tab" data-astro-cid-xlvzfuxv> <a href="/about-me" title="About me" class="tabs__link" data-astro-cid-xlvzfuxv> <svg class="icon" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" data-astro-cid-patnjmll><path d="M21,13A9,9 0 0,1 12,22A9,9 0 0,1 3,13L3.03,4.43C5.68,2.88 8.76,2 12.05,2C15.3,2 18.36,2.87 21,4.38V13M13,19.93C16.39,19.44 19,16.5 19,13V5.59C16.9,4.57 14.54,4 12.05,4C9.5,4 7.08,4.6 4.94,5.66L5,13C5,16.5 7.63,19.44 11,19.93V18H13V19.93M11,16H8L6,13L9,14H10L11,13H13L14,14H15L18,13L16,16H13L12,15L11,16M6,9.03C6.64,8.4 7.5,8.05 8.5,8.05C9.45,8.05 10.34,8.4 11,9.03C10.34,9.65 9.45,10 8.5,10C7.5,10 6.64,9.65 6,9.03M13,9.03C13.64,8.4 14.5,8.05 15.5,8.05C16.45,8.05 17.34,8.4 18,9.03C17.34,9.65 16.45,10 15.5,10C14.5,10 13.64,9.65 13,9.03Z" data-astro-cid-patnjmll></path></svg> </a> </li> </ul>  <a href="/pt/2026/04/29/a-read-only-ai-security-reviewer/" class="lang-switch" title="Português" data-astro-cid-64r42zdf> <span class="lang-switch__current" data-astro-cid-64r42zdf>EN</span> <span class="lang-switch__separator" data-astro-cid-64r42zdf>/</span> <span class="lang-switch__other" data-astro-cid-64r42zdf>PT</span> </a>  </nav> </header> <article class="layout__content" data-astro-cid-sckkx6r4> <div class="layout__content-inner" data-astro-cid-sckkx6r4>  <div class="post-details" data-astro-cid-bangc7to> <div class="post-header post-header--details" data-astro-cid-yl355ysp><p class="post-header__category" data-astro-cid-yl355ysp><a href="/category/developer-tooling" class="post-header__category-link" data-astro-cid-yl355ysp><span class="post-header__icon" data-astro-cid-yl355ysp><svg class="icon" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" data-astro-cid-patnjmll><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z" data-astro-cid-patnjmll></path></svg></span>Developer tooling</a></p><h1 class="post-header__title" data-astro-cid-yl355ysp>A read-only AI security reviewer</h1><p class="post-header__meta" data-astro-cid-yl355ysp>Tuesday, April 28, 2026</p><ul class="post-header__tags" data-astro-cid-yl355ysp><li class="post-header__tag post-header__tag--authorship" data-astro-cid-yl355ysp>ai-assisted</li><li class="post-header__tag" data-astro-cid-yl355ysp>#ai</li><li class="post-header__tag" data-astro-cid-yl355ysp>#ai-agents</li><li class="post-header__tag" data-astro-cid-yl355ysp>#vibecoding</li><li class="post-header__tag" data-astro-cid-yl355ysp>#security</li><li class="post-header__tag" data-astro-cid-yl355ysp>#code-review</li><li class="post-header__tag" data-astro-cid-yl355ysp>#yaml</li><li class="post-header__tag" data-astro-cid-yl355ysp>#markdown</li><li class="post-header__tag" data-astro-cid-yl355ysp>#owasp</li><li class="post-header__tag" data-astro-cid-yl355ysp>#cursor</li><li class="post-header__tag" data-astro-cid-yl355ysp>#claude</li></ul></div> <div class="text-block">   <figure>
+  <img alt="Linocut block print on cream paper in deep red and black ink, with the characteristic edge texture of hand-carved relief printing — visible chisel marks, slightly imperfect edges, high-contrast positive and negative space. Centered on the print is a bold geometric heater-shield silhouette in deep red ink, its outline cut with confident bold strokes and inner cross-hatch detail giving it heft. Inside the shield, instead of any imagery, a stack of horizontal black ink bars represents lines of code — short, medium, longer, then short again — with no readable text. To the right of the shield, a vertical column of four small geometric markers ranks downward in visual emphasis: a heavy filled square in deep red (largest, most assertive), a solid red diamond, a horizontal red-and-black hatched bar, and a small open black circle (smallest). A thin black ink line connects each marker back to the shield&#x27;s right edge. Just below the shield, a small ink-stamped padlock motif in black with a single white-cut stripe slicing across it indicates a closed lock. Bold woodblock line work, characteristic linocut grain, two-color print on cream paper. No readable text or letters anywhere in the composition." src="/content/posts/2026-04-29-a-read-only-ai-security-reviewer/security-shield-review.png">
+  <figcaption>Read the code. Sort by gravity. Cite the rule. Don't touch anything.</figcaption>
+</figure>
+<p>The previous post laid out what subagents are. This one is a walkthrough of one I actually use, day to day, on every change that touches anything sensitive: the security-review subagent.</p>
+<p>It’s a single Markdown file. Twenty lines of frontmatter and prompt, plus a folder of rule documents it consults. The whole apparatus fits in a small wrapper repo that I add to the workspace alongside whatever project I’m working on. Once it’s there, asking the parent agent <em>“review this for security”</em> spawns the subagent, which reads the relevant rules, compares the implementation against them, and returns a severity-ranked report with citations.</p>
+<p>Here’s what’s inside, why it works, and the choices that distinguish a useful security reviewer from a noisy one.</p>
+<h2 id="the-definition-file">The definition file</h2>
+<p>The whole subagent lives in a single file:</p>
+<pre class="astro-code one-dark-pro" style="background-color:#282c34;color:#abb2bf; overflow-x: auto;" tabindex="0" data-language="markdown"><code><span class="line"><span style="color:#ABB2BF">---</span></span>
+<span class="line"><span style="color:#E06C75">name</span><span style="color:#ABB2BF">: </span><span style="color:#98C379">org-standards-security-review</span></span>
+<span class="line"><span style="color:#E06C75">description</span><span style="color:#ABB2BF">: </span><span style="color:#C678DD">></span></span>
+<span class="line"><span style="color:#98C379">  Security and privacy review against the org standards in</span></span>
+<span class="line"><span style="color:#98C379">  standards/rules/. Use when implementing or reviewing auth,</span></span>
+<span class="line"><span style="color:#98C379">  APIs, data handling, uploads, crypto, sessions, or infra.</span></span>
+<span class="line"><span style="color:#98C379">  Use proactively for sensitive features.</span></span>
+<span class="line"><span style="color:#E06C75">model</span><span style="color:#ABB2BF">: </span><span style="color:#98C379">inherit</span></span>
+<span class="line"><span style="color:#E06C75">readonly</span><span style="color:#ABB2BF">: </span><span style="color:#D19A66">true</span></span>
+<span class="line"><span style="color:#ABB2BF">---</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ABB2BF">You review work against the org standards in </span><span style="color:#E5C07B">`</span><span style="color:#98C379">standards/rules/</span><span style="color:#E5C07B">`</span><span style="color:#ABB2BF">.</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E06C75">## When invoked</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E5C07B">1.</span><span style="color:#ABB2BF"> From the parent prompt, infer scope (features, files, or APIs).</span></span>
+<span class="line"><span style="color:#E5C07B">2.</span><span style="color:#ABB2BF"> Identify which topics under </span><span style="color:#E5C07B">`</span><span style="color:#98C379">standards/rules/</span><span style="color:#E5C07B">`</span><span style="color:#ABB2BF"> apply.</span></span>
+<span class="line"><span style="color:#ABB2BF">   Examples: CSRF and auth tokens for state-changing HTTP;</span></span>
+<span class="line"><span style="color:#ABB2BF">   parameterized DB queries for SQL; hardcoded-secrets and</span></span>
+<span class="line"><span style="color:#ABB2BF">   sensitive-data-* for credentials and logs;</span></span>
+<span class="line"><span style="color:#ABB2BF">   file-upload-validation for uploads.</span></span>
+<span class="line"><span style="color:#E5C07B">3.</span><span style="color:#ABB2BF"> Read the relevant </span><span style="color:#E5C07B">`</span><span style="color:#98C379">standards/rules/*.md</span><span style="color:#E5C07B">`</span><span style="color:#ABB2BF"> files and compare</span></span>
+<span class="line"><span style="color:#ABB2BF">   the implementation to the written rules. Cite filenames in</span></span>
+<span class="line"><span style="color:#ABB2BF">   findings.</span></span>
+<span class="line"><span style="color:#E5C07B">4.</span><span style="color:#ABB2BF"> Report by severity (Critical / High / Medium / Low). Each</span></span>
+<span class="line"><span style="color:#ABB2BF">   finding must reference a rule file.</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#ABB2BF">Do not invent stricter requirements than the written rules.</span></span>
+<span class="line"><span style="color:#ABB2BF">If the rules are silent or ambiguous, say so explicitly.</span></span></code></pre>
+<p>That’s it. Twenty-something lines. Let me walk through what each part is doing.</p>
+<h2 id="the-frontmatter">The frontmatter</h2>
+<pre class="astro-code one-dark-pro" style="background-color:#282c34;color:#abb2bf; overflow-x: auto;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#E06C75">name</span><span style="color:#ABB2BF">: </span><span style="color:#98C379">org-standards-security-review</span></span></code></pre>
+<p>The <code>name</code> is what the parent agent uses to invoke the subagent. It also matters for discovery — when the parent is deciding whether to spawn a subagent for a task, it scans names looking for a match against the user’s intent. <em>“Review this for security”</em> matches <code>security-review</code> cleanly.</p>
+<pre class="astro-code one-dark-pro" style="background-color:#282c34;color:#abb2bf; overflow-x: auto;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#E06C75">description</span><span style="color:#ABB2BF">: </span><span style="color:#C678DD">></span></span>
+<span class="line"><span style="color:#98C379">  Security and privacy review against the org standards in</span></span>
+<span class="line"><span style="color:#98C379">  standards/rules/. Use when implementing or reviewing auth,</span></span>
+<span class="line"><span style="color:#98C379">  APIs, data handling, uploads, crypto, sessions, or infra.</span></span>
+<span class="line"><span style="color:#98C379">  Use proactively for sensitive features.</span></span></code></pre>
+<p>This is the part most people underweight. The description does two jobs:</p>
+<ul>
+<li><strong>It tells the parent agent when to reach for this subagent.</strong> The phrases <em>“Use when implementing or reviewing auth, APIs, data handling, uploads, crypto, sessions, or infra”</em> are not decorative. They’re the trigger conditions. If the parent is editing an auth handler, the description matches and the subagent becomes a candidate.</li>
+<li><strong>It tells the user what to expect.</strong> When I’m reading my own subagent list six months from now, the description has to remind me what this thing actually does, so I don’t end up with three security-flavored subagents that all kind of do the same thing.</li>
+</ul>
+<p>The phrase <em>“Use proactively for sensitive features”</em> is doing more work than it looks. It tells the parent agent it doesn’t need to wait for me to ask. If the parent is generating code that touches credentials, it should consider spawning the subagent on its own.</p>
+<pre class="astro-code one-dark-pro" style="background-color:#282c34;color:#abb2bf; overflow-x: auto;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#E06C75">model</span><span style="color:#ABB2BF">: </span><span style="color:#98C379">inherit</span></span></code></pre>
+<p>Inherit from the parent. The default. Other options exist — you can pin the subagent to a smaller cheaper model for routine review, or to a larger model for deeper analysis — but <code>inherit</code> keeps the surface simple and makes the cost predictable.</p>
+<pre class="astro-code one-dark-pro" style="background-color:#282c34;color:#abb2bf; overflow-x: auto;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#E06C75">readonly</span><span style="color:#ABB2BF">: </span><span style="color:#D19A66">true</span></span></code></pre>
+<p>This is the most important line in the file.</p>
+<p>A read-only subagent cannot write files. It can read, search, navigate, summarize — but the result is purely a report. That changes everything about my mental model. I don’t have to review what the subagent is <em>about to do</em> before it does it; I just review what it <em>found</em>. The set of tasks I’ll happily delegate to a read-only subagent is much larger than the set I’d delegate to a writable one. For review work specifically, read-only is the right default.</p>
+<p>It also has a security implication for the security reviewer itself: a read-only review subagent cannot accidentally apply a “fix” it thinks is correct. The fix is my decision. The subagent’s job is to surface the finding.</p>
+<figure>
+  <img alt="Linocut block print on cream paper in deep red and black ink, with characteristic chisel-mark texture and slightly imperfect carved edges. Centered on the page is a bold rectangular paper outline cut in heavy black ink, representing a single document. Inside the document outline, four horizontal bands stack vertically, each band filled with short black hatch-marks suggesting lines of dense text without spelling anything. To the left of each band, a thin black ink line extends out into the margin and ends in a distinctive small carved symbol: the first band&#x27;s annotation ends in a small five-pointed star, the second in a small eye-shape, the third in a small gear, and the fourth in a small padlock. The padlock annotation is rendered larger and printed in deep red ink — the only red on the print — clearly emphasized over the other three black annotations. Bold woodcut line work, characteristic linocut grain, two-color print on cream paper. No readable text or letters anywhere in the composition." src="/content/posts/2026-04-29-a-read-only-ai-security-reviewer/annotated-agent-definition.png">
+  <figcaption>Twenty lines of carved structure. Each annotation answers a different question; the red one is the one that changes how you'll use it.</figcaption>
+</figure>
+<h2 id="the-body--what-the-subagent-actually-does">The body — what the subagent actually does</h2>
+<p>The system prompt is short on purpose. Four numbered steps, plus a guardrail.</p>
+<p><strong>Step one: infer scope.</strong> The parent’s prompt is the input. The subagent has to figure out what files, features, or APIs are being reviewed. Sometimes this is obvious from the prompt; sometimes the subagent has to ask itself “the user said ‘review the auth changes’ — which files are those?” and find them. Either way, the first action is scoping.</p>
+<p><strong>Step two: identify which rules apply.</strong> This is where the subagent earns its keep. The rule directory has dozens of files, each covering one topic — CSRF, auth tokens, parameterized DB queries, secrets handling, file uploads, dependency scanning, and so on. The parent agent doesn’t want to load all of those. The subagent — having scoped the change — picks the relevant ones.</p>
+<p>The prompt gives examples to anchor this: <em>“CSRF and auth tokens for state-changing HTTP; parameterized DB queries for SQL; hardcoded-secrets and sensitive-data-</em> for credentials and logs.”* These are seeds. The subagent extrapolates from them based on what it sees in the change.</p>
+<p><strong>Step three: read the rules and compare.</strong> The subagent opens each relevant rule file and compares the implementation. The crucial detail is <em>“Cite filenames in findings.”</em> Every finding the subagent reports has to point at a specific rule it’s citing. That citation is what makes the output verifiable. I can open the rule the subagent referenced, read it myself, and decide whether the finding is correct.</p>
+<p><strong>Step four: report by severity.</strong> Critical, High, Medium, Low. The format is fixed. Each finding includes the severity, the file in the codebase where the issue is, the rule file being cited, and a short explanation.</p>
+<p>The guardrail at the bottom — <em>“Do not invent stricter requirements than the written rules. If the rules are silent or ambiguous, say so explicitly”</em> — is the line that prevents the subagent from going off the rails. Without it, the subagent will sometimes produce findings based on what it generally believes about security, not on what’s actually in the rule files. That’s worse than useless: it undermines the citations and inflates the report with claims I can’t trace back to anything.</p>
+<h2 id="the-rule-directory-the-subagent-reads">The rule directory the subagent reads</h2>
+<p>The subagent’s behavior is only as good as the rules it consults. The directory looks roughly like this:</p>
+<pre class="astro-code one-dark-pro" style="background-color:#282c34;color:#abb2bf; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>standards/rules/</span></span>
+<span class="line"><span>├── auth-tokens-expiration.md</span></span>
+<span class="line"><span>├── csrf-protection.md</span></span>
+<span class="line"><span>├── csp-headers.md</span></span>
+<span class="line"><span>├── dependency-vulnerability-scanning.md</span></span>
+<span class="line"><span>├── error-handling-with-no-silent-failures.md</span></span>
+<span class="line"><span>├── file-upload-validation.md</span></span>
+<span class="line"><span>├── hardcoded-secrets.md</span></span>
+<span class="line"><span>├── input-sanitization.md</span></span>
+<span class="line"><span>├── least-privilege-principle.md</span></span>
+<span class="line"><span>├── parameterized-db-queries.md</span></span>
+<span class="line"><span>├── password-requirements.md</span></span>
+<span class="line"><span>├── predictable-ids.md</span></span>
+<span class="line"><span>├── rate-limiting.md</span></span>
+<span class="line"><span>├── secure-session-management.md</span></span>
+<span class="line"><span>├── security-events-logging.md</span></span>
+<span class="line"><span>├── security-misconfiguration.md</span></span>
+<span class="line"><span>├── sensitive-data-in-client-side.md</span></span>
+<span class="line"><span>├── sensitive-data-in-errors.md</span></span>
+<span class="line"><span>├── sensitive-data-in-logs.md</span></span>
+<span class="line"><span>├── sensitive-data-in-querystring.md</span></span>
+<span class="line"><span>├── ssrf-protection.md</span></span>
+<span class="line"><span>└── validate-all-inputs.md</span></span></code></pre>
+<p>Each file covers one topic, in plain Markdown, with concrete dos and don’ts. They aren’t novels. Each file is one or two pages: a short statement of the policy, the reasoning, examples of compliant and non-compliant code, common pitfalls.</p>
+<p>The subagent loves this format because it can pick up only what it needs. A change to a SQL query loads <code>parameterized-db-queries.md</code> and skips the rest. A file-upload feature loads <code>file-upload-validation.md</code> and <code>validate-all-inputs.md</code>. The subagent’s context stays small, focused, and citable.</p>
+<p>(I’ll write more about how the rule directory itself works in tomorrow’s post — including how it’s a git submodule shared across projects, and why making it portable matters.)</p>
+<h2 id="what-the-output-actually-looks-like">What the output actually looks like</h2>
+<p>A typical run, on a hypothetical small auth change, comes back looking like this:</p>
+<pre class="astro-code one-dark-pro" style="background-color:#282c34;color:#abb2bf; overflow-x: auto;" tabindex="0" data-language="markdown"><code><span class="line"><span style="color:#E06C75">## Security review — auth.py changes</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D19A66">**Scope:**</span><span style="color:#ABB2BF"> apps/api/routes/auth.py, apps/api/services/sessions.py</span></span>
+<span class="line"><span style="color:#D19A66">**Rules consulted:**</span><span style="color:#ABB2BF"> auth-tokens-expiration.md, secure-session-management.md,</span></span>
+<span class="line"><span style="color:#ABB2BF">  hardcoded-secrets.md, security-events-logging.md</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E06C75">#</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E06C75">## Critical — none</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E06C75">#</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E06C75">## High</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E5C07B">1.</span><span style="color:#D19A66"> **apps/api/services/sessions.py:42**</span><span style="color:#ABB2BF"> — Session token does not</span></span>
+<span class="line"><span style="color:#ABB2BF">   expire. The current implementation issues tokens with no </span><span style="color:#E5C07B">`</span><span style="color:#98C379">exp</span><span style="color:#E5C07B">`</span></span>
+<span class="line"><span style="color:#ABB2BF">   claim. See </span><span style="color:#E5C07B">`</span><span style="color:#98C379">auth-tokens-expiration.md</span><span style="color:#E5C07B">`</span><span style="color:#ABB2BF"> §"All tokens must have</span></span>
+<span class="line"><span style="color:#ABB2BF">   a maximum lifetime." Recommend adding an explicit </span><span style="color:#E5C07B">`</span><span style="color:#98C379">exp</span><span style="color:#E5C07B">`</span><span style="color:#ABB2BF"> based</span></span>
+<span class="line"><span style="color:#ABB2BF">   on the policy in that rule.</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E06C75">#</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E06C75">## Medium</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E5C07B">2.</span><span style="color:#D19A66"> **apps/api/routes/auth.py:18**</span><span style="color:#ABB2BF"> — Failed login attempts are not</span></span>
+<span class="line"><span style="color:#ABB2BF">   logged. See </span><span style="color:#E5C07B">`</span><span style="color:#98C379">security-events-logging.md</span><span style="color:#E5C07B">`</span><span style="color:#ABB2BF"> §"Authentication</span></span>
+<span class="line"><span style="color:#ABB2BF">   events." Recommend adding a structured log entry on failure,</span></span>
+<span class="line"><span style="color:#ABB2BF">   without the credential value.</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E06C75">#</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E06C75">## Low</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E5C07B">3.</span><span style="color:#D19A66"> **apps/api/routes/auth.py**</span><span style="color:#ABB2BF"> — Module-level constant</span></span>
+<span class="line"><span style="color:#E5C07B">   `</span><span style="color:#98C379">DEFAULT_REDIRECT</span><span style="color:#E5C07B">`</span><span style="color:#ABB2BF"> is defined but never used. Not a security</span></span>
+<span class="line"><span style="color:#ABB2BF">   issue; cleanup opportunity. Not cited from any rule.</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E06C75">#</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E06C75">## Notes</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E5C07B">-</span><span style="color:#ABB2BF"> The rules are silent on session token storage location</span></span>
+<span class="line"><span style="color:#ABB2BF">  (cookie vs localStorage). The implementation uses an</span></span>
+<span class="line"><span style="color:#ABB2BF">  HTTP-only cookie, which aligns with general best practice</span></span>
+<span class="line"><span style="color:#ABB2BF">  but is not explicitly required by the consulted rules.</span></span></code></pre>
+<p>Notice what this output is doing.</p>
+<p><strong>Each finding cites a specific rule file.</strong> No finding is “from general best practice” — those are explicitly called out as notes, not findings. That separation is what keeps the report trustworthy.</p>
+<p><strong>Severity is honest.</strong> A “low” finding is genuinely low. The temptation, with any review tool, is to inflate findings to look thorough. The guardrail in the prompt — <em>“Do not invent stricter requirements than the written rules”</em> — pushes back against that.</p>
+<p><strong>The “Notes” section captures ambiguity.</strong> Where the rules are silent, the subagent says so. It doesn’t pretend the silence is a finding. It just notes the gap. I read those notes and decide whether to update the rules themselves.</p>
+<p><strong>The output is short.</strong> No introduction, no recap of the change, no encouragement, no closing pleasantry. Severity headers, numbered findings, citations, notes. Everything else got cut.</p>
+<figure>
+  <img alt="Linocut block print on cream paper in deep red and black ink, with characteristic hand-carved chisel-mark texture and slightly imperfect edges. The composition is a vertical report-shaped layout printed cleanly on the cream ground. At the top, a thick black ink horizontal bar runs across the print as a header. Below it, a thin secondary band of short horizontal hatches suggests metadata. Then four stacked severity sections fill the middle of the print, each beginning with a distinctive geometric chip cut in ink on its left edge: a deep-red heavy square chip atop a section that contains only a single short black hatch (an empty tier), a deep-red triangle chip atop a section containing one rectangular finding card, a solid black hexagon chip atop a section containing one finding card, and a small open black circle atop a section with one smaller finding card. Each finding card is built from three short stacked black hatch-lines and ends with a tiny black citation-pill bar at its lower edge — no readable text inside the cards. At the very bottom of the print, a thin band of close cross-hatching marks a final notes section. Bold woodcut line work, two-color print on cream paper, visible relief-print grain, no readable text or letters anywhere in the composition." src="/content/posts/2026-04-29-a-read-only-ai-security-reviewer/severity-report-output.png">
+  <figcaption>Severity, finding, citation. Every finding traces to a rule you can open. Ambiguity goes into the notes, not into the findings.</figcaption>
+</figure>
+<h2 id="what-this-catches-that-i-wouldnt">What this catches that I wouldn’t</h2>
+<p>Three categories of finding consistently come back from this subagent that I’d have missed otherwise.</p>
+<p><strong>The thing I forgot to do.</strong> A token without an expiration. A log call that includes a credential. A query parameter that holds a session ID. These are all individually obvious, and I individually forget at least one of them per non-trivial change. The subagent doesn’t get tired.</p>
+<p><strong>The thing the rules say but I don’t remember.</strong> Some rules have specific numeric requirements — minimum password length, maximum token lifetime, required headers. I cannot keep all of those in my head. The subagent reads the rule, sees the number, and tells me when the implementation is off.</p>
+<p><strong>The thing nobody noticed before.</strong> Sometimes a finding the subagent surfaces points at a real gap in the <em>existing</em> code, not the change. Those are the most valuable findings, because the human review process had been letting them through. The subagent has no incentive to politely overlook them.</p>
+<h2 id="what-it-doesnt-catch">What it doesn’t catch</h2>
+<p>It’s not magic.</p>
+<p><strong>Logic-level vulnerabilities.</strong> A correctly-implemented auth flow that has a flawed business-logic premise — “anyone with the URL can upgrade their plan” — won’t show up. The rules don’t cover business logic; the subagent won’t invent rules. Logic review is still on humans.</p>
+<p><strong>Design-level issues.</strong> “You shouldn’t be storing this in a database at all” is a design conversation. The subagent will check that the storage you chose follows the rules; it won’t tell you the design is wrong.</p>
+<p><strong>Things the rules don’t cover.</strong> The subagent’s only superpower is faithfully consulting the rules. If the rules are missing a category, the subagent will be silent on that category. The remedy isn’t to ask the subagent to be smarter; it’s to write the missing rule.</p>
+<h2 id="why-this-works-as-a-subagent-specifically">Why this works as a subagent specifically</h2>
+<p>I want to be explicit about why this is a <em>subagent</em> and not a rule, a skill, or a function call.</p>
+<p>It can’t be a rule. Rules attach to file edits and steer generation. This subagent reviews finished work; it isn’t generating code. The trigger is wrong.</p>
+<p>It could be a skill, but a skill runs in the parent’s context. Reading thirty rule files plus the change under review would saturate the parent’s window. By the time the review was done, the parent would be useless for the rest of the session.</p>
+<p>It could be a function call to an external service, but writing one is a much bigger commitment than a Markdown file. And the rules already exist as Markdown documents that the subagent reads natively. Wrapping them in a service is adding a layer for no benefit.</p>
+<p>The subagent is the right shape because the work is <em>isolated, read-heavy, specialized, and produces a small structured return</em>. Each of those properties points at the same conclusion: spawn a clean instance with its own context, give it a focused prompt, get a report back.</p>
+<p>That’s the whole pattern. The instance isn’t “smarter than the parent.” It’s the same model in a more focused configuration. The configuration is what does the work.</p>
+<h2 id="further-reading">Further reading</h2>
+<ul>
+<li><a href="/2026/04/30/org-wide-standards-as-code">Org-wide standards as code</a></li>
+<li><a href="/2026/04/28/subagents-specialized-ai-that-doesnt-pollute-your-context">Subagents — specialized AI that doesn’t pollute your context</a></li>
+</ul>   </div>  </div>  <div class="disqus" id="disqus_thread" data-astro-cid-r2x3s5wt></div> <script>(function(){const identifier = "2026-04-29-a-read-only-ai-security-reviewer";
+const title = "A read-only AI security reviewer";
+const url = "https://bernardodiasdacruz.com/2026/04/29/a-read-only-ai-security-reviewer/";
+
+  if (window.location.hostname !== 'localhost') {
+    window.disqus_config = function () {
+      this.page.url = url;
+      this.page.identifier = identifier;
+      this.page.title = title;
+    };
+    const d = document;
+    const s = d.createElement('script');
+    s.src = 'https://bernardodiasc.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', String(+new Date()));
+    (d.head || d.body).appendChild(s);
+  }
+})();</script>   </div> </article> </main> <script>
+      (function () {
+        var show = window.location.hostname === 'localhost' || new URLSearchParams(window.location.search).has('draft');
+        if (show) document.documentElement.classList.add('show-drafts');
+      })();
+    </script> <script>
+      if (window.location.hostname !== 'localhost') {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-10219275-4');
+      }
+    </script> <script async src="https://www.googletagmanager.com/gtag/js?id=UA-10219275-4"></script> </body> </html> 
