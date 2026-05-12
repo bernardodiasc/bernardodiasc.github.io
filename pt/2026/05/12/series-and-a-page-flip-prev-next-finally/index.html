@@ -44,20 +44,9 @@
 <p>Uma barra fixa no rodapé para navegar entre posts cronologicamente. Prev à esquerda, next à direita, cada um com uma label e o título do alvo. Os tap targets têm pelo menos 44px de altura, e o body tem padding suficiente pra barra nunca cobrir o último parágrafo nem o thread do Disqus.</p>
 <p>Drafts entram na cronologia localmente mas somem em produção pelo mesmo CSS que esconde drafts nas listagens. Quando o batch publicar, a nav reflete o que o leitor consegue alcançar de verdade.</p>
 <h2 id="o-que-isso-muda">O que isso muda</h2>
-<p>Antes, cada post era uma ilha. Você terminava de ler, rolava o thread do Disqus, e a resposta implícita pra “e agora?” era “sei lá, botão de voltar do navegador acho”.</p>
-<p>Agora, três coisas acontecem.</p>
-<p>Se o post é parte de uma sequência, o box lateral te avisa de leve. Você vê o nome da série, quantos posts compõem o arco, onde você está nele, o que vem antes e depois, e dá pra pular pra qualquer um. A decisão de continuar lendo a série é sua, mas você tem a informação pra decidir.</p>
-<p>Se você termina o post e quer seguir, a barra de navegação está ali. Você não volta pro index. Você toca em next e continua lendo.</p>
-<p>E na página de busca, um novo filtro de Séries aparece entre Categorias e Tags. Cada série aparece como um chip clicável com a contagem de posts. Dá pra combinar com categoria, tag e texto — clica “AI Rules And Skills” e “developer-tooling” e vê só os posts naquela interseção. É mais uma forma de surfar os arcos que sempre estiveram ali mas eram invisíveis.</p>
-<p>É uma coisa pequena e levou uma noite. Mas o arquivo parece diferente agora — menos uma lista achatada de arquivos e mais um livro pelo qual dá pra navegar.</p>
-<h2 id="o-que-ainda-quero-ajustar">O que ainda quero ajustar</h2>
-<p>Algumas coisas que deixei como compromisso e provavelmente vou revisitar:</p>
-<ul>
-<li>O box da série só renderiza se houver pelo menos dois posts. Isso significa que se eu crio uma série com um post pretendendo adicionar irmão depois, o box fica invisível até eu commitar o segundo. Tudo bem na prática; um dia talvez valha um placeholder “isto vai ser uma série”.</li>
-<li>O filtro de séries na página de busca mostra o mesmo nome formatado do box no post. Mas a formatação é duplicada — uma no componente Astro, outra no frontmatter da página de busca. Vale extrair pra uma utilidade compartilhada em algum momento.</li>
-<li>Considerei mostrar a série na <code>PostsListing</code> também — um badge minúsculo ao lado de cada título na página inicial. A página de busca já cobre o caso de descoberta agora, mas a listagem do index poderia se beneficiar. Talvez depois.</li>
-</ul>
-<p>Pra todo o resto, o arquivo de regra (<code>blog-post-structure.mdc</code>) agora documenta <code>series</code> como campo de frontmatter, incluindo quando usar e quando deixar vazio. Da próxima vez que eu sentar pra rascunhar uma sequência, o agent que pegar o trabalho vai saber.</p>   </div>  </div>  <div class="disqus" id="disqus_thread" data-astro-cid-r2x3s5wt></div> <script>(function(){const identifier = "pt-2026-05-12-series-and-a-page-flip-prev-next-finally";
+<p>Antes, cada post era uma ilha. Você terminava de ler, rolava o Disqus, e a resposta implícita pra “e agora?” era o botão de voltar.</p>
+<p>Agora, se o post é parte de uma sequência o box lateral te avisa — nome da série, contagem de posts, onde você está, links pros irmãos. Se você termina e quer seguir, a barra de navegação está ali. E na página de busca, um novo filtro de Séries deixa você clicar num chip de série e ver só os posts daquele arco, combinando com categoria, tag ou texto.</p>
+<p>Coisa pequena, levou uma noite. Mas o arquivo parece menos uma lista achatada e mais um livro pelo qual dá pra navegar.</p>   </div>  </div>  <div class="disqus" id="disqus_thread" data-astro-cid-r2x3s5wt></div> <script>(function(){const identifier = "pt-2026-05-12-series-and-a-page-flip-prev-next-finally";
 const title = "Séries e um prev/next em page-flip, finalmente";
 const url = "https://bernardodiasdacruz.com/pt/2026/05/12/series-and-a-page-flip-prev-next-finally/";
 
