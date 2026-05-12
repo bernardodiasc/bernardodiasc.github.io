@@ -1,0 +1,170 @@
+---
+title: De anotações diárias a relatórios para stakeholders
+date: 2026-05-07
+category: strategy
+series: engineering-journal
+lang: pt
+draft: true
+thumbnail: /content/posts/2026-05-07-from-daily-notes-to-stakeholder-reports/four-audiences-split.png
+tags:
+  - productivity
+  - workflow
+  - communication
+  - leadership
+  - reporting
+  - markdown
+  - slack
+  - remote-work
+  - learning
+  - ai-assisted
+excerpt: Uma semana de entradas no diário serve quatro audiências, com quatro lentes diferentes. O gestor quer resultados e riscos. O time quer saber o que está em andamento. O revisor quer os casos de borda. Você quer padrões. Aqui vai por que uma fonte mais quatro lentes funciona melhor que quatro trackers separados.
+---
+
+Uma engenheira sênior me disse uma vez que boa comunicação é um multiplicador de todas as outras habilidades profissionais. Eu não acreditei nela de cara. Achava que comunicação era a camada soft por cima do trabalho de verdade — a parte que importava quando o trabalho já tivesse terminado.
+
+Ela estava certa. Eu estava errado.
+
+Depois de alguns empregos, percebi que os engenheiros que eu mais respeitava não eram necessariamente os programadores mais fortes, e todos eles eram excepcionalmente bons em contar coisas diferentes para audiências diferentes de formas que essas audiências conseguiam agir. Eles não escreviam o mesmo status update pra todo mundo. Escreviam um update pro gestor, um pro time, uma autorrevisão pra si mesmos e — quando o trabalho pedia — algo específico pra QA ou pro cliente. Mesma semana. Audiências diferentes. Lentes diferentes.
+
+Este post é sobre essa prática e o jeito pequeno e deliberado como eu a conduzo hoje. O diário que você mantém todo dia vira o input. O output são múltiplos relatórios, cada um moldado para uma audiência.
+
+<ImageFigure alt="Composição estilo poster de Saul Bass sobre fundo quente de papel creme com leve textura de grão, numa paleta limitada estrita de 3 cores — amarelo mostarda, vermelho profundo, preto carvão, mais o creme do papel. A composição usa silhuetas ousadas e planas com bordas tipo papel cortado à mão e a simplicidade geométrica do design de poster de cinema de meados do século vinte. No lado esquerdo, uma silhueta preta ousada de uma pilha escalonada de papéis está centralizada — desenhada como cinco retângulos sobrepostos com cantos curvados e leve inclinação fora de eixo, sugerindo uma pilha de diário. Da borda direita dessa pilha, quatro linhas retas ousadas de cor plana se abrem em leque em ângulos distintos em direção a quatro silhuetas de persona dispostas em coluna vertical no lado direito. Cada silhueta tem forma distinta em preto carvão plano: a mais alta, uma pessoa em perfil com prancheta junto ao peito; a segunda, um agrupamento cerrado de três cabeças próximas; a terceira, um rosto em perfil entre duas silhuetas espelhadas; a quarta, um perfil com lupa estilizada substituindo o olho. As quatro linhas são cada uma de cor plana diferente — amarelo mostarda, vermelho profundo, carvão e ferrugem quente — sugerindo quatro lentes distintas. Nenhum texto legível em qualquer parte da composição." src="/content/posts/2026-05-07-from-daily-notes-to-stakeholder-reports/four-audiences-split.png" caption="Uma fonte, quatro silhuetas. Mesma semana, quatro histórias diferentes — cada uma precisa, cada uma moldada pra quem vai ler." />
+
+## Quatro audiências, quatro necessidades diferentes
+
+Antes de entrar em como o workflow funciona, quero apresentar as quatro audiências e o que cada uma delas realmente quer. Essas não são as únicas quatro, mas cobrem a maior parte do que engenheiros em times distribuídos precisam comunicar.
+
+#
+
+## O gestor
+
+O que o gestor precisa de você é basicamente um pequeno conjunto de coisas, repetido de forma confiável:
+
+- **Resultados**, expressos em linguagem de negócio ou produto, não linguagem de implementação.
+- **Riscos**, levantados cedo e claramente. O gestor prefere ouvir sobre um problema duas semanas antes do que no dia em que ele estoura.
+- **Pedidos**, se houver. *"Preciso dessa decisão de você", "Gostaria de trazer essa pessoa."*
+- **Calibração de confiança**. *"No caminho certo" vs. "em risco" vs. "bloqueado"*, aplicados com honestidade.
+
+O gestor geralmente não quer — e frequentemente não quer ativamente — detalhes de implementação, justificativas técnicas ou um resumo de cada reunião. O critério de inclusão é: *meu gestor se arrependeria se eu deixasse isso de fora, considerando o que ele precisa fazer essa semana?*
+
+#
+
+## O time
+
+O que o time precisa é mais próximo do trabalho em si, mas também não é uma transcrição:
+
+- **O que está em andamento**, pra que o time evite trabalho duplicado e identifique pontos de integração.
+- **Onde você está travado ou com dúvida**, pra que possam ajudar.
+- **O que está prestes a ser entregue**, pra que se preparem pra revisão ou trabalho downstream.
+- **O que você notou**, pra que o conhecimento coletivo do time cresça.
+
+O time é a audiência que mais se beneficia de franqueza sobre o meio bagunçado. *"Passei dois dias perseguindo a causa errada do bug de auth; no final era X."* Essa frase é mais valiosa pro time do que uma postmortem polida, porque diz a eles *a mesma armadilha está lá na próxima vez*.
+
+#
+
+## Você mesmo
+
+O que você precisa da sua própria escrita é a mais pessoal das quatro:
+
+- **Padrões**, identificados a partir de uma visão mais longa que um único dia.
+- **Atrito**, identificado e nomeado pra que não fique invisível.
+- **Decisões que você tomou e o raciocínio na hora**, pra que o eu-do-futuro possa recuperar não só *o quê* mas *por quê*.
+- **Avaliações honestas** da sua própria semana — o que fez bem, o que faria diferente.
+
+A audiência de si mesmo é a mais propensa a ser pulada. Parece autoindulgente. Não é. É como você vai compondo, e pular isso é a razão pela qual alguns engenheiros aprendem rápido e outros estacionam.
+
+#
+
+## O revisor (quando aplicável)
+
+Quando o trabalho vai ser verificado por outra pessoa — QA, um revisor de segurança, um cliente — o revisor quer:
+
+- **O que mudou e por quê**, incluindo os casos de borda que você considerou.
+- **O que você testou**, e o que não pôde ou não testou.
+- **Lacunas conhecidas**. *"Funciona pros casos A e B; C ainda não está tratado."*
+- **Instruções de reprodução**, escritas pra alguém que não tem o seu contexto.
+
+A audiência do revisor é a mais exigente em clareza, porque a consequência de escrita pouco clara é retrabalho ou pior.
+
+## Por que uma fonte com quatro lentes ganha de quatro trackers separados
+
+Eu costumava achar que a resposta certa era quatro cadernos paralelos — um pra cada audiência. Dia um, escrever quatro entradas; dia dois, mais quatro. No final da semana, quatro fios de escrita.
+
+Isso desmoronou em menos de um mês. O custo de escrever quatro entradas paralelas é alto demais; uma delas sempre fica de fora, o que significa que *aquela* audiência começa a não receber nada, o que faz o sistema inteiro parecer quebrado.
+
+O que funcionou, depois de algumas iterações, é *uma fonte, quatro lentes*.
+
+A fonte é o diário — capturado do mesmo jeito todo dia, no mesmo lugar, independente da audiência. As lentes são derivadas da fonte sob demanda, semanalmente ou quando uma audiência pede. As lentes são visões diferentes da mesma semana.
+
+Mesma fonte. Seleção, ordenação e ênfase diferentes.
+
+Isso funciona porque a *informação* é invariante — o que eu fiz nessa semana é o que eu fiz nessa semana. O que muda por audiência é *qual subconjunto importa e como é enquadrado*. Seleção e enquadramento são o que você deveria fazer pra cada audiência de qualquer forma. Fazê-los sob demanda a partir de uma única fonte é a versão barata do mesmo trabalho.
+
+## O que as lentes realmente fazem
+
+Concretamente, quando gero um relatório para uma das quatro audiências a partir de uma semana de entradas no diário, o output é moldado de forma diferente em cinco aspectos visíveis.
+
+**Seleção.** Bullets diferentes são incluídos. O relatório do gestor inclui os três resultados mais consequentes; o relatório do time inclui os itens em andamento mesmo quando ainda não são entregáveis; o relatório pessoal inclui o atrito mesmo quando ainda não está resolvido.
+
+**Ordenação.** Relatórios do gestor abrem com resultados; relatórios do time abrem com trabalho em andamento; relatórios pessoais abrem com padrões; relatórios do revisor abrem com o que mudou. A abertura é o sinal de ordenação — o que a audiência lê primeiro define o tom.
+
+**Vocabulário.** Relatórios do gestor traduzem trabalho técnico em linguagem de produto ("reduzimos a taxa de falha de autenticação pela metade" ao invés de "corrigimos o handler de expiração do JWT"). Relatórios do time usam o vocabulário técnico que o time já compartilha. Relatórios pessoais usam qualquer vocabulário que pareça honesto. Relatórios do revisor usam o vocabulário do artefato sendo revisado.
+
+**Nível de detalhe.** Relatórios do gestor são densos — cada frase precisa merecer seu lugar. Relatórios do time são mais soltos, com espaço pra textura que ajuda colegas. Relatórios pessoais são os mais detalhados; essa é a única audiência onde ser prolixo às vezes é o movimento certo. Relatórios do revisor são cirúrgicos: precisos, sem decoração.
+
+**Fechamento.** Relatórios do gestor fecham com riscos e pedidos. Relatórios do time fecham com o que está prestes a ser entregue. Relatórios pessoais fecham com o que fazer diferente na próxima semana. Relatórios do revisor fecham com lacunas conhecidas.
+
+Cinco dimensões, quatro audiências. O mesmo input produz vinte decisões de enquadramento distintas. Feitas à mão toda semana, são algumas horas. Feitas com a ajuda de um assistente de IA que foi informado do que cada lente enfatiza, são vinte minutos no total — e os relatórios resultantes são indiscutivelmente melhores, porque as regras de enquadramento deliberado não oscilam de sessão pra sessão.
+
+## A questão da cadência
+
+Audiências diferentes têm cadências naturais diferentes.
+
+- **Relatórios do gestor** são semanais pra mim. Alguns times fazem quinzenais ou em standups assíncronos; o princípio é o mesmo.
+- **Updates do time** são diários a semanais, dependendo do quanto o time conversa. Eu pessoalmente prefiro um update curto diário mais um resumo semanal.
+- **Relatórios pessoais** são semanais com uma retrospectiva mensal. A versão semanal é pra correção de rota; a mensal é pra perceber padrões que a versão semanal perde.
+- **Relatórios do revisor** são por artefato. Sempre que algo está sendo entregue pra revisão, um relatório do revisor faz parte do artefato.
+
+Se você empilha as quatro cadências, pode acabar escrevendo *muitos* relatórios. Isso parece caro. Costumava ser. Com o modelo de fonte-e-lente e um assistente de IA fazendo a aplicação da lente, o tempo total por semana fica mais perto de trinta minutos do que quatro horas.
+
+## O que eu não delego
+
+A aplicação da lente — traduzir das entradas do diário para output moldado por audiência — pode ser amplamente delegada a um assistente de IA. As regras de enquadramento são estáveis; o input é texto; a transformação é razoavelmente mecânica.
+
+O que eu não delego é a revisão editorial depois que a lente é aplicada.
+
+Um relatório do gestor rascunhado pelo assistente é competente. Às vezes ele vai escolher o resultado errado pra abrir. Às vezes vai suavizar demais um problema porque foi treinado em fraseado corporativo-educado. Às vezes vai chamar algo de "no caminho certo" quando eu sei que não está.
+
+A revisão editorial de cinco minutos — *eu leio o que o assistente produziu e reescrevo as partes que não estão bem* — é a parte que precisa ser minha. Não porque o assistente não consiga chegar perto; consegue. Porque a *proximidade* importa. Um relatório do gestor que está 90% certo e 10% levemente errado nas coisas erradas é pior que um relatório 80% tão polido mas preciso em tudo.
+
+É o mesmo ponto que eu fiz no post anterior: o assistente reduz o atrito; o julgamento continua sendo meu.
+
+## Uma nota sobre tom
+
+Uma coisa sobre comunicar pra múltiplas audiências que eu subestimei por muito tempo: **o tom de cada relatório é parte da mensagem**.
+
+Um relatório do gestor em linguagem casual de chat sinaliza "isso não é importante o suficiente pra pensar com cuidado." Um relatório do time em linguagem corporativa rígida sinaliza "eu não quero de verdade conversar sobre isso com vocês." Um relatório pessoal em linguagem performática sinaliza (pra si mesmo) que você não está sendo honesto. Um relatório do revisor em prosa vaga sinaliza "eu não fiz meu dever de casa."
+
+O vocabulário e o tom estão fazendo um trabalho que os bullet points sozinhos não conseguem. Quando reviso meus próprios rascunhos, essa checagem de tom é a última coisa que faço antes de enviar. Isso *soa* certo pra quem vai ler? Se não, o que especificamente parece fora?
+
+<ImageFigure alt="Díptico estilo poster de Saul Bass sobre fundo quente de papel creme com sutil textura de grão, numa paleta limitada estrita de 3 cores — amarelo mostarda, vermelho profundo, preto carvão, mais o creme do papel. Os dois painéis estão lado a lado com fina margem creme entre eles e compartilham as mesmas proporções verticais. O painel esquerdo tem um retângulo amarelo mostarda ousado como fundo, sobre o qual uma silhueta preta de uma mão oferece um papel de gráfico curvado pra fora. No topo, uma fina barra horizontal carvão sugere um cabeçalho. Abaixo, três barras curtas carvão empilhadas verticalmente com a barra superior desenhada levemente mais grossa e longa que as outras — a abertura. Dois pequenos pontos de pontuação carvão flutuam na margem. O painel direito tem um retângulo vermelho profundo ousado como fundo, sobre o qual uma silhueta preta de um rosto em perfil segura um pequeno espelho de mão, o espelho capturando uma silhueta refletida menor do mesmo rosto. No topo deste painel, uma barra horizontal carvão fina sugere cabeçalho. Abaixo, três barras curtas carvão empilhadas verticalmente com a barra superior levemente circulada por uma linha tipo lápis carvão — a abertura enfatizada. Uma pequena marca de margem carvão ao lado. Ambos painéis compartilham a mesma linguagem visual de Saul Bass: formas planas ousadas, bordas tipo papel cortado à mão, paleta estritamente limitada, simplicidade geométrica. Nenhum texto legível em qualquer parte da composição." src="/content/posts/2026-05-07-from-daily-notes-to-stakeholder-reports/manager-vs-self-reports.png" caption="Mesma semana, lente diferente. A frase de abertura é a lente — o gestor quer resultados, você quer padrões." />
+
+## Como isso funciona na prática
+
+Uma sexta-feira típica pra mim, final do dia, funciona mais ou menos assim.
+
+- Abro as entradas da semana no diário (cinco arquivos, um por dia útil).
+- Peço ao assistente de IA pra produzir quatro rascunhos: update do gestor, update do time, resumo pessoal e quaisquer notas pendentes de revisão.
+- Pra cada rascunho, faço uma revisão editorial de cinco minutos. Corto o que não merece seu lugar. Reformulo qualquer coisa que suavize onde eu quero ser direto, ou direcione onde eu quero suavizar.
+- Posto cada relatório no canal apropriado: update do gestor num thread de DM privado, update do time no canal do time, resumo pessoal fica na minha pasta, notas do revisor anexadas ao artefato correspondente.
+
+Tempo total: trinta a quarenta minutos pra semana inteira. Sem o modelo de fonte-e-lente, o mesmo conjunto de relatórios costumava levar mais de duas horas e frequentemente era pulado.
+
+A versão de trinta minutos não é de qualidade inferior. De certa forma é superior, porque as regras de enquadramento não oscilam entre relatórios — o gestor sempre recebe relatórios liderados por resultados, o time sempre recebe relatórios liderados por andamento, o formato é consistente o suficiente pra que a audiência saiba o que procurar. A comunicação compõe, do jeito que boa comunicação faz.
+
+Esse é o pitch inteiro. Comunique com frequência, comunique de forma diferente pra audiências diferentes, e deixe a fonte ser uma e as lentes serem muitas. Mesmo trabalho de engenharia, muito mais legível pras pessoas que precisam enxergar.
+
+## Leitura complementar
+
+- [Por que todo engenheiro deveria manter um diário](/2026/05/03/why-every-engineer-should-keep-a-journal)
+- [A escuta ativa](/2018/04/10/the-active-listening)

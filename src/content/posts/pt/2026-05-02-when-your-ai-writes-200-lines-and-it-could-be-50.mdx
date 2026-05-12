@@ -1,0 +1,376 @@
+---
+title: Quando sua IA escreve 200 linhas e poderia ser 50
+date: 2026-05-02
+category: developer-tooling
+series: ai-guardrails
+lang: pt
+draft: true
+thumbnail: /content/posts/2026-05-02-when-your-ai-writes-200-lines-and-it-could-be-50/before-after-code-editors.png
+tags:
+  - ai
+  - ai-agents
+  - vibecoding
+  - best-practices
+  - code-review
+  - code-quality
+  - refactoring
+  - karpathy
+  - python
+  - typescript
+  - ai-assisted
+excerpt: O modo de falha mais comum que vejo com código gerado por IA é overengineering. Não código ruim — apenas código demais. Este post é um tour pelos formatos específicos que o overengineering assume, diffs antes/depois de sessões reais, e o check mental de uma linha que resolve a maior parte disso.
+---
+
+Tenho mantido uma pequena lista. Toda vez que o agente de IA com quem trabalho produz um trecho de código que é visivelmente mais elaborado do que o problema exige, anoto qual formato o overengineering assumiu. Depois de alguns meses, a lista não é longa. São talvez seis ou sete padrões recorrentes. Uma vez que você consegue nomeá-los, consegue identificá-los em segundos.
+
+Este post é um tour por esses padrões. Exemplos reais de antes/depois, na maioria de sessões em que peguei o inchaço a tempo e fiz pushback. O objetivo não é zoar código gerado por IA — esses padrões também aparecem em código que escrevi manualmente, só que menos agressivamente. O objetivo é dar nomes aos padrões para que sejam mais fáceis de corrigir.
+
+<ImageFigure alt="Díptico em pincelada sumi-e sobre papel de arroz creme com bordas artesanais, separado por uma linha suave de dobra vertical no centro da página. A metade esquerda mostra uma massa emaranhada e caótica de pinceladas sobrepostas — muitos traços de pesos variados empilhados uns sobre os outros formando um feixe denso como ninho de pássaro, com marcas de pincel seco, respingos de tinta nas bordas e pequenas poças onde os traços se cruzaram. A composição transmite excesso visual: gestos demais dizendo a mesma coisa. A metade direita mostra um único caule de bambu confiante renderizado em apenas três pinceladas deliberadas — um traço vertical afinando para cima para o caule, um traço curto angulado para um nó e uma folha angulada afinada no topo. Generoso espaço negativo ao redor do bambu. Um pequeno selo quadrado vermelho acentua o canto inferior direito da metade direita. As duas metades compartilham o mesmo papel de arroz. Sem texto ou caracteres legíveis em nenhum lugar da composição." src="/content/posts/2026-05-02-when-your-ai-writes-200-lines-and-it-could-be-50/before-after-code-editors.png" caption="Mesmo gesto, quatro vezes menos tinta. O emaranhado da versão esquerda é mais ou menos os padrões recorrentes de que este post trata." />
+
+## O check mental
+
+Antes de entrar nos padrões, o teste de uma linha que importa mais do que qualquer um deles:
+
+> Um engenheiro sênior diria que isso é complicado demais?
+
+Esse é o check. Está no arquivo de rule always-on que o agente carrega no início de toda conversa. A maioria do que segue são apenas formas específicas nas quais, quando você olha o código resultante, a resposta é claramente *sim*.
+
+O check funciona porque engenheiros sêniores — do tipo que mantiveram codebases ao longo de anos — têm uma alergia forte a código que faz mais do que o momento exige. Eles já viram helpers abstraídos com elegância se calcificarem em legado. Já debugaram testes que mockam tudo. Sabem que 50 linhas que qualquer um consegue ler vencem 200 linhas que só o autor original consegue estender.
+
+O agente, quando instruído a aplicar esse check ao seu próprio output, fica razoavelmente bom em simplificar. Não perfeito, mas razoavelmente bom.
+
+<ImageFigure alt="Folha de estudos sumi-e sobre papel de arroz creme com bordas artesanais, em composição vertical de paisagem. Sete pequenos estudos individuais em tinta estão dispostos pela página em uma grade relaxada — três acima, três abaixo, um deslocado — cada um contido em sua própria área tranquila de papel com generoso espaço entre os estudos. Cada estudo é um tema natural diferente renderizado em economia extrema de pincel de um a três traços apenas, todos compartilhando a mesma linguagem de tinta sumi-e: um único caule de bambu em três traços; um único círculo enso aberto desenhado em uma varredura contínua de pincel com uma pequena abertura no ponto de fechamento; um único pico de montanha em silhueta em um traço ondulado; um único peixe em movimento sugerido por dois traços curvos; uma única libélula em três marcas pequenas; uma única onda rolante com um pequeno floco de crista; e uma única folha de bétula com caule delicado e três hachuras de nervura. Os traços variam em umidade — alguns saturados com confiança, outros secos e esboçados — mas cada estudo honra o princípio sumi-e de dizer o máximo possível com o mínimo de tinta possível. Um único selo quadrado vermelho acentua o canto inferior direito da página. Sem texto ou caracteres legíveis em nenhum lugar da composição." src="/content/posts/2026-05-02-when-your-ai-writes-200-lines-and-it-could-be-50/overengineering-specimens.png" caption="Sete formas recorrentes. Uma vez que consegue nomeá-las, consegue identificá-las em segundos — e recusá-las." />
+
+## Padrão um: uma classe para uma única função
+
+Esse é o mais comum que vejo, especialmente em TypeScript e Python. Uma única função — útil, estreita, chamada de um só lugar — é embrulhada numa classe.
+
+A primeira versão do agente:
+
+```typescript
+class CategoryAssigner {
+  private categoryMap: Map<string, string>;
+
+  constructor() {
+    this.categoryMap = new Map([
+      ['this-blog', 'blog feature posts'],
+      ['developer-tooling', 'practical posts'],
+      ['strategy', 'workflow philosophy'],
+      ['ai-work', 'reflective AI posts'],
+    ]);
+  }
+
+  public assign(post: { tags: string[]; topic: string }): string {
+    if (post.tags.includes('blog-feature')) return 'this-blog';
+    if (post.tags.includes('philosophy')) return 'ai-work';
+    if (post.tags.includes('reflection')) return 'ai-work';
+    if (post.topic.includes('rule') || post.topic.includes('skill')) {
+      return 'developer-tooling';
+    }
+    return 'strategy';
+  }
+
+  public describe(category: string): string {
+    return this.categoryMap.get(category) ?? 'unknown';
+  }
+}
+```
+
+O que está errado: a classe não faz nada que uma função não pudesse. O `categoryMap` é construído no constructor mas nunca depende de nada por instância. O método `describe` é código morto — não é chamado por nada na tarefa original. O método `assign` é o trabalho real.
+
+A simplificação:
+
+```typescript
+function assignCategory(post: { tags: string[]; topic: string }): string {
+  if (post.tags.includes('blog-feature')) return 'this-blog';
+  if (post.tags.includes('philosophy')) return 'ai-work';
+  if (post.tags.includes('reflection')) return 'ai-work';
+  if (post.topic.includes('rule') || post.topic.includes('skill')) {
+    return 'developer-tooling';
+  }
+  return 'strategy';
+}
+```
+
+Uma função. Quinze linhas incluindo a assinatura. Mesmo comportamento. Revisável em cinco segundos. Se um segundo método genuinamente precisar compartilhar estado com a lógica de atribuição, esse é o momento de considerar uma classe — não antes.
+
+## Padrão dois: configuração para coisas que não serão configuradas
+
+O agente adora tornar coisas configuráveis. Mesmo coisas que ninguém pediu para tornar configuráveis.
+
+A primeira versão, onde eu tinha pedido uma função que posta uma mensagem no Slack:
+
+```python
+class SlackPoster:
+    def __init__(
+        self,
+        token: str,
+        default_channel: str | None = None,
+        username_override: str | None = None,
+        icon_emoji: str | None = None,
+        thread_ts: str | None = None,
+        as_user: bool = False,
+        link_names: bool = True,
+        unfurl_links: bool = True,
+        unfurl_media: bool = True,
+        retry_count: int = 3,
+        retry_delay: float = 1.0,
+    ):
+        self.token = token
+        self.default_channel = default_channel
+        self.username_override = username_override
+        self.icon_emoji = icon_emoji
+        self.thread_ts = thread_ts
+        self.as_user = as_user
+        self.link_names = link_names
+        self.unfurl_links = unfurl_links
+        self.unfurl_media = unfurl_media
+        self.retry_count = retry_count
+        self.retry_delay = retry_delay
+        self._session = self._build_session()
+
+    def _build_session(self): ...
+    def post(self, channel: str, text: str, **overrides): ...
+```
+
+Eu tinha pedido uma função. O que recebi foi uma classe com onze parâmetros de configuração, três dos quais eu realmente usaria, e um método de session-builder que eu não tinha pedido.
+
+A simplificação:
+
+```python
+def post_slack_message(token: str, channel: str, text: str) -> dict:
+    response = requests.post(
+        "https://slack.com/api/chat.postMessage",
+        headers={"Authorization": f"Bearer {token}"},
+        json={"channel": channel, "text": text},
+    )
+    response.raise_for_status()
+    return response.json()
+```
+
+Seis linhas mais a assinatura. Se algum dia precisarmos das onze opções de configuração, podemos adicioná-las quando precisarmos. *YAGNI* — *you aren't gonna need it* — é um dos conselhos mais antigos em software, e se aplica a código gerado por IA com força extra porque o agente tem zero contexto sobre se você vai precisar da configurabilidade depois.
+
+## Padrão três: tratamento de erro para cenários impossíveis
+
+O agente foi treinado em muito código de produção, que tem muito tratamento de erro defensivo, boa parte para casos que não podem realmente acontecer. Essa tendência se transmite.
+
+A primeira versão, numa função que faz parse de um arquivo de configuração reconhecidamente válido:
+
+```python
+def parse_config(path: str) -> Config:
+    if not isinstance(path, str):
+        raise TypeError(f"Expected str, got {type(path)}")
+    if not path:
+        raise ValueError("Path cannot be empty")
+
+    try:
+        if not os.path.exists(path):
+            raise FileNotFoundError(f"Config not found: {path}")
+
+        if not os.path.isfile(path):
+            raise ValueError(f"Path is not a file: {path}")
+
+        if os.path.getsize(path) == 0:
+            raise ValueError(f"Config file is empty: {path}")
+
+        with open(path, "r", encoding="utf-8") as f:
+            try:
+                content = f.read()
+            except UnicodeDecodeError as e:
+                raise ValueError(f"Config is not valid UTF-8: {e}")
+
+        try:
+            data = yaml.safe_load(content)
+        except yaml.YAMLError as e:
+            raise ValueError(f"Invalid YAML: {e}")
+
+        if not isinstance(data, dict):
+            raise ValueError(f"Config must be a YAML mapping, got {type(data)}")
+
+        return Config(**data)
+    except (OSError, IOError) as e:
+        raise RuntimeError(f"Failed to read config: {e}")
+```
+
+A função faz parse de um arquivo de configuração que o próprio script escreve. O caminho é hardcoded, o arquivo é sempre UTF-8, nunca está vazio, é sempre um mapping YAML. Cada um daqueles caminhos de erro é inalcançável neste codebase. Parecem completos; são ruído.
+
+A simplificação:
+
+```python
+def parse_config(path: str) -> Config:
+    with open(path, encoding="utf-8") as f:
+        return Config(**yaml.safe_load(f))
+```
+
+Três linhas. Se o arquivo estiver faltando, o Python levanta `FileNotFoundError` e a mensagem é clara. Se o YAML estiver malformado, `yaml.safe_load` levanta `YAMLError` com o número da linha. Se as chaves não baterem, `Config(**...)` levanta `TypeError` com o campo ofensor. Os defaults são bons. Adicionar vinte linhas de verificações prévias só esconde o erro mais limpo que você teria recebido de qualquer forma.
+
+A regra não é *não trate erros*. A regra é *não trate erros que não podem acontecer*. Se a validação importa nessa camada porque input não confiável passa por ela, tudo bem — trate. Se o input é reconhecidamente válido, confie nos defaults da biblioteca padrão.
+
+## Padrão quatro: abstração especulativa
+
+O mais sutil. O código é escrito de uma forma que antecipa necessidades que não se materializaram.
+
+Uma versão disso apareceu quando pedi ao agente para escrever uma função que pontua posts do blog por relevância de tags. A primeira versão:
+
+```python
+class ScoringStrategy(ABC):
+    @abstractmethod
+    def score(self, post: Post, query: Query) -> float: ...
+
+class TagOverlapStrategy(ScoringStrategy):
+    def score(self, post: Post, query: Query) -> float:
+        return len(set(post.tags) & set(query.tags))
+
+class TitleMatchStrategy(ScoringStrategy):
+    def score(self, post: Post, query: Query) -> float:
+        return 1.0 if query.text.lower() in post.title.lower() else 0.0
+
+class CombinedScoringStrategy(ScoringStrategy):
+    def __init__(self, strategies: list[tuple[ScoringStrategy, float]]):
+        self.strategies = strategies
+
+    def score(self, post: Post, query: Query) -> float:
+        return sum(s.score(post, query) * w for s, w in self.strategies)
+```
+
+O Strategy pattern, uma classe base, três implementações, um combinador. Bonito. Também desnecessário — a função que eu pedi tem exatamente um caso de uso: ranquear posts por sobreposição de tags na página de busca. Não existe uma segunda estratégia. Pode ser que nunca exista.
+
+A simplificação:
+
+```python
+def score_post(post: Post, query: Query) -> float:
+    return len(set(post.tags) & set(query.tags))
+```
+
+Uma linha. Se uma segunda estratégia de scoring algum dia precisar coexistir com esta, *esse* é o momento de considerar extrair uma interface. Extrair a interface antes da segunda implementação existir é resolver um problema imaginário e entregar a estrutura que o resolve.
+
+Esse é o padrão que o Karpathy aponta diretamente: **nada de abstrações para código de uso único.** É o mesmo conselho que os engenheiros mais experientes com quem trabalhei me deram por anos. O agente vai produzir abstrações na ausência de pushback explícito. O pushback é a rule.
+
+## Padrão cinco: testes que testam o framework, não o código
+
+Esse não é sobre o código em si — é sobre os testes que o agente gera em torno do código.
+
+A primeira versão, em testes para um parser de configuração:
+
+```python
+def test_open_is_called_with_correct_path():
+    with patch("builtins.open", mock_open(read_data="version: 1")) as m:
+        parse_config("/path/to/config.yaml")
+        m.assert_called_once_with("/path/to/config.yaml", encoding="utf-8")
+
+def test_yaml_safe_load_is_called():
+    with patch("yaml.safe_load") as m:
+        m.return_value = {"version": 1}
+        with patch("builtins.open", mock_open(read_data="version: 1")):
+            parse_config("/path/to/config.yaml")
+            m.assert_called_once()
+```
+
+Ambos os testes passam. Ambos estão testando que o `open` do Python e o `safe_load` do PyYAML foram chamados. Não estão testando se a configuração foi parseada corretamente. Se `parse_config` fizesse a coisa errada — retornasse o tipo errado, perdesse um campo, convertesse um valor errado — esses testes ainda passariam.
+
+A simplificação:
+
+```python
+def test_parses_a_simple_config(tmp_path):
+    config_file = tmp_path / "config.yaml"
+    config_file.write_text("version: 1\nname: test")
+    config = parse_config(str(config_file))
+    assert config.version == 1
+    assert config.name == "test"
+```
+
+Um teste. Usa o `tmp_path` do pytest para escrever um arquivo real. Chama a função real. Asserta os outputs reais. Se `parse_config` regredir, este teste pega. Os testes com mock não teriam pego.
+
+A regra: **teste o comportamento que o usuário se importa, não a implementação que o produz.** Mocks são uma ferramenta para isolar coisas que você não consegue alcançar (rede, tempo, aleatoriedade), não para provar que o código chama as funções que você espera que ele chame.
+
+## Padrão seis: comentários que narram o código
+
+Um pequeno, mas que se acumula. O agente tem uma tendência a adicionar comentários que simplesmente reafirmam o que a próxima linha de código faz.
+
+A primeira versão:
+
+```python
+# Open the config file
+with open(path) as f:
+    # Read the contents
+    content = f.read()
+
+# Parse the YAML
+data = yaml.safe_load(content)
+
+# Return a Config instance
+return Config(**data)
+```
+
+Todo comentário é verdadeiro. Todo comentário também é redundante. Um leitor desse código consegue ver que `with open(path) as f` abre o arquivo de configuração. Dizer de novo num comentário adiciona linhas, não entendimento.
+
+A simplificação: apenas remova os comentários.
+
+```python
+with open(path) as f:
+    content = f.read()
+data = yaml.safe_load(content)
+return Config(**data)
+```
+
+A regra, no arquivo de rule always-on: *não adicione comentários que apenas narram o que o código faz.* Comentários devem explicar *por que*, não *o que*. O *o que* está ali mesmo no código. O *por que* — a restrição que não é visível no código, o tradeoff que foi considerado, a pegadinha que pegou alguém uma vez — é para isso que comentários servem.
+
+Code review sênior consistentemente marca comentários narrativos como ruído. A rule codifica esse sinal para que o agente não os gere em primeiro lugar.
+
+## Padrão sete: o pior deles, a feature não solicitada
+
+O overengineering mais caro não é estrutural. É scope creep. Você pediu uma coisa; o agente fez sete.
+
+Uma versão disso apareceu quando pedi ao agente para adicionar uma flag `draft: true` a um único post de blog. A primeira versão incluiu:
+
+- A mudança no post.
+- Uma nova função utilitária para filtrar drafts de uma página de índice.
+- Uma modificação na página de busca para também filtrar drafts.
+- Uma mudança no script de build para alertar sobre posts em draft.
+- Uma nova seção na documentação do projeto explicando o sistema de drafts.
+
+Tudo isso é plausivelmente útil. Nada disso foi pedido. Cada adição tem suas próprias implicações, seus próprios bugs potenciais, sua própria superfície de revisão. A tarefa expandiu de "editar um campo no frontmatter" para "projetar um sistema de drafts."
+
+A simplificação:
+
+```diff
+ ---
+ title: Some post
+ date: 2026-05-02
+ category: developer-tooling
++draft: true
+ ---
+```
+
+Uma linha. O post agora tem o campo. Se filtragem e alertas forem necessários, são mudanças *separadas* com seu próprio escopo, sua própria revisão, sua própria mensagem de commit. Juntar tudo no diff de "adicionar flag de draft" torna esse diff mais difícil de revisar e mais difícil de reverter.
+
+Esse padrão é difícil de pegar porque cada adição individual parece útil. A correção é a rule de mudanças cirúrgicas do post anterior: *cada linha alterada deve rastrear diretamente ao pedido do usuário.* Linhas que não rastreiam de volta ao pedido — mesmo boas linhas, mesmo linhas bem-intencionadas — não pertencem ao diff.
+
+## Como é o pushback na prática
+
+O arquivo de rule é necessário mas não suficiente. Mesmo com a rule carregada, o agente às vezes vai produzir output com overengineering, especialmente na primeira passada. O trabalho restante é meu: eu tenho que realmente fazer pushback quando vejo um desses padrões.
+
+Como o pushback se parece, na prática, é curto e direto.
+
+- *"Isso não precisa de uma classe. Faça como função."*
+- *"Remova todos os parâmetros de configuração exceto os dois que usamos."*
+- *"Remova o tratamento de erro para casos que não podem acontecer."*
+- *"Remova a classe base abstrata e a única implementação concreta. Apenas inline a função."*
+- *"Eu pedi uma mudança. Reduza o diff a essa mudança."*
+
+O agente sempre obedece. A próxima iteração é sempre mais enxuta. O custo de uma rodada de pushback é pequeno. O custo de aceitar a versão com overengineering é que você agora fez o commit, e remover depois é mais caro do que recusar adicionar agora.
+
+## O efeito composto
+
+Cada um desses padrões, individualmente, custa talvez dez minutos de revisão e um parágrafo de pushback. Nenhum deles é uma catástrofe.
+
+O efeito composto, ao longo de alguns meses trabalhando com um agente de IA de programação, é que o codebase ou se mantém limpo ou começa a acumular inchaço. Codebases que acumulam inchaço fazem compounding do jeito errado — cada nova adição é mais difícil que a anterior, cada refactor é maior do que deveria, a superfície de trabalho vira legado em meses em vez de anos.
+
+Então passei a pensar no check de simplicidade como um dos comportamentos mais importantes na rule always-on. Os outros três comportamentos — pense antes de codificar, mudanças cirúrgicas, execução orientada a objetivos — são sobre como o agente trabalha *durante* uma tarefa. Simplicidade é sobre o que sobrevive *depois*. É a rule que mantém o codebase habitável.
+
+O teste do engenheiro sênior faz a maior parte do trabalho. Aplique-o constantemente. Recuse a solução de 200 linhas que quer ser 50. Na maioria das vezes, simplificar não é uma regressão — é a resposta real que estava se escondendo atrás da elaborada.
+
+## Leitura complementar
+
+- [Guardrails comportamentais para assistentes de IA de programação](/pt/2026/05/01/behavioral-guardrails-for-ai-coding-assistants)
+- [Subagents — IA especializada que não polui seu contexto](/pt/2026/04/28/subagents-specialized-ai-that-doesnt-pollute-your-context)

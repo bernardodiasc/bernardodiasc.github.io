@@ -1,0 +1,264 @@
+---
+title: Um revisor de segurança de IA read-only
+date: 2026-04-29
+category: developer-tooling
+series: subagents
+draft: true
+lang: pt
+thumbnail: /content/posts/2026-04-29-a-read-only-ai-security-reviewer/security-shield-review.png
+tags:
+  - ai
+  - ai-agents
+  - vibecoding
+  - security
+  - code-review
+  - yaml
+  - markdown
+  - owasp
+  - cursor
+  - claude
+  - ai-assisted
+excerpt: Um subagent que lê suas regras de segurança, olha o código que você acabou de escrever, e te diz o que tá errado por severidade — com citações. Aqui vai o arquivo de definição real, o conjunto de regras que ele consulta, a saída que produz, e as pequenas escolhas que tornam ele útil em vez de um gerador de ruído.
+---
+
+O post anterior explicou o que são subagents. Esse aqui é um walkthrough de um que eu realmente uso, dia a dia, em toda mudança que toca algo sensível: o subagent de security-review.
+
+É um único arquivo Markdown. Vinte linhas de frontmatter e prompt, mais uma pasta de documentos de regras que ele consulta. O aparato todo cabe num pequeno repo wrapper que eu adiciono ao workspace junto com qualquer projeto em que esteja trabalhando. Uma vez que está lá, pedir pro agente pai *"revisa isso por segurança"* spawna o subagent, que lê as regras relevantes, compara a implementação contra elas, e retorna um relatório ranqueado por severidade com citações.
+
+<ImageFigure alt="Impressão em bloco de linogravura em papel creme com tinta vermelha escura e preta, com a textura de borda característica de impressão em relevo esculpida à mão — marcas de cinzel visíveis, bordas ligeiramente imperfeitas, alto contraste entre espaço positivo e negativo. Centralizado na impressão está uma silhueta geométrica ousada de escudo heater em tinta vermelha escura, seu contorno cortado com traços confiantes e detalhes internos de hachurado dando peso. Dentro do escudo, em vez de imagens, uma pilha de barras horizontais pretas representa linhas de código — curta, média, mais longa, depois curta de novo — sem texto legível. À direita do escudo, uma coluna vertical de quatro pequenos marcadores geométricos desce em ênfase visual: um quadrado preenchido pesado em vermelho escuro (maior, mais assertivo), um losango vermelho sólido, uma barra hachurada horizontal vermelho-e-preto, e um pequeno círculo aberto preto (menor). Uma linha fina de tinta preta conecta cada marcador de volta à borda direita do escudo. Logo abaixo do escudo, um motivo de cadeado estampado em tinta preta com uma única listra branca cortada cortando-o indica um cadeado fechado. Trabalho de linhas em bloco de madeira ousado, grão de linogravura característico, impressão em duas cores em papel creme. Nenhum texto ou letras legíveis em nenhum lugar da composição." src="/content/posts/2026-04-29-a-read-only-ai-security-reviewer/security-shield-review.png" caption="Leia o código. Ordene por gravidade. Cite a regra. Não toque em nada." />
+
+Aqui vai o que tem dentro, por que funciona, e as escolhas que distinguem um revisor de segurança útil de um barulhento.
+
+## O arquivo de definição
+
+O subagent inteiro vive num único arquivo:
+
+```markdown
+---
+name: org-standards-security-review
+description: >
+  Security and privacy review against the org standards in
+  standards/rules/. Use when implementing or reviewing auth,
+  APIs, data handling, uploads, crypto, sessions, or infra.
+  Use proactively for sensitive features.
+model: inherit
+readonly: true
+---
+
+You review work against the org standards in `standards/rules/`.
+
+## When invoked
+
+1. From the parent prompt, infer scope (features, files, or APIs).
+2. Identify which topics under `standards/rules/` apply.
+   Examples: CSRF and auth tokens for state-changing HTTP;
+   parameterized DB queries for SQL; hardcoded-secrets and
+   sensitive-data-* for credentials and logs;
+   file-upload-validation for uploads.
+3. Read the relevant `standards/rules/*.md` files and compare
+   the implementation to the written rules. Cite filenames in
+   findings.
+4. Report by severity (Critical / High / Medium / Low). Each
+   finding must reference a rule file.
+
+Do not invent stricter requirements than the written rules.
+If the rules are silent or ambiguous, say so explicitly.
+```
+
+Isso é tudo. Umas vinte e poucas linhas. Deixa eu passar pelo que cada parte está fazendo.
+
+## O frontmatter
+
+```yaml
+name: org-standards-security-review
+```
+
+O `name` é o que o agente pai usa pra invocar o subagent. Também importa pra descoberta — quando o pai está decidindo se deve spawnar um subagent pra uma tarefa, ele escaneia nomes procurando match com a intenção do usuário. *"Revisa isso por segurança"* casa com `security-review` de forma limpa.
+
+```yaml
+description: >
+  Security and privacy review against the org standards in
+  standards/rules/. Use when implementing or reviewing auth,
+  APIs, data handling, uploads, crypto, sessions, or infra.
+  Use proactively for sensitive features.
+```
+
+Essa é a parte que a maioria das pessoas subestima. A description faz dois trabalhos:
+
+- **Diz ao agente pai quando usar esse subagent.** As frases *"Use when implementing or reviewing auth, APIs, data handling, uploads, crypto, sessions, or infra"* não são decorativas. São as condições de disparo. Se o pai está editando um handler de auth, a description casa e o subagent se torna um candidato.
+- **Diz ao usuário o que esperar.** Quando eu estiver lendo minha própria lista de subagents daqui a seis meses, a description tem que me lembrar o que essa coisa realmente faz, pra eu não acabar com três subagents com sabor de segurança que meio que fazem a mesma coisa.
+
+A frase *"Use proactively for sensitive features"* está fazendo mais trabalho do que parece. Diz ao agente pai que ele não precisa esperar eu pedir. Se o pai está gerando código que toca credenciais, deve considerar spawnar o subagent por conta própria.
+
+```yaml
+model: inherit
+```
+
+Herdar do pai. O padrão. Outras opções existem — você pode fixar o subagent num modelo menor e mais barato pra revisão rotineira, ou num modelo maior pra análise mais profunda — mas `inherit` mantém a superfície simples e o custo previsível.
+
+```yaml
+readonly: true
+```
+
+Essa é a linha mais importante do arquivo.
+
+Um subagent read-only não pode escrever arquivos. Pode ler, buscar, navegar, resumir — mas o resultado é puramente um relatório. Isso muda tudo no meu modelo mental. Não preciso revisar o que o subagent *vai fazer* antes de fazer; apenas reviso o que ele *encontrou*. O conjunto de tarefas que eu delego com tranquilidade pra um subagent read-only é muito maior do que o conjunto que eu delegaria pra um com permissão de escrita. Pra trabalho de revisão especificamente, read-only é o default certo.
+
+Também tem uma implicação de segurança pro próprio revisor de segurança: um subagent de revisão read-only não pode acidentalmente aplicar um "fix" que ele acha correto. O fix é decisão minha. O trabalho do subagent é mostrar o finding.
+
+<ImageFigure alt="Impressão em bloco de linogravura em papel creme com tinta vermelha escura e preta, com textura de marca de cinzel característica e bordas esculpidas ligeiramente imperfeitas. Centralizado na página está um contorno retangular ousado de papel cortado em tinta preta pesada, representando um único documento. Dentro do contorno do documento, quatro faixas horizontais se empilham verticalmente, cada faixa preenchida com marcas de hachurado preto curtas sugerindo linhas de texto denso sem soletrar nada. À esquerda de cada faixa, uma linha fina de tinta preta se estende pra margem e termina num pequeno símbolo esculpido distinto: a anotação da primeira faixa termina numa pequena estrela de cinco pontas, a segunda num formato de olho, a terceira numa pequena engrenagem, e a quarta num pequeno cadeado. A anotação do cadeado é renderizada maior e impressa em tinta vermelha escura — o único vermelho na impressão — claramente enfatizada sobre as outras três anotações pretas. Trabalho de linhas de xilogravura ousado, grão de linogravura característico, impressão em duas cores em papel creme. Nenhum texto ou letras legíveis em nenhum lugar da composição." src="/content/posts/2026-04-29-a-read-only-ai-security-reviewer/annotated-agent-definition.png" caption="Vinte linhas de estrutura esculpida. Cada anotação responde uma pergunta diferente; a vermelha é a que muda como você vai usar." />
+
+## O corpo — o que o subagent realmente faz
+
+O system prompt é curto de propósito. Quatro passos numerados, mais uma guardrail.
+
+**Passo um: inferir escopo.** O prompt do pai é a entrada. O subagent precisa descobrir quais arquivos, features ou APIs estão sendo revisados. Às vezes isso é óbvio pelo prompt; às vezes o subagent precisa se perguntar "o usuário disse 'revisa as mudanças de auth' — quais arquivos são esses?" e encontrá-los. De qualquer forma, a primeira ação é delimitar o escopo.
+
+**Passo dois: identificar quais regras se aplicam.** É aqui que o subagent mostra seu valor. O diretório de regras tem dezenas de arquivos, cada um cobrindo um tópico — CSRF, auth tokens, parameterized DB queries, tratamento de secrets, file uploads, dependency scanning, e assim por diante. O agente pai não quer carregar tudo isso. O subagent — tendo delimitado a mudança — pega os relevantes.
+
+O prompt dá exemplos pra ancorar: *"CSRF and auth tokens for state-changing HTTP; parameterized DB queries for SQL; hardcoded-secrets and sensitive-data-* for credentials and logs."* São sementes. O subagent extrapola a partir delas com base no que vê na mudança.
+
+**Passo três: ler as regras e comparar.** O subagent abre cada arquivo de regra relevante e compara a implementação. O detalhe crucial é *"Cite filenames in findings."* Todo finding que o subagent reporta tem que apontar pra uma regra específica que está citando. Essa citação é o que torna a saída verificável. Eu posso abrir a regra que o subagent referenciou, ler eu mesmo, e decidir se o finding está correto.
+
+**Passo quatro: reportar por severidade.** Critical, High, Medium, Low. O formato é fixo. Cada finding inclui a severidade, o arquivo no codebase onde o problema está, o arquivo de regra sendo citado, e uma explicação curta.
+
+A guardrail no final — *"Do not invent stricter requirements than the written rules. If the rules are silent or ambiguous, say so explicitly"* — é a linha que previne o subagent de sair dos trilhos. Sem ela, o subagent às vezes produz findings baseados no que ele geralmente acredita sobre segurança, não no que está realmente nos arquivos de regra. Isso é pior do que inútil: mina as citações e infla o relatório com afirmações que eu não consigo rastrear de volta a nada.
+
+## O diretório de regras que o subagent lê
+
+O comportamento do subagent é tão bom quanto as regras que ele consulta. O diretório se parece mais ou menos com isso:
+
+```
+standards/rules/
+├── auth-tokens-expiration.md
+├── csrf-protection.md
+├── csp-headers.md
+├── dependency-vulnerability-scanning.md
+├── error-handling-with-no-silent-failures.md
+├── file-upload-validation.md
+├── hardcoded-secrets.md
+├── input-sanitization.md
+├── least-privilege-principle.md
+├── parameterized-db-queries.md
+├── password-requirements.md
+├── predictable-ids.md
+├── rate-limiting.md
+├── secure-session-management.md
+├── security-events-logging.md
+├── security-misconfiguration.md
+├── sensitive-data-in-client-side.md
+├── sensitive-data-in-errors.md
+├── sensitive-data-in-logs.md
+├── sensitive-data-in-querystring.md
+├── ssrf-protection.md
+└── validate-all-inputs.md
+```
+
+Cada arquivo cobre um tópico, em Markdown simples, com dos e don'ts concretos. Não são romances. Cada arquivo tem uma ou duas páginas: uma declaração curta da política, o raciocínio, exemplos de código conforme e não-conforme, armadilhas comuns.
+
+O subagent adora esse formato porque pode pegar só o que precisa. Uma mudança numa query SQL carrega `parameterized-db-queries.md` e pula o resto. Uma feature de file-upload carrega `file-upload-validation.md` e `validate-all-inputs.md`. O contexto do subagent permanece pequeno, focado e citável.
+
+(Vou escrever mais sobre como o diretório de regras em si funciona no post de amanhã — incluindo como é um git submodule compartilhado entre projetos, e por que torná-lo portável importa.)
+
+## Como a saída realmente se parece
+
+Uma execução típica, numa hipotética pequena mudança de auth, volta parecendo assim:
+
+```markdown
+## Security review — auth.py changes
+
+**Scope:** apps/api/routes/auth.py, apps/api/services/sessions.py
+**Rules consulted:** auth-tokens-expiration.md, secure-session-management.md,
+  hardcoded-secrets.md, security-events-logging.md
+
+#
+
+## Critical — none
+
+#
+
+## High
+
+1. **apps/api/services/sessions.py:42** — Session token does not
+   expire. The current implementation issues tokens with no `exp`
+   claim. See `auth-tokens-expiration.md` §"All tokens must have
+   a maximum lifetime." Recommend adding an explicit `exp` based
+   on the policy in that rule.
+
+#
+
+## Medium
+
+2. **apps/api/routes/auth.py:18** — Failed login attempts are not
+   logged. See `security-events-logging.md` §"Authentication
+   events." Recommend adding a structured log entry on failure,
+   without the credential value.
+
+#
+
+## Low
+
+3. **apps/api/routes/auth.py** — Module-level constant
+   `DEFAULT_REDIRECT` is defined but never used. Not a security
+   issue; cleanup opportunity. Not cited from any rule.
+
+#
+
+## Notes
+
+- The rules are silent on session token storage location
+  (cookie vs localStorage). The implementation uses an
+  HTTP-only cookie, which aligns with general best practice
+  but is not explicitly required by the consulted rules.
+```
+
+Repare no que essa saída está fazendo.
+
+**Cada finding cita um arquivo de regra específico.** Nenhum finding é "de boa prática geral" — esses são explicitamente chamados como notes, não findings. Essa separação é o que mantém o relatório confiável.
+
+**A severidade é honesta.** Um finding "low" é genuinamente low. A tentação, com qualquer ferramenta de revisão, é inflar findings pra parecer detalhista. A guardrail no prompt — *"Do not invent stricter requirements than the written rules"* — resiste a isso.
+
+**A seção "Notes" captura ambiguidade.** Onde as regras são silenciosas, o subagent diz isso. Não finge que o silêncio é um finding. Apenas anota a lacuna. Eu leio essas notes e decido se devo atualizar as próprias regras.
+
+**A saída é curta.** Sem introdução, sem recapitulação da mudança, sem encorajamento, sem despedida cordial. Headers de severidade, findings numerados, citações, notes. Todo o resto foi cortado.
+
+<ImageFigure alt="Impressão em bloco de linogravura em papel creme com tinta vermelha escura e preta, com textura de marca de cinzel esculpida à mão e bordas ligeiramente imperfeitas. A composição é um layout vertical em formato de relatório impresso de forma limpa no fundo creme. No topo, uma barra horizontal grossa de tinta preta corre pela impressão como cabeçalho. Abaixo, uma faixa secundária fina de hachuras horizontais curtas sugere metadados. Então quatro seções de severidade empilhadas preenchem o meio da impressão, cada uma começando com um chip geométrico distinto cortado em tinta na borda esquerda: um chip quadrado pesado vermelho escuro no topo de uma seção que contém apenas uma única hachura preta curta (um tier vazio), um chip triangular vermelho escuro no topo de uma seção contendo um card de finding retangular, um chip hexagonal sólido preto no topo de uma seção contendo um card de finding, e um pequeno círculo aberto preto no topo de uma seção com um card de finding menor. Cada card de finding é construído de três linhas de hachura preta curtas empilhadas e termina com uma pequena barra de pill de citação preta na borda inferior — nenhum texto legível dentro dos cards. Na parte mais baixa da impressão, uma faixa fina de hachurado cruzado denso marca uma seção final de notes. Trabalho de linhas em xilogravura ousado, impressão em duas cores em papel creme, grão de impressão em relevo visível, nenhum texto ou letras legíveis em nenhum lugar da composição." src="/content/posts/2026-04-29-a-read-only-ai-security-reviewer/severity-report-output.png" caption="Severidade, finding, citação. Cada finding rastreia até uma regra que você pode abrir. Ambiguidade vai nas notes, não nos findings." />
+
+## O que isso pega que eu não pegaria
+
+Três categorias de finding consistentemente voltam desse subagent que eu teria perdido de outra forma.
+
+**A coisa que eu esqueci de fazer.** Um token sem expiração. Uma chamada de log que inclui uma credencial. Um parâmetro de query que guarda um session ID. Todas são individualmente óbvias, e eu individualmente esqueço pelo menos uma delas por mudança não-trivial. O subagent não cansa.
+
+**A coisa que as regras dizem mas eu não lembro.** Algumas regras têm requisitos numéricos específicos — comprimento mínimo de senha, lifetime máximo de token, headers obrigatórios. Não consigo manter todos esses na cabeça. O subagent lê a regra, vê o número, e me diz quando a implementação está fora.
+
+**A coisa que ninguém tinha notado antes.** Às vezes um finding que o subagent traz aponta pra uma lacuna real no código *existente*, não na mudança. Esses são os findings mais valiosos, porque o processo de revisão humana estava deixando passar. O subagent não tem incentivo pra educadamente ignorar.
+
+## O que não pega
+
+Não é mágica.
+
+**Vulnerabilidades de nível de lógica.** Um fluxo de auth corretamente implementado que tem uma premissa de business-logic falha — "qualquer um com a URL pode fazer upgrade do plano" — não vai aparecer. As regras não cobrem business logic; o subagent não inventa regras. Revisão de lógica ainda é dos humanos.
+
+**Problemas de nível de design.** "Você não deveria estar guardando isso num banco de dados" é uma conversa de design. O subagent vai verificar que o storage que você escolheu segue as regras; não vai dizer que o design está errado.
+
+**Coisas que as regras não cobrem.** O único superpoder do subagent é consultar fielmente as regras. Se as regras estão com uma categoria faltando, o subagent vai ser silencioso naquela categoria. O remédio não é pedir pro subagent ser mais esperto; é escrever a regra que falta.
+
+## Por que funciona como subagent especificamente
+
+Quero ser explícito sobre por que isso é um *subagent* e não uma rule, uma skill, ou uma function call.
+
+Não pode ser uma rule. Rules se acoplam a edições de arquivo e guiam a geração. Esse subagent revisa trabalho finalizado; não está gerando código. O trigger está errado.
+
+Poderia ser uma skill, mas uma skill roda no contexto do pai. Ler trinta arquivos de regra mais a mudança sendo revisada saturaria a janela do pai. Quando a revisão terminasse, o pai estaria inútil pro resto da sessão.
+
+Poderia ser uma function call pra um serviço externo, mas escrever um é um compromisso muito maior que um arquivo Markdown. E as regras já existem como documentos Markdown que o subagent lê nativamente. Envolvê-las num serviço é adicionar uma camada sem benefício.
+
+O subagent é o formato certo porque o trabalho é *isolado, pesado em leitura, especializado, e produz um retorno estruturado pequeno*. Cada uma dessas propriedades aponta pra mesma conclusão: spawne uma instância limpa com seu próprio contexto, dê um prompt focado, receba um relatório de volta.
+
+Esse é o padrão todo. A instância não é "mais inteligente que o pai." É o mesmo modelo numa configuração mais focada. A configuração é o que faz o trabalho.
+
+## Leitura adicional
+
+- [Standards de organização como código](/pt/2026/04/30/org-wide-standards-as-code)
+- [Subagents — IA especializada que não polui seu contexto](/pt/2026/04/28/subagents-specialized-ai-that-doesnt-pollute-your-context)

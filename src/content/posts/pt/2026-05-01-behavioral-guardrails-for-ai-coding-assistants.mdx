@@ -1,0 +1,184 @@
+---
+title: Guardrails comportamentais para assistentes de IA de programação
+date: 2026-05-01
+category: developer-tooling
+series: ai-guardrails
+lang: pt
+draft: true
+thumbnail: /content/posts/2026-05-01-behavioral-guardrails-for-ai-coding-assistants/four-pillars.png
+tags:
+  - ai
+  - ai-agents
+  - vibecoding
+  - developer-experience
+  - best-practices
+  - karpathy
+  - prompt-engineering
+  - code-quality
+  - cursor
+  - claude
+  - ai-assisted
+excerpt: Existem quatro comportamentos que quero que qualquer agente de IA de programação siga, independente do modelo por trás. Pense antes de codificar. Mantenha simples. Faça mudanças cirúrgicas. Defina o que significa estar pronto. Cada um veio de um erro real que eu vi o agente cometer. Aqui vai por que os codifiquei como um arquivo de rule.
+---
+
+Tenho um arquivo de rule always-on no topo de cada projeto em que trabalho. Tem umas cem linhas. Ele não descreve minha stack, meu estilo de código nem minhas convenções de projeto. Ele descreve quatro comportamentos que quero que o agente de IA siga quando está escrevendo ou revisando código.
+
+A rule é carregada em toda conversa. Todo modelo que uso a lê antes de fazer qualquer coisa. Os comportamentos são deliberadamente agnósticos de ferramenta — não dependem de qual agente de IA estou rodando hoje, nem de qual modelo de linguagem está por trás. São sobre os mesmos tipos de erros que qualquer fluxo de trabalho de programação assistida por LLM comete quando você não faz pushback.
+
+Cada comportamento veio de observar o agente errar algo, mais de uma vez, de um jeito que parecia estrutural em vez de acidental. Este post é sobre esses quatro comportamentos, por que cada um merece sua própria seção no arquivo de rule, e o trabalho que cada um faz na prática.
+
+<ImageFigure alt="Renderização arquitetônica clássica greco-romana em traço confiante de bico-de-pena com sombreamento dramático em hachura cruzada, sobre papel pergaminho creme. Quatro colunas altas com caneluras dóricas estão dispostas em fileira no primeiro plano, cada uma renderizada com as caneluras verticais precisas, capitéis em equino afiados e base em estilobata escalonada da arquitetura de templo grego clássica. Cada coluna carrega um pequeno medalhão em relevo na altura onde o capitel encontra o fuste, e os quatro medalhões são visivelmente diferentes entre si: o medalhão da primeira coluna mostra um pequeno perfil de cabeça pensativa com sobrancelha levemente franzida, o segundo mostra um ramo estilizado com folhas podadas como se aparadas, o terceiro mostra uma pequena ferramenta em formato de bisturi finamente detalhada, e o quarto mostra uma pequena coroa de louros ao redor de um alvo circular. Atrás e entre as colunas, uma estrada de pedra pavimentada com lajes retangulares em fuga se estende até uma linha de horizonte distante onde a névoa atmosférica embaça a perspectiva. As linhas de lajes convergem para um único ponto de fuga no centro superior da composição. Luz forte entrando do canto superior esquerdo, lançando sombras clássicas precisas atrás de cada coluna. Fundo em pergaminho creme; sem texto ou letras legíveis em nenhum lugar da composição." src="/content/posts/2026-05-01-behavioral-guardrails-for-ai-coding-assistants/four-pillars.png" caption="Quatro comportamentos, quatro colunas. A estrada passa entre elas. O agente caminha por ali." />
+
+## De onde vieram os quatro
+
+Os quatro são adaptações livres de observações que Andrej Karpathy compartilhou sobre os tipos de armadilhas em que LLMs caem ao escrever código. As palavras são minhas, o enquadramento é meu, mas a observação subjacente é dele: existem modos de falha recorrentes que são previsíveis assim que você sabe o que procurar, e vale a pena nomeá-los explicitamente para que o agente (e você) possam evitá-los.
+
+Vou percorrer cada um com a redação que realmente uso, o modo de falha que ele aborda, e o tipo de trabalho que faz em tarefas reais.
+
+## 1. Pense antes de codificar
+
+> Não assuma. Não esconda confusão. Exponha tradeoffs.
+
+O modo de falha que isso aborda é o viés do agente em direção à ação. Faça uma pergunta vaga e o agente começa a produzir diffs. Quando você percebe que a pergunta tinha múltiplas respostas válidas, já tem uma versão semi-implementada de uma delas.
+
+O corpo da rule, no arquivo:
+
+```markdown
+Before implementing:
+- State your assumptions explicitly. If uncertain, ask.
+- If multiple interpretations exist, present them — don't pick silently.
+- If a simpler approach exists, say so. Push back when warranted.
+- If something is unclear, stop. Name what's confusing. Ask.
+```
+
+Quatro linhas que mudam o comportamento de forma perceptível.
+
+A primeira linha — *declare suas suposições explicitamente* — é a que subestimei no início e agora considero essencial. O agente sempre tem suposições. Sem a rule, essas suposições ficam implícitas e você só as descobre quando o diff não faz o que esperava. Com a rule, o agente as diz em voz alta. *"Estou assumindo que o input já está validado upstream. Está correto?"* Cinco segundos para confirmar ou corrigir, em vez de quinze minutos debugando depois.
+
+A terceira linha — *faça pushback quando justificado* — foi mais difícil de fazer pegar. O modo padrão de um agente de IA é concordância solícita. Mesmo quando o pedido é ruim, o agente quer executá-lo. A rule explicitamente diz para ele fazer pushback. O resultado, depois de algumas sessões se acostumando, é que o agente às vezes diz *"a abordagem mais simples aqui é X; quer essa em vez disso?"* e eu percebo que meu enquadramento original era complicado demais. Isso é o agente fazendo seu trabalho.
+
+A quarta linha é uma que adiciono tanto para mim quanto para o modelo. *Se algo não está claro, pare. Nomeie o que está confuso.* Uma vez que o agente para de tentar fingir fluência, a conversa fica mais rápida, não mais lenta. Confusão que é nomeada é resolvida. Confusão que é escondida vira bug.
+
+## 2. Simplicidade primeiro
+
+> Mínimo de código que resolve o problema. Nada especulativo.
+
+Isso aborda a falha mais comum que já vi, por ampla margem: o agente escreve mais código do que o problema precisa. Abstrações para funções de uso único. Opções de configuração para coisas que nunca serão configuradas. Tratamento de erro para casos que não podem acontecer. Um padrão de "e se precisássemos estender isso depois?" aplicado a código que nunca será estendido.
+
+O corpo da rule:
+
+```markdown
+- No features beyond what was asked.
+- No abstractions for single-use code.
+- No "flexibility" or "configurability" that wasn't requested.
+- No error handling for impossible scenarios.
+- If you write 200 lines and it could be 50, rewrite it.
+
+Ask yourself: "Would a senior engineer say this is overcomplicated?"
+If yes, simplify.
+```
+
+O check *"um engenheiro sênior diria que isso é complicado demais?"* é o que faz mais trabalho. É um único teste mental que o agente pode aplicar ao seu próprio output antes de confirmar. O modelo é bom em rodar esse teste nele mesmo uma vez que é instruído a fazê-lo. Sem o prompt, ele simplesmente não roda.
+
+Vou escrever um post inteiro amanhã sobre como isso se parece na prática — as formas específicas de overengineering, os diffs antes/depois, os momentos em que tive que fazer pushback em uma solução de 200 linhas que queria ser 50. A versão curta: essa rule, sozinha, mudou mais sobre a qualidade do código gerado do que qualquer outra mudança individual que fiz.
+
+## 3. Mudanças cirúrgicas
+
+> Toque apenas o que precisa. Limpe apenas sua própria bagunça.
+
+Isso aborda uma falha de sabor oposto: quando pedido para mudar uma coisa, o agente conserta outras sete que não precisava. Reformatando aquela função adjacente. Atualizando aquele comentário que estava tecnicamente levemente desatualizado. Renomeando aquela variável enquanto estava ali.
+
+Cada toque individual é bem-intencionado. O agregado é um diff difícil de revisar, difícil de reverter e difícil de explicar numa mensagem de commit.
+
+A rule:
+
+```markdown
+When editing existing code:
+- Don't "improve" adjacent code, comments, or formatting.
+- Don't refactor things that aren't broken.
+- Match existing style, even if you'd do it differently.
+- If you notice unrelated dead code, mention it — don't delete it.
+
+When your changes create orphans:
+- Remove imports/variables/functions that YOUR changes
+  made unused.
+- Don't remove pre-existing dead code unless asked.
+
+The test: every changed line should trace directly to the
+user's request.
+```
+
+Aquela última frase é o teste. *Cada linha alterada deve rastrear diretamente ao pedido do usuário.* Você pode aplicá-lo linha por linha a um diff. Se não consegue rastrear uma linha de volta ao pedido, ela não deveria estar no diff.
+
+O pushback mais comum contra essa rule é "mas o código adjacente realmente estava errado." Provavelmente estava. A correção não é incluí-lo silenciosamente neste diff. A correção é mencioná-lo ("percebi que `helper_x` não está sendo usado; posso remover em uma mudança separada se quiser") e seguir em frente. Essa separação torna a revisão possível e o revert seguro. É a prática de engenharia que a rule está tentando codificar.
+
+Há uma segunda cláusula que importa: *limpe apenas sua própria bagunça.* Se uma mudança sua deixou um import sem uso, remova. É seu. Se um import já estava sem uso antes da sua mudança, é pré-existente — deixe. O princípio mantém o escopo do diff apertado em ambas as direções.
+
+<ImageFigure alt="Renderização arquitetônica clássica greco-romana em díptico em traço confiante de bico-de-pena sobre papel pergaminho creme, separado por uma linha vertical fina de caneta no centro da composição. O painel esquerdo mostra uma entablatura clássica horizontal larga — arquitrave, friso e cornija — cortada em pedra pesada e renderizada em sombreamento detalhado com hachura cruzada. O friso é excessivamente decorado com painéis de relevo sobrepostos, rosetas ornamentais, medalhões adicionais empilhados nos cantos e vários floreios que sobrecarregam a linha da viga subjacente. O painel direito mostra a mesma largura e proporção de entablatura clássica, mas reduzida à sua estrutura essencial: três painéis de tríglifo em relevo equilibrados que se alinham com o ritmo estrutural da viga, sem medalhões extras, sem floreios adicionados — apenas a geometria estrutural. Ambos os painéis compartilham o mesmo estilo de desenho clássico: traço confiante de tinta, luz dramática do canto superior esquerdo, proporção clássica, fundo em pergaminho creme. Sem texto ou letras legíveis em nenhum lugar da composição." src="/content/posts/2026-05-01-behavioral-guardrails-for-ai-coding-assistants/surgical-changes-diff.png" caption="Mesma arquitrave, metade das entalhes. Cada marca de cinzel deve rastrear diretamente à estrutura." />
+
+## 4. Execução orientada a objetivos
+
+> Defina critérios de sucesso. Itere até verificar.
+
+O quarto comportamento aborda o que acontece no final de uma tarefa. Sem essa rule, o agente termina quando fica sem coisas para fazer. Com essa rule, o agente termina quando a tarefa está *verificadamente concluída*.
+
+A rule:
+
+```markdown
+Transform tasks into verifiable goals:
+- "Add validation" → "Write tests for invalid inputs,
+  then make them pass"
+- "Fix the bug" → "Write a test that reproduces it,
+  then make it pass"
+- "Refactor X" → "Ensure tests pass before and after"
+
+For multi-step tasks, state a brief plan:
+1. [Step] → verify: [check]
+2. [Step] → verify: [check]
+3. [Step] → verify: [check]
+
+Strong success criteria let you loop independently.
+Weak criteria ("make it work") require constant clarification.
+```
+
+O reenquadramento no primeiro bloco é o movimento. *"Adicionar validação"* por si só é aberto; o agente vai produzir algo com cara de validação e parar. *"Escrever testes para inputs inválidos, depois fazê-los passar"* dá ao agente tanto o objetivo de implementação quanto o critério de verificação. O agente agora tem uma medida objetiva de "pronto".
+
+Para tarefas de múltiplos passos, o formato de plano com verificação é a correção estrutural. Cada passo tem seu próprio check. O agente não avança para o passo dois até o passo um passar. Isso parece óbvio em retrospecto; sem a rule não acontece, porque o agente vai alegremente empilhar quatro passos incertos um sobre o outro e chamar o resultado de "pronto".
+
+A última frase é o diagnóstico. Se você precisa ficar esclarecendo *"está realmente funcionando?"* depois que o agente declara que terminou, seus critérios de sucesso eram fracos. A rule faz você (e o agente) se comprometerem com critérios mais fortes logo de cara, para que o loop de verificação rode sem você ficar babysitting.
+
+## Por que esses quatro e não outros
+
+Tentei listas mais longas. Elas não sobreviveram ao contato com a realidade.
+
+Uma lista de quinze comportamentos é uma lista que ninguém lê. O agente a carrega, claro, mas uma lista longa dilui qualquer instrução individual. A versão com quatro itens é curta o suficiente para que o agente trate cada um como vinculante em vez de como uma sugestão num mar de sugestões.
+
+Também tentei adicionar comportamentos mais específicos — "sempre escreva testes", "prefira estilo funcional ao imperativo", "use type hints." Cada um desses às vezes está certo, frequentemente errado, e depende do projeto. Colocá-los na rule always-on tornava a rule menos universal e menos útil. Eles pertencem a rules específicas de projeto, onde o contexto é apropriado.
+
+Os quatro comportamentos que ficaram são os que se aplicam *independente de stack, projeto ou tarefa*. Pense antes de agir. Não faça overengineering. Toque o que precisa, nada mais. Defina "pronto". Esses quatro se sustentam em todo codebase em que já trabalhei.
+
+## Um breve tradeoff de encerramento
+
+Essas diretrizes enviesam o agente para cautela em detrimento de velocidade. Para tarefas triviais — renomear uma variável, corrigir um typo — são overhead. O arquivo de rule diz isso explicitamente, com uma linha no topo: *"Para tarefas triviais, use julgamento."*
+
+Essa válvula de escape importa. Uma rule que transforma um fix de uma linha num exercício de planejamento em múltiplos passos está deixando o sistema mais lento, não melhor. O objetivo da rule é instalar bons defaults para o caso *não-trivial*, onde a tendência do agente de agir prematuramente ou fazer overengineering produziria dano real. Em tarefas triviais, o agente reconhece as stakes menores e pula o cerimonial.
+
+## Como eu saberia que a rule está funcionando
+
+O arquivo de rule termina com um breve critério de sucesso próprio:
+
+```markdown
+These guidelines are working if: fewer unnecessary changes
+in diffs, fewer rewrites due to overcomplication, and
+clarifying questions come before implementation rather than
+after mistakes.
+```
+
+Esse é o teste. Se os diffs estão mais enxutos, se estou reescrevendo menos, e se o agente está fazendo a pergunta inteligente no início de uma tarefa em vez de depois — a rule está fazendo seu trabalho. Se esses sinais não estão se movendo, a rule não está merecendo seu lugar no contexto always-on.
+
+Até agora, nos projetos em que a usei, os sinais se moveram na direção certa. Não completamente. O agente ainda ocasionalmente produz uma solução de 200 linhas que quer ser 50, e eu ainda me pego aceitando mudanças too-clever que violam o princípio de mudanças cirúrgicas. Mas o piso está significativamente mais alto do que estava antes, que é para isso que guardrails servem.
+
+## Leitura complementar
+
+- [Quando sua IA escreve 200 linhas e poderia ser 50](/pt/2026/05/02/when-your-ai-writes-200-lines-and-it-could-be-50)
+- [Rules como memória de projeto](/pt/2026/04/24/rules-as-project-memory)

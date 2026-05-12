@@ -1,0 +1,110 @@
+---
+title: Planejando 20 posts de blog com um agente de IA
+date: 2026-04-21
+category: ai-work
+series: blog-meta
+draft: true
+lang: pt
+thumbnail: /content/posts/2026-04-21-planning-20-blog-posts-with-an-ai-agent/planning-board-batches.png
+tags:
+  - ai
+  - ai-agents
+  - vibecoding
+  - developer-experience
+  - workflow
+  - content-strategy
+  - planning
+  - markdown
+  - ai-assisted
+excerpt: Sentei com um agente de IA para planejar uma série de 21 posts. Não esperava que o planejamento em si fosse a parte mais interessante — mas foi, e a maior parte do que aprendi é sobre como usar essas ferramentas, não sobre o que escrever.
+---
+
+Sentei com um agente de IA para planejar uma série sobre agentes de IA. Sim, é recursivo. Não, eu não tinha previsto isso quando comecei.
+
+O resultado foi um arquivo de planejamento de 500 linhas com 21 posts agrupados em 6 lotes temáticos, com categorias atribuídas, datas agendadas, briefings de imagem escritos e uma política de segurança de conteúdo anexada. Mas o plano em si não foi o que me surpreendeu. O que me surpreendeu é o quanto a *sessão de planejamento* me ensinou sobre como trabalhar com essas ferramentas — e o quanto disso agora aparece no resto do meu fluxo de trabalho.
+
+Este post é sobre isso. Não sobre o plano, mas sobre o planejamento.
+
+<ImageFigure alt="Colagem de técnica mista fotografada de cima, em estilo de artefato de planejamento. A composição se estende por uma superfície de mesa creme gasta e é construída a partir de camadas de papel rasgado: seis faixas horizontais distintas cruzam a página, cada uma com cor e textura diferentes — papel jornal pálido, kraft quente, cinza-azulado frio, pêssego desbotado, página de caderno pautado creme, cartolina menta suave — de modo que as faixas se leem visualmente como seis fileiras agrupadas sem nenhum rótulo. Espalhados pelas faixas estão pequenos cartões de papel arredondados, cada um cortado de um material diferente (restos de envelope, papel pautado, cartolina colorida), fixados com tiras curtas de washi tape pastel, carimbos de pontos ou abas de fita crepe. Cada cartão carrega apenas rabiscos abstratos a lápis onde o texto estaria — garatujas em loop, pequenos padrões de ponto e traço, sem letras legíveis. Setas curvas a lápis grafite vagam entre os cartões e pelas faixas, com diversas correções redesenhadas, marcas de borracha e bordas de fita reposicionadas. Em um canto, um lápis curto repousa ao lado de uma borracha macia e uma marca tênue de xícara de café mancha a faixa de kraft. Luz natural levemente inclinada, sombra profunda nas bordas dos cartões, textura de papel palpável; quente, artesanal, levemente desgastado, sem texto legível em lugar nenhum da composição." src="/content/posts/2026-04-21-planning-20-blog-posts-with-an-ai-agent/planning-board-batches.png" caption="Seis faixas de papel, muitos cartões, várias rodadas movendo as coisas de lugar. O plano como artefato de trabalho, não como documento finalizado." />
+
+## Plan mode é o lugar certo para pensar
+
+A maioria das ferramentas de IA para código tem algo que chamam de **plan mode**, **ask mode** ou algum equivalente. Somente leitura. Sem edições de arquivo. Geralmente roda num modelo menor e mais barato. O agente pode navegar pelo codebase, ler arquivos, fazer perguntas, propor mudanças — mas fisicamente não consegue escrever nada no disco.
+
+Por muito tempo eu tratei o plan mode como uma versão pior do modo "real" de agente. Menos poder, menos throughput, menos satisfatório. Então eu pulava. Abria o agent mode direto, despejava minha ideia e ficava vendo o agente começar a editar arquivos em segundos. Às vezes isso funciona. Para qualquer coisa maior que uma mudança de uma linha, é um pequeno desastre.
+
+Olha o que eu não tinha percebido: no agent mode, o modelo quer *fazer alguma coisa*. Ele é enviesado a produzir diffs. Faça uma pergunta vaga e ele vai começar a "corrigir" coisas. Quando você percebe que não queria aquilo, já tem um design meio implementado grudado na árvore.
+
+O plan mode remove essa pressão. O agente não pode agir, então tudo que ele pode fazer é pensar em voz alta com você. Modelo mais barato, menos em jogo, sem diffs para limpar. Você separa o pensar do fazer, e o pensar melhora porque ninguém está correndo para um commit.
+
+Comecei esta série de posts no plan mode. Deveria ter feito isso para tudo que fosse maior que "renomeia essa variável" desde o início.
+
+<ImageFigure alt="Díptico de colagem de técnica mista em uma única folha paisagem, dividido ao meio por uma costura irregular de papel rasgado, em estilo de artefato de planejamento. A metade esquerda é construída em tons frios — fundos de papel cinza-azulado pálido, sobreposições de papel vegetal creme — com um esboço suave a grafite de um laptop em vista de três quartos; a área da tela é um painel de papel vegetal translúcido colado, atrás do qual flutua um pequeno motivo de cadeado carimbado em tinta em um canto. Em torno do laptop estão gestos exploratórios a lápis: loops abertos, traços, alguns cachos de interrogação, linhas finas incertas que se leem como 'pensamento' sem formar letras. A metade direita é construída em tons quentes — kraft laranja-queimado, papel jornal ferrugem, cartolina vermelho-tijolo — com uma silhueta de laptop carimbada em tinta mais confiante; a área da tela é bloqueada como uma pilha de barras coloridas sólidas em coral, ocre e azul-petróleo empilhadas como um histograma, sugerindo código escrito sem usar letras. Em volta, asteriscos carimbados, pequenas setas e padrões de pontos confiantes se projetam para fora. Uma única tira de washi tape amarelo-claro corre verticalmente pela costura, segurando as duas metades juntas. Uma seta tracejada solta a lápis curva do lado esquerdo para o direito. Bordas de papel visíveis, resíduos de cola, leve curvatura das camadas; sem texto legível em lugar nenhum da composição." src="/content/posts/2026-04-21-planning-20-blog-posts-with-an-ai-agent/plan-mode-vs-agent-mode.png" caption="Mesmo agente, dois trabalhos diferentes. A metade fria é para descobrir qual é o trabalho. A metade quente é para terminá-lo." />
+
+## Múltipla escolha funciona melhor que "o que você acha?"
+
+A outra coisa que mudei no meio da sessão foi como eu fazia perguntas.
+
+Quando você diz "o que você acha sobre como organizar as categorias?", o modelo te dá um parágrafo ponderado. Você lê, concorda em grande parte, acena, e avançou exatamente um centímetro. Aí ele te faz uma pergunta de volta, você devolve um parágrafo, e depois de trinta minutos disso você percebe que teve uma conversa agradável e tomou três decisões reais.
+
+O que funcionou melhor — pra mim, nesse tipo de tarefa — foi pedir ao agente que me desse **opções estruturadas**. Três ou quatro alternativas, cada uma com uma justificativa de uma linha, e uma recomendação. Aí eu escolhia. Às vezes pedia uma segunda rodada quando ele tinha mais contexto.
+
+Esse estilo faz algo que eu não esperava. Força o agente a se comprometer com alternativas em vez de ficar em cima do muro. E me força a *decidir de verdade* em vez de concordar com qualquer enquadramento que saiu primeiro. Um loop de "o que você acha" é enviesado para a primeira resposta plausível. Um loop de múltipla escolha é enviesado para escolher. Escolher é o gargalo, então qualquer coisa que acelere isso acelera a sessão inteira.
+
+No final eu já estava pedindo listas de opções quase por reflexo. "Me dá quatro formas de lidar com datas nessa série, nomeia os tradeoffs, recomenda uma." O plano andou muito mais rápido depois disso.
+
+## O plano foi reescrito umas dez vezes
+
+Bom, aqui vai a parte um pouco constrangedora. Achei que ia fazer um brainstorm por uma hora e sair com um plano limpo. O que realmente aconteceu é que escrevi uma primeira versão, reli, odiei metade, pedi ao agente para refatorar uma seção, odiei outra coisa, pedi de novo. O arquivo do plano passou por umas dez reescritas substanciais antes de estabilizar.
+
+O que mudava a cada vez não era a *quantidade* de conteúdo — essa cresceu de forma estável — mas as *restrições* em torno dele. Cada passada adicionou uma restrição que eu não tinha pensado quando comecei:
+
+- **Segurança de conteúdo**: os arquivos de rules que eu estaria escrevendo para o blog seriam commitados num repositório público. Então não podem conter nomes de projetos internos do meu trabalho, nomes de clientes, nomes de colegas, nenhum dado. Isso adicionou uma seção inteira à rule de convenções de escrita e mudou como eu escrevi os próprios tópicos dos posts.
+- **Neutralidade de vendor**: eu quase intitulei metade da série "Cursor Skills", "subagents do Cursor", etc. Aí notei que estava efetivamente escrevendo material de marketing para um produto. A série é sobre **agentes de IA para código** como categoria — Cursor, Claude Code, Copilot, o que vier depois. Fiz o agente voltar e reescrever cada título para refletir isso. (Uma exceção: um post especificamente sobre portabilidade entre ferramentas.)
+- **Convenções de imagem**: no começo os posts tinham uma mistura de "precisa de um diagrama", "talvez uma imagem aqui" e nada. Deixei explícito: cada post recebe pelo menos três imagens, cada bloco `<figure>` tem um `alt` bom o suficiente para ser um prompt de geração de imagem, cada `figcaption` adiciona algo que o alt não tem.
+- **Datas e cronologia**: posts no blog são listados por data. Se eu simplesmente desse a todos a data de hoje, a ordem se dissolveria em ruído. Então retroagimos as datas — um por dia, terminando hoje, começando três semanas atrás — para dar a cada post uma URL limpa e uma posição legível no arquivo.
+- **Categorias**: comecei com cinco categorias e uma regra de bolso vaga. No final eram seis (a nova é "developer-tooling") e uma árvore de decisão real sobre qual post cai onde.
+
+Nada disso era visível no início. Cada restrição surgiu porque eu tentei aplicar o plano a um post específico e algo não encaixou.
+
+<ImageFigure alt="Colagem de técnica mista em estilo de artefato de planejamento, mostrando a reformulação iterativa de uma ideia. Na extrema esquerda, uma pequena mancha de papel creme representa uma primeira ideia bruta — uma forma ovoide levemente rasgada com um único ponto de lápis no centro. A partir dela, seis fios finos de linha de bordado colorida (vermelho, marinho, ocre, sálvia, ameixa, carvão) se curvam para a direita em parábolas suaves até uma coluna vertical solta de seis pequenos cartões dispostos de cima para baixo. Cada cartão é de um substrato diferente — papel jornal pálido, papel cianótipo azul-planta, kraft, página de caderno pautado, retalho de bloco amarelo desbotado, cartolina creme manchada de café — e cada um carrega um ícone distinto desenhado à mão no centro em vez de texto: um pequeno cadeado, um relógio pequeno, um contorno de moldura, uma pequena grade de calendário, um conjunto de círculos concêntricos e uma forma de pasta. Fios vermelhos de tinta curvam de volta dos cartões inferiores para os anteriores, serpenteando em loops de feedback; algumas setas riscadas, marcas de borracha e tiras de fita reposicionadas sugerem revisão. Bastante papel creme aparecendo, luz natural suave do canto superior esquerdo, leve profundidade tridimensional em cada borda de cartão. Paleta contida, tátil, feito à mão, sem texto legível em lugar nenhum da composição." src="/content/posts/2026-04-21-planning-20-blog-posts-with-an-ai-agent/constraints-emerging-iteratively.png" caption="As restrições não chegaram no começo. Surgiram quando o plano encontrou seu primeiro post concreto e se recusou a encaixar, e então voltaram para remodelar decisões anteriores." />
+
+## O agente percebeu coisas que eu teria deixado passar
+
+Olha, aqui vai a parte em que quero ser honesto: essa não é uma história em que a IA escreveu por mim. Nem é uma história em que a IA organizou meus pensamentos pré-existentes. O agente percebeu pontos cegos reais — perguntas que eu ainda não tinha feito a mim mesmo — e fazer essas perguntas mais cedo me salvou de publicar coisas das quais me arrependeria.
+
+Dois exemplos.
+
+Quando descrevi um dos posts sobre uma skill de debug que construí, comecei a digitar o nome real do projeto. O agente parou nele e perguntou, em essência: "esse nome é seguro para publicar?" Não era. O projeto fica dentro de um repositório privado, o nome tem significado para pessoas dentro do time com quem trabalho, e soltar isso num post público seria um pequeno vazamento. Não percebi até ser perguntado. Essa conversa se tornou a seção de segurança de conteúdo na rule de convenções de escrita.
+
+O segundo é menor. Eu estava prestes a intitular um post "Cursor skills são incríveis" ou algo equivalentemente efusivo, e o agente apontou que o resto da série estava falando sobre "agentes de IA para código" como categoria genérica. A inconsistência ficaria evidente. Mudamos o título e adicionamos a rule de enquadramento tool-agnostic. Essa mesma rule me manteve honesto nos vinte títulos seguintes.
+
+Nenhum desses movimentos foi escrita criativa. Foi o agente fazendo o que humanos fazem uns pelos outros quando revisam trabalho: notar a coisa que o autor parou de enxergar.
+
+## Planeje tudo, depois escreva em lotes
+
+A outra coisa que eu não esperava era quanto dinheiro e tempo eu economizaria planejando todos os 21 posts de antemão em vez de escrever um, depois planejar o próximo, e assim por diante.
+
+Quando você planeja em lotes, o agente consegue ver o formato da série inteira. Ele pode sugerir referências cruzadas — "este post deveria linkar para aquele como leitura complementar" — que seriam impossíveis se os posts futuros ainda não existissem. Ele pode equilibrar a distribuição de tópicos para que a série não colapse numa única categoria. Pode identificar quando dois posts se sobrepõem e fundi-los, ou quando um post está fazendo demais e dividi-lo.
+
+Isso também permite que você entre no agent mode para a escrita real com um prompt muito mais direcionado. Em vez de "escreva um post de blog sobre journaling", vira "escreva o post de visão geral de journaling, lote 5, aqui está a spec, aqui está o tom, aqui estão os links de leitura complementar, aqui estão os posts existentes para combinar a voz." Esse tipo de prompt produz saída que dá pra usar. O outro tipo produz um ensaio genérico.
+
+Então: planeje uma vez, planeje tudo, depois execute em lotes temáticos. Mais barato, mais coerente, menos retrabalho.
+
+## O que eu faria diferente da próxima vez
+
+Algumas coisas teriam me economizado umas duas horas se eu soubesse desde o início.
+
+- **Decida as categorias antes de qualquer coisa.** Mudei a lista de categorias no meio do caminho e tive que revisitar cada tópico de post. O conjunto de categorias é a coisa barata de acertar cedo.
+- **Escreva a política de segurança primeiro.** Mesma lógica. Se eu tivesse escrito "sem nomes internos, sem nomes de clientes, sem IDs reais" logo na primeira mensagem, as ideias de tópicos teriam chegado já abstraídas.
+- **Escolha um registro de voz por post explicitamente.** Alguns posts são casuais, outros são reflexivos. Eu estava deixando implícito, e os rascunhos voltavam num cinza neutro de LLM. Nomear o registro de antemão resolve isso na hora.
+- **Não dê título às coisas no plan mode.** Títulos são a parte mais opinada de um post. A primeira tentativa do agente para um título geralmente é genérica demais; a minha é geralmente esperta demais. Deveria ter deixado títulos por último.
+
+Sinceramente, a maior lição é essa: **a sessão de planejamento é o trabalho.** Uma vez que o plano existe, a escrita é em grande parte transcrição com notas de estilo. A parte difícil — o que dizer, em que ordem, com que omissões — acontece antes de qualquer post ser escrito. Isso é verdade para escrita normal também, mas com uma IA no loop o gargalo se move tão para cima que dá quase para ver acontecendo.
+
+Enfim. Mais vinte posts na fila depois desse. Vamos ver como isso vai.
+
+## Leitura complementar
+
+- [Ensinando a IA a escrever como eu](/pt/2026/04/22/teaching-ai-how-to-write-like-me)
+- [De escrever código a desenhar inteligência](/pt/2026/04/14/from-writing-code-to-designing-intelligence)

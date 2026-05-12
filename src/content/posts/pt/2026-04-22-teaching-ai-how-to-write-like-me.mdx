@@ -1,0 +1,194 @@
+---
+title: Ensinando a IA a escrever como eu
+date: 2026-04-22
+category: this-blog
+series: blog-meta
+draft: true
+lang: pt
+thumbnail: /content/posts/2026-04-22-teaching-ai-how-to-write-like-me/voice-rule-side-by-side.png
+tags:
+  - ai
+  - ai-agents
+  - vibecoding
+  - developer-experience
+  - natural-language-processing
+  - i18n
+  - markdown
+  - astro
+  - content-strategy
+  - ai-assisted
+excerpt: Meu blog tem uma voz. A IA, por padrão, não tem — ela tem a voz de toda a internet calculada numa média. Então escrevi três arquivos de rules que ensinam o agente como eu soo, o que evitar e o que conta como "pronto."
+---
+
+Quando comecei a deixar uma IA me ajudar a rascunhar posts para este blog, a saída tinha um problema. Não era um problema de gramática. A gramática estava perfeita. O problema era que **não soava como eu**.
+
+Soava como um post de blog genérico e competente da internet. Confiante. Suave. Transições limpas. Nenhuma das pequenas irregularidades que fazem a escrita parecer que uma pessoa escreveu. Depois de alguns rascunhos percebi que o modelo não ia aprender minha voz por osmose só porque tínhamos passado algumas horas juntos.
+
+<ImageFigure alt="Pintura sumi-e em nanquim sobre papel de arroz branco-osso com bordas naturalmente irregulares, em composição paisagem horizontal. Duas formas abstratas de pinceladas se aproximam uma da outra pela página. A forma da esquerda é mais alta e com mais personalidade — construída com pinceladas de nanquim úmido confiantes de peso variado, com alguns floreios mais soltos, respingos ocasionais de tinta e um arrasto de secagem distinto na ponta de uma pincelada. A forma da direita começa como uma pilha mais uniforme de pinceladas em tons de cinza mais frios, mas conforme as marcas curvam para dentro elas gradualmente adquirem o ritmo e variação de peso da forma esquerda, até que na área central suas pinceladas se sobrepõem e se tornam indistinguíveis. A composição inteira tem o ritmo da escrita sem formar letras ou caracteres; lê-se como gesto, respiração e pausa. Um pequeno selo quadrado vermelho acentua a área inferior direita como a assinatura de um pintor. Generoso espaço negativo, textura suave do papel creme, luz levemente inclinada, sem texto legível ou letras em lugar nenhum da composição." src="/content/posts/2026-04-22-teaching-ai-how-to-write-like-me/voice-rule-side-by-side.png" caption="A voz da esquerda é minha. A voz da direita é o agente aprendendo a compartilhar seu ritmo." />
+
+Então escrevi três arquivos de rules. O agente os lê toda vez que toca num post. São curtos, opinados e descrevem a voz do jeito que eu descreveria para outro escritor humano. Este post é um passo a passo desses arquivos, com o conteúdo real que acabei usando.
+
+## O que são rules, afinal
+
+Rules são pequenos arquivos Markdown com frontmatter YAML que um agente de IA para código carrega quando está trabalhando num projeto. A maioria das ferramentas modernas de agentes tem alguma versão disso — Cursor chama de rules, Claude Code chama de `CLAUDE.md`, outros têm seu próprio nome. O formato é o mesmo: uma descrição, um glob pattern que diz "carregue este arquivo quando trabalhar nesses caminhos", e um corpo de orientações.
+
+Vou mostrar como ficam as minhas para o blog.
+
+```yaml
+---
+description: Voice, tone, content safety, and tool-agnostic framing for blog posts in this project.
+globs:
+  - "src/content/posts/**/*.md"
+  - "src/content/posts/**/*.mdx"
+alwaysApply: false
+---
+
+# Blog writing conventions
+
+Voice and tone guide for posts in `src/content/posts/`. Read this before
+drafting, translating, or editing any post body or excerpt.
+```
+
+Esse é o topo do arquivo que o agente carrega toda vez que estou editando um post. O glob pattern importa — significa que a rule de escrita só se conecta quando estou num arquivo de post, não quando estou mexendo num componente ou config. Outras rules se conectam a outros globs. O agente monta o contexto certo por arquivo, automaticamente.
+
+<ImageFigure alt="Composição sumi-e em nanquim sobre papel de arroz creme. No lado esquerdo repousa um pequeno selo carimbado — uma forma precisa e blocada em vermelho escuro e preto, como a marca de assinatura de um artista. A partir dele, um único fio de lavagem de tinta cinza curva para a direita pela página como um filete de incenso e alcança um espalhamento irregular de pequenos retângulos de papel em branco dispostos como folhas flutuando. O fio só pousa em dois dos retângulos, envolvendo-os num halo suave de tons de cinza e tornando seu papel de um creme levemente mais quente; os outros retângulos ficam intocados e secos, suas bordas nítidas. As duas peças abraçadas ficam em alturas levemente diferentes, como se sinalizadas de um grupo maior. Textura de pincel suave no fio, variação de pincel seco no selo, bordas de papel irregulares feitas à mão, uma grande quantidade de espaço negativo, sem texto legível ou caracteres em lugar nenhum da composição." src="/content/posts/2026-04-22-teaching-ai-how-to-write-like-me/rule-and-draft-side-by-side.png" caption="A rule se conecta aos arquivos certos e fica longe dos errados. O agente monta o contexto certo por arquivo, automaticamente." />
+
+## Rule um: a voz em si
+
+A primeira rule é a mais longa. Ela descreve a voz em três blocos: os **dois registros** que uso, os **padrões de assinatura** que quero manter e as **coisas a evitar**.
+
+A parte dos dois registros fica assim:
+
+```markdown
+## Two registers
+
+#
+
+## Casual / dev-diary
+Used for: tutorials, "I just shipped X" posts, planning recaps.
+- Conversational openings ("It's been a while.", "Here's the part…").
+- First person. Address the reader directly as "you".
+- Short paragraphs. Frequent line breaks.
+- Numbers and concrete details over abstractions.
+
+#
+
+## Reflective / essay
+Used for: posts about workflow philosophy, why something matters.
+- Longer, more measured sentences. Still first person.
+- Builds an argument across paragraphs rather than walking through steps.
+- Avoid jargon when a plain phrase will do.
+- Leave room for tension and ambiguity. Don't force a tidy conclusion.
+```
+
+Esse trecho sozinho mudou a saída de forma perceptível. Antes, cada post saía na mesma voz de andamento médio — nem casual, nem reflexivo, só blog-genérico. Depois, eu podia dizer ao agente "este é casual, tipo os posts de sexta no estilo diário de dev" e ele acertava o registro, quase sempre.
+
+A parte seguinte é um pequeno inventário de **o que manter**. Reli dez dos meus posts mais antigos e extraí os padrões recorrentes. Muletas conversacionais que uso muito ("Bom,", "Olha,", "Sinceramente,"). O leve sabor de ESL — sou brasileiro, vivo em inglês faz tempo, mas minhas frases às vezes não soam como as de um nativo, e isso é parte da voz. Enquadramentos autoconscientes onde nomeio o que vou fazer ("Deixa eu voltar um passo.", "A questão é essa."). Números e datas específicos em vez de quantidades vagas.
+
+Esse último importa mais do que eu esperava. Escrevi "muitos anos atrás" uma vez e o agente deixou. Corrigi para "quase oito anos atrás" e coloquei uma nota na rule: **prefira quantidades específicas**. A saída ficou mais concreta na hora.
+
+A lista de "o que evitar" é mais curta e mais incisiva:
+
+```markdown
+- LLM-flavored phrases: "leverage", "delve into", "in today's
+  fast-paced world", "navigate the complexities of".
+- Bullet lists where a paragraph would carry the argument better.
+- Fake enthusiasm. Hype words like "amazing", "incredible",
+  "game-changing" read as borrowed.
+- Forced "key takeaway" boxes. Endings can be quiet.
+- Stripping the mild ESL flavor. If a sentence reads like the
+  author wrote it on a Tuesday at 11pm, leave it.
+```
+
+Esse último ponto é o que tive que ser mais explícito. O modelo quer alisar cada frase num inglês americano idiomático perfeito. Pra mim isso é uma regressão — remove a coisa que faz a escrita parecer local.
+
+## Rule dois: dual language
+
+Esta é mecânica mas importante. Cada post neste blog existe em duas línguas: inglês em `src/content/posts/<slug>.md` e português brasileiro em `src/content/posts/pt/<slug>.md`. Mesmo nome de arquivo, mesma data, mesmas tags, corpo traduzido.
+
+O arquivo de rule torna esse contrato explícito:
+
+```markdown
+Both files must share:
+- The same `YYYY-MM-DD-slug` filename.
+- The same `date` in frontmatter.
+- The same `category` value.
+- The same `tags` array (tags are slugs, not labels).
+- The same `thumbnail` path (images are language-agnostic).
+- The same number, order, and `src` of `<figure>` blocks.
+  Translate `alt` and `figcaption`.
+
+The PT file additionally requires `lang: pt`.
+```
+
+Sem isso, cada tradução desviava um pouco. Conjuntos de tags diferentes entre EN e PT, nomes de arquivos de imagem levemente diferentes, um campo de data faltando. Com a rule, eu só digo "traduz esse post pra PT" e o agente produz um arquivo paralelo com o formato certo.
+
+Tem uma seção de qualidade de tradução também. Português brasileiro, não de Portugal. Manter vocabulário de trabalho em inglês que devs brasileiros realmente usam ("deploy", "build", "frontend"). Não formalizar demais o registro casual. As frases de assinatura têm equivalentes — "Bom,", "Olha,", "Sinceramente,", "Deixa eu te contar…" — e devem aparecer na versão PT também, sem serem alisadas.
+
+## Rule três: a estrutura
+
+A terceira rule é a chata, mas é onde a maioria dos bugs costumava morar. Schema do frontmatter. Convenção de nomes de arquivo. Sequenciamento de datas. Convenções de imagem. Convenções de tags. A seção de encerramento obrigatória.
+
+A parte de imagens é o trecho que mais mudou como eu trabalho:
+
+```markdown
+Every post must have at least 3 images:
+- 1 hero/thumbnail image, referenced in `frontmatter.thumbnail`.
+- 2 or more inline images in the post body.
+
+Inline image pattern (use raw HTML, not Markdown):
+
+<ImageFigure alt="..." src="/content/posts/<slug>/<image-name>.png" caption="Editorial caption that adds context." />
+
+- alt must be detailed enough to use as an image-generation prompt.
+- figcaption adds editorial context, not a repeat of the alt.
+```
+
+O motivo disso importar: o agente agora escreve posts com blocos `<figure>` apontando para caminhos de imagem que ainda não existem. O `alt` é detalhado o suficiente para eu alimentar diretamente num modelo de imagem. O `figcaption` é editorial. Eu gero as imagens numa passada separada, salvo nos caminhos sugeridos, e o post de repente está ilustrado. A rule mantém o fluxo consistente em cada post.
+
+A seção de encerramento obrigatória é uma coisa pequena que se compõe pelo arquivo inteiro:
+
+```markdown
+Every post must end with a `
+
+## Further reading` section that links
+to 1–3 other posts on the blog. Genuinely relevant, not filler.
+Use the canonical post path:
+- EN: [Title](/YYYY/MM/DD/slug)
+- PT: [Título](/pt/YYYY/MM/DD/slug)
+```
+
+Daqui a três meses, quando os posts desta série estiverem espalhados pelo arquivo, os blocos de leitura complementar transformam o arquivo num grafo em vez de uma lista plana. Compromisso pequeno agora, efeito composto grande depois.
+
+<ImageFigure alt="Composição sumi-e em nanquim sobre papel de arroz creme, com duas faixas horizontais paralelas empilhadas verticalmente e separadas por generoso espaço negativo. A faixa superior é construída a partir de uma sequência de gestos de pincel curtos, soltos e energéticos com comprimentos variados e espaçamento irregular — pinceladas úmidas rápidas, respingos ocasionais de tinta, intervalos deliberados entre elas — capturando o ritmo de uma escrita conversacional e entrecortada. A faixa inferior é construída a partir de gestos de pincel mais longos, medidos e suaves com espaçamento uniforme e peso mais estável, capturando a cadência de uma prosa mais lenta e construída. As duas faixas compartilham a mesma linguagem de pincel e tinta mas têm temperamentos visivelmente diferentes — uma staccato, outra legato. Uma leve mudança tonal vertical no papel entre as duas faixas se lê como uma fronteira silenciosa. Um pequeno selo quadrado vermelho acentua um canto. Sem letras, sem caracteres, sem texto legível em lugar nenhum — puramente ritmo gestual." src="/content/posts/2026-04-22-teaching-ai-how-to-write-like-me/two-registers-diagram.png" caption="Dois registros, um autor. As pinceladas compartilham a mesma mão mas respiram em tempos diferentes." />
+
+## O que mudou na saída
+
+Algumas coisas, depois que commitei esses três arquivos.
+
+Os rascunhos começaram a chegar no registro certo sem eu precisar pedir. Se eu dizia "escreve o post sobre journaling", o agente escolhia o registro reflexivo porque o arquivo de rule liga tipos de tópico a registros. Quase nunca precisei corrigir o registro depois disso.
+
+As frases de assinatura voltaram. Não de forma servil — o modelo não enfiava "Olha," em cada parágrafo — mas um "Sinceramente," aparecia onde eu realmente usaria um, e o ritmo parecia certo.
+
+Filler de LLM caiu quase a zero. "Leverage", "delve", "in today's fast-paced world" — sumiram. Uma vez que esse vocabulário é nomeado na rule como proibido, o modelo não recorre a ele.
+
+E a sincronização dual-language deixou de ser um trabalho chato. Eu escrevo o post em EN, peço o PT, e o que volta é estruturalmente paralelo sem eu precisar conferir o YAML.
+
+## O que não funcionou
+
+A rule de voz não substitui a edição.
+
+O modelo ainda ocasionalmente escreve uma frase que está *tecnicamente* no meu registro mas lê como uma paródia dele. Muitos "Sinceramente," seguidos. Um "Bom," que é só filler. Frases que forçam demais o sinal de ESL até parecerem um sotaque encenado. Eu corto essas quando vejo. A rule enviesou a saída; ela não faz a leitura final.
+
+A outra coisa que não resolve é **o que dizer**. Rules de voz governam *como* algo é dito. O argumento, a ordem, as omissões — essa parte ainda é comigo. Um post perfeitamente na minha voz sobre nada continua sendo um post sobre nada.
+
+## Por que vale a pena fazer isso uma vez
+
+Escrever esses três arquivos de rules levou talvez uma hora. Editá-los ao longo do caminho foi mais uma hora espalhada em algumas sessões. Eles ficam em `.cursor/rules/` e funcionam para cada post que eu escrever aqui. O custo é inicial e pequeno. O benefício se compõe em cada rascunho, cada tradução, cada ajuste rápido.
+
+Esse é o padrão, mais ou menos. Não tente coachear a voz do agente na janela de chat a cada post. Escreva o coaching uma vez. Deixe o agente reler a cada arquivo. Edite as rules quando identificar uma falha recorrente. A conversa fica mais curta e a saída fica mais estável.
+
+## Leitura complementar
+
+- [Rules como memória de projeto](/pt/2026/04/24/rules-as-project-memory)
+- [Suporte multi-idioma, finalmente](/pt/2026/02/22/multi-language-support-at-last)

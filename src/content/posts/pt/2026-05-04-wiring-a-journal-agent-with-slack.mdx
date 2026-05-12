@@ -1,0 +1,266 @@
+---
+title: Conectando um agente de diário ao Slack
+date: 2026-05-04
+category: integrations
+series: engineering-journal
+lang: pt
+draft: true
+thumbnail: /content/posts/2026-05-04-wiring-a-journal-agent-with-slack/slack-journal-pipeline.png
+tags:
+  - ai
+  - ai-agents
+  - vibecoding
+  - slack
+  - slack-api
+  - bot-tokens
+  - integrations
+  - python
+  - rest-api
+  - bash
+  - ai-assisted
+excerpt: Um agente de diário que lê dos canais Slack da sua equipe para ter contexto e posta atualizações formatadas de volta é um wrapper Python pequeno mais alguns bot tokens bem nomeados. Esta é a integração real — setup de tokens, conversations.history, recibos de postagem, aliases de canais, e as pequenas escolhas que mantêm tudo seguro de rodar.
+---
+
+O post anterior foi sobre *por que* manter um diário de engenharia. Este é sobre uma peça específica de infraestrutura que adicionei ao meu: uma integração com Slack que permite ao agente de diário ler contexto do chat e postar atualizações finalizadas de volta, sem eu ter que copiar e colar nada.
+
+A integração em si são algumas centenas de linhas de Python e um punhado de arquivos de skill pequenos. Não é impressionante; simplesmente funciona. A parte interessante é quais escolhas tornaram seguro deixar rodando sozinho.
+
+Este post é o passo a passo — setup de tokens, os endpoints da API que uso, as pequenas abstrações que impedem o agente de fazer algo estúpido, e o padrão de recibo que significa que eu sempre consigo ver o que realmente foi postado.
+
+<ImageFigure alt="Esquema estilo manual de eletrônica vintage dos anos 1960 sobre fundo de papel creme-bege quente com textura sutil de papel envelhecido. A página é disposta com as cores chapadas e o trabalho de linhas geométricas limpas de um diagrama de manual técnico dos anos 1960: teal profundo, laranja-ferrugem quente, ameixa abafado e verde-abacate contra o fundo creme, sem sombreamento ou gradientes — apenas blocos geométricos chapados e linhas conectoras finas. No lado esquerdo, um ícone estilizado único representa a plataforma de chat: um hash em ameixa abafado feito de três paralelogramos entrecruzados, desenhado em cor chapada. Abaixo do hash, dois pequenos formatos abstratos de token sentam lado a lado — pequenos retângulos chapados com marcações geométricas distintas, um em teal profundo carregando um pequeno triângulo inscrito, um em laranja-ferrugem carregando um pequeno círculo inscrito. Do token teal, uma linha de seta direcional teal limpa flui para a direita através da página passando por um pequeno bloco esquemático chapado e continua até um ícone de pasta chapado na borda direita. Abaixo deste fluxo teal, um fluxo paralelo corre na direção oposta: começando em um ícone de documento chapado na borda direita, uma linha de seta laranja-ferrugem limpa se move para a esquerda através de um segundo pequeno bloco esquemático, passa pelo token laranja-ferrugem, e volta ao ícone hash ameixa. Os dois fluxos nunca se cruzam no meio da página; convergem apenas no ícone de chat à esquerda. Paleta de cores chapadas estrita, linhas geométricas finas, nenhum texto ou letra legível em lugar algum da composição." src="/content/posts/2026-05-04-wiring-a-journal-agent-with-slack/slack-journal-pipeline.png" caption="Fluxo de leitura vai numa direção. Fluxo de postagem vai na outra. Os dois nunca compartilham estado, nunca compartilham um token, e nunca se misturam." />
+
+## O que a integração faz
+
+Duas coisas, separadas de forma limpa.
+
+**Ler do Slack.** O agente pode buscar mensagens recentes de um canal nomeado (ou um alias de canal que eu defini) e transformá-las num arquivo de contexto em `context/`. Esse contexto vira input para planejamento diário ou captura de progresso. Exemplos:
+
+- *"Pega o último dia do canal de standup da equipe como contexto para o plano de hoje."*
+- *"Salva o canal de anúncios desta semana como arquivo de contexto."*
+
+**Postar no Slack.** O agente pode pegar um plano ou relatório em Markdown e postar a versão formatada para Slack em um canal. Exemplos:
+
+- *"Posta o plano de hoje no meu Slack privado."*
+- *"Manda o relatório semanal para o gestor no canal da equipe como thread."*
+
+Duas responsabilidades, duas skills, dois bot tokens diferentes. Misturá-los seria um erro.
+
+## Bot tokens — um somente-leitura, um somente-escrita
+
+A primeira decisão foi sobre autenticação. O Slack usa bot tokens (`xoxb-...`) com escopos granulares. Você pode ter um token que faz tudo, ou vários tokens com escopo restrito.
+
+Eu tenho dois:
+
+- **Um token somente-leitura.** Escopos: `channels:history`, `groups:history`, `im:history`. Esse token pode ler mensagens dos canais em que o bot está. Não pode postar. Não pode reagir. Não pode deletar.
+- **Um token somente-escrita.** Escopos: `chat:write`. Esse token pode postar mensagens em nome do bot. Não pode ler histórico.
+
+Dois tokens significam que uma configuração errada numa direção não pode acidentalmente causar dano na outra. O script de fetch literalmente não consegue postar nada; o script de post literalmente não consegue ler nada além do que eu entrego a ele. O raio de explosão de um vazamento ou bug fica estreito.
+
+No arquivo de env:
+
+```bash
+JOURNAL_SLACK_BOT_TOKEN_READ=xoxb-redacted-read-only
+JOURNAL_SLACK_BOT_TOKEN_WRITE=xoxb-redacted-write-only
+```
+
+O agente pega o token certo pelo propósito. Não existe caminho de código onde um token é usado na operação do outro.
+
+## Aliases de canais — nunca cole um channel ID
+
+A segunda decisão me salvou de uma classe de erro que eu cometeria várias vezes por semana.
+
+IDs de canais Slack se parecem com `C0123ABCD45`. Não são memorizáveis por humanos. Se eu tiver que digitar um num comando, eventualmente vou digitar o errado — possivelmente num comando de postagem, possivelmente num canal público quando eu queria postar em algum lugar privado.
+
+Então a integração tem um mapa de aliases:
+
+```python
+CHANNEL_ALIASES = {
+    "private-journal": "C0123ABCD45",
+    "team-standup":     "C0234BCDE56",
+    "team-announce":    "C0345CDEF67",
+}
+```
+
+O mapa fica num arquivo que o agente lê. Todo comando recebe um nome, não um ID. *"Postar em private-journal"* resolve para `C0123ABCD45`; *"Ler team-standup"* resolve para `C0234BCDE56`. Se eu digitar o alias errado, o script dá erro com uma mensagem clara *"alias desconhecido"*. Se eu genuinamente precisar postar num canal que não tem alias, preciso adicioná-lo ao mapa primeiro — e adicionar ao mapa é uma ação deliberada, auditável em code review.
+
+Esse é o tipo de abstração pequena que custa dez linhas e previne o erro mais grave.
+
+## O script de fetch
+
+O lado de leitura é um script Python usando apenas stdlib que bate no endpoint `conversations.history` do Slack e escreve um arquivo de contexto legível.
+
+```python
+import os
+import sys
+import json
+import urllib.request
+import urllib.parse
+from datetime import datetime, timedelta
+from pathlib import Path
+
+SLACK_API = "https://slack.com/api"
+
+def fetch_recent(channel_id: str, hours: int) -> list[dict]:
+    token = os.environ["JOURNAL_SLACK_BOT_TOKEN_READ"]
+    oldest = (datetime.now() - timedelta(hours=hours)).timestamp()
+
+    params = urllib.parse.urlencode({
+        "channel": channel_id,
+        "oldest": f"{oldest:.0f}",
+        "limit": 200,
+    })
+
+    req = urllib.request.Request(
+        f"{SLACK_API}/conversations.history?{params}",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    with urllib.request.urlopen(req) as resp:
+        data = json.load(resp)
+
+    if not data.get("ok"):
+        raise RuntimeError(f"Slack error: {data.get('error')}")
+
+    return list(reversed(data["messages"]))
+```
+
+Duas observações sobre as escolhas.
+
+**Apenas stdlib.** Sem `requests`, sem `slack_sdk`. O script pode rodar em qualquer ambiente Python sem instalar dependências. Isso importa porque o script mora numa pasta de skill que é clonada em múltiplas máquinas; ser livre de dependências significa que simplesmente funciona.
+
+**Janela temporal por padrão.** O endpoint aceita um parâmetro `oldest`; o script sempre o define. Não existe caminho de código que busca *todo* o histórico. Se eu precisar de uma janela maior, passo um valor de `hours` maior. O padrão — vinte e quatro horas — cobre a maioria dos usos.
+
+O script então pega as mensagens brutas e as renderiza num arquivo de contexto legível:
+
+```python
+def render_messages(messages: list[dict]) -> str:
+    lines = []
+    for msg in messages:
+        ts = datetime.fromtimestamp(float(msg["ts"]))
+        user = msg.get("user", "?")
+        text = msg.get("text", "").strip()
+        if not text:
+            continue
+        lines.append(f"[{ts.isoformat(timespec='minutes')}] {user}: {text}")
+    return "\n".join(lines)
+```
+
+O contexto renderizado vai para um arquivo em `context/` nomeado com a data e o alias do canal:
+
+```
+context/2026-05-04-team-standup.txt
+```
+
+O arquivo é texto puro. O agente o carrega como input para o que quer que esteja trabalhando em seguida — um plano diário, uma captura de progresso, um relatório para o gestor. O arquivo de contexto é o recibo de que o fetch aconteceu.
+
+## O script de post
+
+O lado de escrita também é apenas stdlib, com um passo extra: a conversão de Markdown para formatação Slack.
+
+```python
+import os
+import json
+import urllib.request
+
+SLACK_API = "https://slack.com/api"
+
+def post_message(channel_id: str, text: str, thread_ts: str | None = None) -> dict:
+    token = os.environ["JOURNAL_SLACK_BOT_TOKEN_WRITE"]
+
+    body = {"channel": channel_id, "text": text}
+    if thread_ts:
+        body["thread_ts"] = thread_ts
+
+    req = urllib.request.Request(
+        f"{SLACK_API}/chat.postMessage",
+        data=json.dumps(body).encode("utf-8"),
+        headers={
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json; charset=utf-8",
+        },
+    )
+
+    with urllib.request.urlopen(req) as resp:
+        data = json.load(resp)
+
+    if not data.get("ok"):
+        raise RuntimeError(f"Slack error: {data.get('error')}")
+
+    return data
+```
+
+Mesmo formato do script de fetch. Stdlib, escopo restrito, erros claros.
+
+A conversão de Markdown para Slack-mrkdwn é a peça pequena que faz o output ficar bonito. O sabor de markup do Slack não é bem Markdown — negrito usa `*` em vez de `**`, itálico usa `_` em vez de `*`, links usam `<url|texto>` em vez de `[texto](url)`, e blocos de código são parecidos mas não idênticos. O script de render cuida da conversão antes do script de post tocar nele.
+
+## O padrão de recibo
+
+Essa é a parte da integração que levei mais tempo para definir, e que eu defenderia com mais força.
+
+Quando o agente posta uma mensagem, a mensagem vai para o Slack. Não existe cópia local por padrão. Se algo der errado — canal errado, thread errada, conteúdo errado — e você deletar a mensagem no Slack, perdeu o registro inteiramente.
+
+Então o script de post escreve um recibo em disco. Para cada post bem-sucedido, um pequeno arquivo é escrito ao lado do arquivo Markdown fonte:
+
+```
+plans/2026-05-04.md       ← o plano original
+plans/2026-05-04.slack.txt ← a versão renderizada para Slack (o recibo)
+```
+
+O arquivo irmão `.slack.txt` é o que realmente foi enviado. Se depois você se perguntar *"o que eu postei no dia 4 de maio?"*, a resposta está no sistema de arquivos, em texto puro, ao lado do fonte. Se quiser repostar a mesma coisa, o recibo é o payload literal.
+
+A regra, na skill de post: **a existência do arquivo .slack.txt é a prova de entrega**. Se o post falhar, nenhum recibo é escrito. Se o post tiver sucesso, o recibo é escrito *depois* que a API confirma o sucesso. Não existe estado ambíguo intermediário.
+
+É uma coisa pequena. Também é a coisa que me fez confiar na integração. Sem o recibo, cada post é uma operação de mão única para um sistema que eu não controlo totalmente. Com o recibo, cada post deixa um rastro local que posso auditar a qualquer momento.
+
+<ImageFigure alt="Esquema chapado estilo manual de eletrônica vintage dos anos 1960 sobre fundo de papel creme-bege quente com textura sutil de papel envelhecido, no trabalho de linhas geométricas limpas de uma página de manual técnico dos anos 1960. No topo central fica um ícone de pasta estilo chapado — um trapézio limpo com uma pequena aba superior — desenhado em cor chapada teal abafado, sem sombreamento. Abaixo da pasta, dois pares de formatos retangulares pequenos de ícone de arquivo estão empilhados em coluna vertical. Em cada par, o ícone de arquivo à esquerda é teal chapado com um pequeno triângulo geométrico inscrito no centro; o ícone de arquivo à direita é ligeiramente menor, laranja-ferrugem chapado, com um pequeno círculo inscrito no centro. Cada arquivo laranja-ferrugem em ambos os pares tem um pequeno emblema de checkmark verde-abacate chapado no canto inferior direito — um tick geométrico simples sem sombreamento. Os dois arquivos teal não têm emblema. Ao lado da coluna de arquivos, uma pequena faixa de legenda em cor chapada mostra um único arquivo laranja-ferrugem com check verde, isolado e levemente ampliado, como se para chamar atenção ao motivo de recibo. Bastante margem creme ao redor de todos os elementos. Paleta de cores chapadas estrita, linhas geométricas finas, nenhum texto ou letra legível em lugar algum da composição." src="/content/posts/2026-05-04-wiring-a-journal-agent-with-slack/receipt-pattern-files.png" caption="O arquivo irmão de recibo é a prova de entrega. Se existe em disco, o post chegou." />
+
+## Aliases de canais encontram recibos
+
+Os dois padrões se combinam num fluxo confortável.
+
+```bash
+# Escrever o plano em Markdown.
+$EDITOR plans/2026-05-04.md
+
+# Renderizar e postar em um passo.
+journal post plans/2026-05-04.md --to private-journal
+
+# Um recibo é escrito ao lado do plano.
+ls plans/2026-05-04.*
+plans/2026-05-04.md
+plans/2026-05-04.slack.txt
+```
+
+O agente faz isso quando eu peço. O script é uma camada fina que a skill invoca. A superfície voltada ao usuário é *"posta o plano de hoje no meu canal privado,"* e as camadas abaixo resolvem o alias, renderizam o Markdown para Slack-mrkdwn, batem na API com o token somente-escrita, e deixam um recibo em caso de sucesso.
+
+O mesmo padrão funciona para relatórios, atualizações de status, qualquer coisa baseada em Markdown.
+
+## O que eu deliberadamente *não* fiz
+
+Algumas funcionalidades que considerei e descartei.
+
+**Sem bot interativo no Slack.** A integração é unidirecional para posts (script-para-Slack) e unidirecional para leituras (Slack-para-script). Considerei fazer o bot responder a menções em canais, aceitar comandos via DMs, todos os padrões interativos usuais. Descartei. Um bot interativo é uma superfície muito maior — sockets, app manifests, hospedagem de runtime, lógica de retry. O design somente-script cabe em algumas centenas de linhas e roda localmente. Abri mão de conveniência e ganhei simplicidade.
+
+**Sem postagem automática em agenda.** A integração roda quando eu (ou o agente) a aciono. Não tem um loop cron que posta planos diários automaticamente. Tentei isso brevemente e me arrependi imediatamente — as poucas vezes que precisei pular um dia ou corrigir um rascunho antes de postar viraram brigas com o scheduler. Acionamento manual, talvez meio segundo de fricção, muito menos carga mental.
+
+**Sem mineração de reações ou metadados de threads.** O script de fetch retorna texto puro. Não rastreia quem reagiu a quê, ou quais mensagens estavam em thread sob qual mensagem pai. Essa informação é ocasionalmente útil e não vale a complexidade. Se eu genuinamente precisar, adiciono; ainda não precisei.
+
+**Sem filtragem "inteligente".** O script de fetch retorna a lista bruta de mensagens (menos as vazias). Não tenta filtrar para mensagens "importantes". O agente lendo o arquivo de contexto pode decidir o que é importante. Pré-filtrar só esconderia sinal sob uma heurística.
+
+O efeito cumulativo dessas omissões é que a integração é pequena, previsível e entediante. Entediante é uma feature.
+
+## Uma nota sobre a camada de skills
+
+Cada script é encapsulado numa skill que o agente de IA pode invocar pelo nome:
+
+- `journal-fetch-slack` — busca de um alias de canal, escreve um arquivo de contexto, imprime o caminho.
+- `journal-post-slack` — recebe um arquivo Markdown, renderiza o irmão Slack, posta, escreve o recibo.
+- `journal-render-slack` — renderiza Markdown para Slack-mrkdwn sem postar (útil para revisão).
+
+O corpo da skill é a descrição voltada ao usuário de quando e como invocar o script. O script é o executável. O agente lê a skill, escolhe a certa para a tarefa, e a executa. Da perspectiva do usuário, a integração é *"pedir ao agente em linguagem natural."* Da perspectiva do sistema, é uma separação limpa entre intenção (skill) e execução (script).
+
+É isso a integração. Dois tokens, dois fluxos, aliases de canais, recibos, e uma recusa em adicionar qualquer coisa que não justifique sua complexidade. O diário se beneficia do contexto do Slack sem herdar a superfície do Slack. Era tudo que eu queria.
+
+## Leitura complementar
+
+- [Fetching from Instagram using Facebook Graph API](/2018/03/05/fetching-from-instagram-using-facebook-graph-api)
+- [Por que todo engenheiro deveria manter um diário](/pt/2026/05/03/why-every-engineer-should-keep-a-journal)

@@ -1,0 +1,196 @@
+---
+title: Ferramentas de IA vendor-agnostic — skills portáveis entre coding agents
+date: 2026-05-06
+category: developer-tooling
+series: ai-workflows
+lang: pt
+draft: true
+thumbnail: /content/posts/2026-05-06-vendor-agnostic-ai-tooling-portable-skills-across-coding-agents/cursor-claude-shared-source.png
+tags:
+  - ai
+  - ai-agents
+  - vibecoding
+  - architecture
+  - developer-experience
+  - cursor
+  - claude
+  - vscode
+  - bash
+  - symlinks
+  - ai-assisted
+excerpt: Uma pasta canônica de origem. Symlinks de cada diretório esperado por cada ferramenta apontando de volta para essa origem. Os mesmos arquivos de skill funcionam no Cursor, Claude Code e qualquer outro coding agent de IA sem forks. Aqui está o layout, a lógica de sincronização, e por que prender sua biblioteca de skills em uma ferramenta é um erro que vale a pena evitar.
+---
+
+Eu uso um coding agent de IA quase todo dia. Quero poder trocar para um diferente amanhã sem perder a biblioteca de skills que construí. Não porque espero trocar — mas porque no dia em que uma ferramenta muda seu preço, sua API, seu comportamento, ou simplesmente é superada por algo melhor, eu quero que meu trabalho venha comigo.
+
+O padrão que me leva até lá é pequeno o suficiente para caber num parágrafo e estável o suficiente para que eu não precise revisitá-lo. **Uma pasta canônica de origem. Symlinks de cada diretório esperado por cada ferramenta apontando de volta para essa origem.** Os mesmos arquivos de skill, rule e subagent funcionam em todo agent sem forks, cópias ou scripts de sincronização.
+
+Este é o passo a passo do layout, dos pequenos detalhes que fazem funcionar, e do raciocínio por trás de escolher portabilidade em vez de otimização por ferramenta.
+
+<ImageFigure alt="Ilustração flat design mid-century moderna sobre fundo de papel creme-casca-de-ovo suave, com a paleta quente e abafada e geometria orgânica amigável do design gráfico da era Eames dos anos 1950-1960 — amarelo-mostarda suave, teal empoeirado, terracota quente, vermelho-tijolo suave, sem sombreamento ou gradientes, apenas planos de cor chapada. Duas silhuetas abstratas de dispositivos ficam no topo da composição, lado a lado, cada uma renderizada como uma forma geométrica arredondada diferente: a da esquerda é uma pequena caixa chapada teal empoeirado com dois pequenos detalhes retangulares deslocados e uma única listra fina terracota na face; a da direita é uma forma arredondada mostarda ligeiramente diferente com um pequeno motivo de explosão estelar chapado no centro. De cada dispositivo, uma linha curva orgânica chapada em creme flui para baixo pela página em direção a uma forma oval central generosa renderizada em amarelo-mostarda suave. Dentro da oval central, três pequenas formas chapadas estão aninhadas: uma folha terracota suave, uma pequena vagem de semente creme, e um pequeno pássaro abstrato teal empoeirado. Onde a linha curva de cada dispositivo encontra a oval, um pequeno ícone chapado de elo de corrente — desenhado como dois loops arredondados entrelaçados em creme — fica no ponto de entrada. Ao redor da composição, pontos de explosão estelar creme mid-century espalhados e pequenos fragmentos geométricos completam o vocabulário visual da era. Cor chapada estrita, geometria orgânica amigável, nenhum texto ou letra legível em lugar algum da composição." src="/content/posts/2026-05-06-vendor-agnostic-ai-tooling-portable-skills-across-coding-agents/cursor-claude-shared-source.png" caption="Dois dispositivos, uma origem. Os links permitem que cada dispositivo encontre suas coisas no lugar que espera, sem duplicar conteúdo." />
+
+## O problema que isso resolve
+
+Todo coding agent de IA espera sua configuração num lugar ligeiramente diferente.
+
+- Cursor lê de `.cursor/` (rules em `.cursor/rules/`, skills em `.cursor/skills/`, subagents em `.cursor/agents/`).
+- Claude Code lê de um `CLAUDE.md` no nível raiz mais um diretório `.claude/` (com subpastas similares).
+- Outros agents têm suas próprias convenções, nenhuma delas harmonizada.
+
+A abordagem ingênua é ter um conjunto de arquivos na pasta de uma ferramenta e aceitar que trocar de ferramenta significa reescrever tudo. É assim que a maioria dos projetos começa.
+
+A abordagem um pouco menos ingênua é manter *duas* cópias — uma em `.cursor/`, uma em `.claude/` — e mantê-las sincronizadas manualmente. Isso funciona para umas três skills antes de desmoronar. Na décima skill, as duas pastas divergiram, e você está gastando mais tempo reconciliando do que escrevendo.
+
+A abordagem realmente boa é a que vou descrever: escolha um local de fonte-da-verdade, e faça o diretório esperado de cada ferramenta apontar via symlink para ele. Uma edição de arquivo, toda ferramenta vê a mudança.
+
+## O layout
+
+Em qualquer projeto onde eu quero essa portabilidade, o layout fica assim:
+
+```
+my-project/
+├── src/
+│   ├── rules/         ← rules canônicos
+│   ├── skills/        ← skills canônicos
+│   └── agents/        ← subagents canônicos
+├── .cursor/
+│   ├── rules    → ../src/rules
+│   ├── skills   → ../src/skills
+│   └── agents   → ../src/agents
+└── .claude/
+    ├── rules    → ../src/rules
+    ├── skills   → ../src/skills
+    └── agents   → ../src/agents
+```
+
+`src/` é onde os arquivos reais vivem. Os diretórios `.cursor/` e `.claude/` contêm *apenas* symlinks de volta para `src/`. Quando o agent lê `.cursor/skills/journal-capture-progress/SKILL.md`, está transparentemente seguindo o symlink para `src/skills/journal-capture-progress/SKILL.md`.
+
+Esse é o padrão inteiro.
+
+## Por que `src/` e não as pastas das ferramentas diretamente
+
+Algumas escolhas nesse layout estão fazendo mais trabalho do que parecem.
+
+**`src/` é genérico.** Não tem nome de nenhum coding agent específico. Se uma nova ferramenta aparecer que espera sua config em `.someother/`, eu adiciono mais três symlinks apontando para `src/` e a nova ferramenta começa a funcionar sem mover nenhum arquivo.
+
+**`src/` fica por conta própria na raiz do projeto.** Fica como irmão das pastas específicas de ferramenta, não dentro de nenhuma delas. Isso é proposital. Se eu deletasse `.cursor/` amanhã — digamos que saí do Cursor — `src/` não é afetado. O conteúdo canônico não tem dependência da existência do diretório de nenhuma ferramenta.
+
+**Os symlinks são no nível de diretório, não de arquivo.** Cada pasta de ferramenta tem três symlinks (rules, skills, agents), não um symlink por arquivo de skill. Isso significa que eu nunca preciso atualizar os symlinks quando adiciono uma nova skill — o symlink já está apontando para o diretório pai, então a nova skill fica visível imediatamente.
+
+**Os symlinks são relativos.** `../src/rules`, não `/Users/me/projects/foo/src/rules`. Symlinks relativos sobrevivem a mover o projeto para outra pasta, clonar numa máquina nova, ou compartilhar com um colega. Caminhos absolutos quebrariam no momento em que o projeto fosse movido.
+
+Essas quatro pequenas escolhas resultam num setup quase completamente passivo — uma vez configurado, não precisa de manutenção.
+
+## Configurando
+
+A configuração são alguns comandos `ln` uma única vez. Nenhum script necessário. Da raiz do projeto:
+
+```bash
+mkdir -p src/rules src/skills src/agents
+
+mkdir -p .cursor .claude
+
+ln -s ../src/rules    .cursor/rules
+ln -s ../src/skills   .cursor/skills
+ln -s ../src/agents   .cursor/agents
+
+ln -s ../src/rules    .claude/rules
+ln -s ../src/skills   .claude/skills
+ln -s ../src/agents   .claude/agents
+```
+
+Essa é toda a configuração. Seis symlinks; uma origem canônica.
+
+Se quiser tornar isso repetível entre projetos, uma pequena função shell resolve:
+
+```bash
+setup_portable_ai_config() {
+  mkdir -p src/rules src/skills src/agents
+  mkdir -p .cursor .claude
+  for kind in rules skills agents; do
+    [ -L ".cursor/$kind" ] || ln -s "../src/$kind" ".cursor/$kind"
+    [ -L ".claude/$kind" ] || ln -s "../src/$kind" ".claude/$kind"
+  done
+}
+```
+
+Idempotente (o check `-L` pula a criação do link se um já existe). Apenas stdlib. Seguro de re-executar.
+
+<ImageFigure alt="Ilustração flat design mid-century moderna sobre fundo de papel creme-casca-de-ovo suave, com a paleta quente e abafada e geometria orgânica amigável do design gráfico da era Eames dos anos 1950-1960 — amarelo-mostarda suave, teal empoeirado, terracota quente, vermelho-tijolo, sem sombreamento ou gradientes, apenas planos de cor chapada. A composição é estruturada como uma árvore genealógica estilizada de pastas. No topo central fica uma única forma orgânica arredondada de pasta em teal empoeirado, com uma pequena aba superior e borda inferior suavemente curvada. Dela, três linhas curvas finas chapadas descem para três pastas filhas dispostas em fileira horizontal abaixo. A filha da esquerda é uma pasta arredondada menor em terracota; a filha do centro é uma pasta arredondada ligeiramente maior em mostarda suave (claramente a fonte central); a filha da direita é uma pasta arredondada creme. Dentro da pasta mostarda central, três pequenas sub-formas chapadas estão aninhadas em fileira: uma pequena folha terracota suave, uma pequena vagem de semente creme, e um pequeno pássaro abstrato teal empoeirado. De cada uma das pastas da esquerda e da direita, três pequenos ícones chapados de elo de corrente (cada um desenhado como dois loops arredondados entrelaçados em creme) emergem e alcançam via linhas curvas chapadas finas que elegantemente formam loops em direção às sub-formas correspondentes dentro da pasta mostarda central. Nas margens, pontos de explosão estelar creme mid-century espalhados e pequenos fragmentos geométricos. Cor chapada estrita, geometria orgânica amigável, nenhum texto ou letra legível em lugar algum da composição." src="/content/posts/2026-05-06-vendor-agnostic-ai-tooling-portable-skills-across-coding-agents/portable-tree-symlinks.png" caption="Duas pastas de dispositivo. Uma origem. As setas são links que o sistema de arquivos segue transparentemente." />
+
+## Como são os arquivos de skill
+
+Os arquivos de skill em si são agnósticos de ferramenta.
+
+Um `SKILL.md` escrito em `src/skills/journal-capture-progress/SKILL.md` funciona identicamente se o Cursor ou o Claude Code o ler. O formato que ambas as ferramentas usam é o mesmo: frontmatter YAML com `name` e `description`, corpo em Markdown, arquivos de script opcionais numa subpasta `scripts/`.
+
+```markdown
+---
+name: journal-capture-progress
+description: Capture daily progress into journaling/entries/YYYY-MM-DD.md.
+  Ask the user about style and which sections to fill before running.
+---
+
+# Journal: capture progress
+
+Take loose end-of-day notes and produce a structured journal entry...
+```
+
+Não tem nada nesse arquivo que diz *"isso é para o Cursor"* ou *"isso é para o Claude Code."* É apenas um documento de procedimento. A especificidade da ferramenta está no layout de diretórios, não no conteúdo.
+
+Essa foi a parte em que tive que ser deliberado. No começo, eu escrevia skills que referenciavam funcionalidades específicas de ferramentas — *"use o painel de agente do Cursor para..."*, *"no menu slash do Claude Code..."*. Essas skills quebravam quando eu tentava na outra ferramenta. A correção foi escrever skills que descrevem a *tarefa*, não a *interface*. A interface é trabalho do agent descobrir; a skill descreve o que o humano quer feito.
+
+Um teste simples: leia o corpo da skill sem saber qual ferramenta vai executá-la. Se você ainda consegue entender o que deveria acontecer, a skill é portável. Se o corpo assume a UI ou comandos de uma ferramenta específica, está acoplada.
+
+## E as peculiaridades específicas de cada ferramenta?
+
+A resposta honesta: toda ferramenta tem, e você precisa decidir o que fazer nas bordas.
+
+Algumas coisas para esperar:
+
+**Campos de frontmatter diferem ligeiramente.** Os rules do Cursor usam `globs:` e `alwaysApply:`; outras ferramentas usam chaves diferentes. A maioria das ferramentas ignora campos de frontmatter que não reconhece, o que significa que um rule com ambos os conjuntos de campos funciona em ambas as ferramentas, apenas com comportamento diferente. Normalmente eu escolho a convenção de uma ferramenta como primária e aceito que a outra ferramenta vai tratar o rule ligeiramente diferente.
+
+**Formatos de definição de subagent diferem ligeiramente.** Os campos e estrutura de prompt variam. Para subagents, às vezes mantenho dois arquivos de definição — um por ferramenta — porque as diferenças são grandes o suficiente para que um arquivo não consiga servir ambos de forma limpa. Eles ficam em `src/agents/cursor/` e `src/agents/claude/`, e os symlinks no diretório de cada ferramenta apontam para o correto.
+
+**Padrões glob podem variar.** Os matchers de glob de algumas ferramentas se comportam diferentemente em edge cases (caminhos profundamente aninhados, arquivos ocultos). Quando isso importa, escrevo o glob na forma mais ampla e aceito leve overmatching em uma ferramenta.
+
+O padrão: **compartilhe o que é verdadeiramente compartilhado, aceite pequenos forks nas bordas genuínas, e nunca deixe as bordas se espalharem para as partes compartilhadas.**
+
+## O que eu ganho com esse setup
+
+O padrão era originalmente sobre portabilidade — se eu tiver que trocar de ferramenta, minha biblioteca vem comigo. Esse é o benefício principal e é real.
+
+Mas alguns benefícios inesperados apareceram depois que eu vinha rodando isso há um tempo.
+
+**Code review de diff fica mais limpo.** Quando adiciono uma skill, o diff é *um* arquivo novo em `src/skills/...`. Não três ou quatro arquivos duplicados em diretórios diferentes. A intenção da mudança é inequívoca.
+
+**Onboarding de novas ferramentas é rápido.** A primeira vez que experimentei Claude Code num projeto que já tinha `src/`, o único passo de setup foi criar o diretório `.claude/` e adicionar três symlinks. Tempo total: menos de um minuto. Toda skill existente ficou imediatamente disponível.
+
+**Experimentos entre ferramentas se tornam possíveis.** Às vezes quero comparar como a mesma skill performa em dois agents diferentes. Com esse layout, "a mesma skill" é *literalmente* o mesmo arquivo. Qualquer diferença de comportamento é do modelo ou do runtime, não de drift na skill.
+
+**A biblioteca sobrevive às ferramentas.** Esse é o benefício de cauda longa. Ferramentas de IA mudam rápido. Uma biblioteca fortemente acoplada a uma ferramenta envelhece com aquela ferramenta. Uma biblioteca vendor-agnostic envelhece com os *conceitos*, que envelhecem muito mais devagar. A skill que me ajudou a debugar um checkpoint no ano passado é a mesma skill me ajudando hoje, mesmo que o runtime ao redor tenha mudado duas vezes.
+
+## Do que isso não é substituto
+
+Algumas ressalvas honestas.
+
+Esse padrão não significa "todas as skills funcionam igualmente bem em todas as ferramentas." Alguns agents são melhores em escolher a skill certa a partir de uma descrição; alguns são melhores em executar scripts; alguns têm ecossistemas de tool-call mais ricos. Os arquivos de skill são portáveis; a *experiência* de usá-los não é perfeitamente uniforme entre ferramentas. Não espere que uma skill que é ágil num agent seja ágil em todos os outros.
+
+Também não significa "trocar de ferramenta é de graça." Ainda tem custo de onboarding — reaprender os padrões de interação do agent, se retreinar nos pontos fortes e fracos dele. A biblioteca portável reduz um ponto de fricção importante, mas não reduz todos.
+
+E não significa "você deveria ser agnóstico de ferramenta desde o primeiro dia." Quando você está começando com coding agents de IA, escolher uma ferramenta e ir fundo nela é a jogada certa. A preocupação com portabilidade importa quando você já tem skills acumuladas o suficiente para que *não* protegê-las pareça imprudente. Antes disso, é otimização prematura.
+
+## Uma pequena nota filosófica
+
+Quero ser explícito sobre a convicção subjacente.
+
+Coding agents de IA estão no início. O espaço está se movendo rápido. Novos entrantes virão, ferramentas existentes vão mudar de forma, e não há razão para acreditar que a ferramenta dominante de 2026 será a ferramenta dominante de 2030. Nesse ambiente, **o artefato portável é o durável**. Skills, rules e definições de subagent escritas em Markdown puro, desacopladas das idiossincrasias de qualquer ferramenta, vão sobreviver a qualquer runtime específico.
+
+Essa é uma aposta sobre como a indústria evolui. Pode estar errada. Se uma única ferramenta acabar dominando para sempre e absorver todas as alternativas, meu hedge terá sido desnecessário.
+
+Ainda assim prefiro fazer a aposta. O custo da portabilidade são seis symlinks. O custo de estar preso é estar preso.
+
+## Leitura complementar
+
+- [AI agent skills — why I wrote 33 of them](/2026/04/25/ai-agent-skills-why-i-wrote-33-of-them)
+- [Rules as project memory](/2026/04/24/rules-as-project-memory)

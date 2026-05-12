@@ -1,0 +1,238 @@
+---
+title: Criando debug skills que inspecionam sistemas em produção
+date: 2026-04-27
+category: developer-tooling
+series: ai-rules-and-skills
+draft: true
+lang: pt
+thumbnail: /content/posts/2026-04-27-building-debug-skills-that-inspect-live-systems/magnifying-glass-architecture.png
+tags:
+  - ai
+  - ai-agents
+  - vibecoding
+  - debugging
+  - python
+  - postgresql
+  - opentelemetry
+  - bash
+  - langgraph
+  - cursor
+  - ai-assisted
+excerpt: Uma debug skill transforma "deixa eu abrir o banco e ver o que o agente achou que tava fazendo" numa pergunta de trinta segundos pro seu agente de IA. Aqui vai um walkthrough de uma — do início ao fim — com o layout real que uso, as pegadinhas, e as decisões pequenas que definem se a skill é genuinamente útil ou só ruído visível.
+---
+
+O agente com quem trabalho no dia a dia persiste o estado dele no Postgres. Quando algo parece errado — uma resposta que não bate com a entrada, um pedaço de contexto faltando, um step que não executou — o movimento natural de debugging é ler o estado persistido e ver o que o agente realmente achou que tava fazendo.
+
+A primeira vez que precisei fazer isso, levou vinte minutos entre lembrar o schema, achar a tabela certa, decodificar o blob serializado e imprimir as partes relevantes. Na segunda vez, eu escrevi uma debug skill. Depois disso, virou: *verificar o último checkpoint dessa thread.* O agente lê a skill, roda o script, parseia a saída, me diz o que tá errado. Tempo total, menos de um minuto.
+
+Esse post é um walkthrough de uma debug skill dessas, de ponta a ponta. O exemplo é genérico, mas a estrutura é a que eu realmente uso nas oito debug skills que escrevi pra esse projeto. Se você quiser escrever uma dessas, é assim que as minhas são.
+
+<ImageFigure alt="Desenho a grafite em página de caderno de rascunho ligeiramente fora-de-branco com textura de papel visível, no estilo de caderno de trabalho de engenheiro. Um diagrama de arquitetura solto desenhado à mão ocupa o centro: três caixas retangulares suaves desenhadas com linhas de lápis confiantes e linhas de construção fantasma de passadas anteriores, conectadas por setas simples que se desviam levemente da reta. As caixas não têm rótulo, mas cada uma tem um pequeno símbolo rabiscado dentro — uma pequena silhueta de cabeça robótica, um contorno de janela de terminal, um pequeno cilindro de banco de dados. Pairando acima do diagrama há uma grande lupa desenhada à mão com cabo de madeira desgastado e aro de latão, renderizada em hachurado e sombreamento a grafite. Dentro da lente, o diagrama subjacente está ampliado e revela detalhes em lápis invisíveis fora da lente: pequenos contornos de limites tracejados, tags de dados estruturados desenhadas como marcas de chaves, e uma coluna de símbolos de check e X. Ao redor da página, rabiscos de margem de caderno — uma pequena bobina de mola, uma mancha de borracha, algumas setas riscadas, o canto de uma página rasgada. Sombreamento suave a lápis, manchas de grafite ocasionais, nenhum texto ou letras legíveis em nenhum lugar da composição." src="/content/posts/2026-04-27-building-debug-skills-that-inspect-live-systems/magnifying-glass-architecture.png" caption="O esboço de arquitetura é o diagrama. O estado dentro dele é o que você está realmente debugando. Skills tornam esse estado invisível visível." />
+
+## O que estamos construindo
+
+Uma debug skill que recebe um identificador de thread e imprime o último estado persistido daquela thread, num formato que um humano (e o agente de IA lendo a skill) consegue interpretar rápido.
+
+Especificamente:
+
+- Recebe um argumento obrigatório (o thread ID).
+- Lê de uma tabela Postgres que guarda o estado persistido.
+- Decodifica o blob binário que o framework escreve naquela tabela.
+- Imprime um resumo legível: quais keys estão setadas, em qual step o pipeline chegou, se os campos esperados estão presentes.
+- Opcionalmente faz dump do JSON decodificado completo pra inspeção mais profunda.
+- Importa o decoder real usado pelo sistema em execução, em vez de reimplementar um. Essa última escolha importa mais do que parece.
+
+## Layout dos arquivos
+
+A skill vive no próprio diretório:
+
+```
+.cursor/skills/agent-debug-checkpoint/
+├── SKILL.md
+└── scripts/
+    └── debug_checkpoint.py
+```
+
+`SKILL.md` é o que o agente de IA lê. `scripts/debug_checkpoint.py` é o que roda. Dois arquivos. Só isso.
+
+## O SKILL.md
+
+Aqui vai o arquivo de documentação da skill, sem nomes específicos do projeto:
+
+```markdown
+---
+name: agent-debug-checkpoint
+description: Read and decode the latest persisted state for a given thread.
+  Shows which keys are set, current pipeline step, and presence of expected
+  fields. Use when debugging persisted graph state vs the input that produced it.
+---
+
+# Debug agent checkpoint
+
+Queries the persisted-state table for a `thread_id` and decodes the
+state blob into a human-readable summary. Best-effort msgpack/JSON
+decode; pass `--raw-json` to dump the full structure if needed.
+
+## Quick start
+
+​```bash
+working_directory: ai-automation-backend
+poetry run python ../ai-automation-dev-agents/.cursor/skills/agent-debug-checkpoint/scripts/debug_checkpoint.py \
+  --thread-id 1711900000.000100
+​```
+
+## Options
+
+| Flag           | Purpose                                     |
+|----------------|---------------------------------------------|
+| `--thread-id`  | Thread identifier (required)                |
+| `--limit`      | How many checkpoint rows, newest first (3)  |
+| `--raw-json`   | Dump full decoded JSON instead of summary   |
+
+## Backend reference
+
+- `apps/.../persistence/checkpoint.py` — checkpoint table writer/reader
+- `apps/.../state/serde.py` — serializer used by the runtime
+```
+
+Esse é o corpo inteiro da skill. O agente lê isso, sabe o comando, sabe as flags, e sabe onde vive o código-fonte do sistema se algo não estiver claro. Cinco coisas pra notar:
+
+1. **A `description` é sobre *quando* usar a skill.** Não "isso lê estado de checkpoint" — isso é só o nome com outras palavras. *"Use when debugging persisted graph state vs the input that produced it"* diz ao agente quando pegar essa skill em vez de outra.
+2. **O Quick start é copy-paste ready.** Incluindo o working directory. O agente não precisa adivinhar.
+3. **A tabela de opções é pequena.** Três flags. Se uma debug skill tá passando de cinco ou seis opções, provavelmente são duas skills tentando ser uma.
+4. **O Backend reference aponta pro código-fonte em produção.** Quando o corpo da skill estiver desatualizado, o agente tem um fallback.
+5. **Sem prosa sobre *por que* isso importa.** O agente não precisa. A skill é um procedimento, não uma redação.
+
+## O script
+
+O script é um arquivo Python enxuto. Stdlib + uns poucos imports do projeto. A estrutura que funcionou pra mim:
+
+```python
+import argparse
+import json
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from _shared.backend_imports import setup_backend_path
+
+setup_backend_path()
+
+from apps.persistence.checkpoint import open_checkpoint_reader  # noqa: E402
+from apps.state.serde import decode_checkpoint                   # noqa: E402
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--thread-id", required=True)
+    parser.add_argument("--limit", type=int, default=3)
+    parser.add_argument("--raw-json", action="store_true")
+    args = parser.parse_args()
+
+    with open_checkpoint_reader() as reader:
+        rows = reader.fetch_recent(thread_id=args.thread_id, limit=args.limit)
+
+    if not rows:
+        print(f"No checkpoint rows for thread_id={args.thread_id!r}")
+        return 0
+
+    for row in rows:
+        decoded = decode_checkpoint(row.blob)
+        if args.raw_json:
+            print(json.dumps(decoded, indent=2, default=str))
+            continue
+
+        print(f"--- checkpoint @ {row.created_at.isoformat()} ---")
+        print(f"keys present: {sorted(decoded.keys())}")
+        step = decoded.get("pipeline_step")
+        print(f"current step: {step!r}")
+        for required in ("user_input", "parsed_request", "supervisor_route"):
+            present = required in decoded
+            marker = "✓" if present else "✗"
+            print(f"  {marker} {required}")
+
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+```
+
+Algumas decisões de design nesse script de trinta linhas estão fazendo mais trabalho do que parecem.
+
+**Ele importa o decoder real.** `decode_checkpoint` é a mesma função que o runtime usa. Se a serialização do runtime muda, o decoder muda, e o script de debug continua funcionando sem eu ter que lembrar de atualizar. Reimplementar o decoder no script — o que era tentador na época — teria produzido uma ferramenta que apodrecia silenciosamente conforme o codebase evoluía.
+
+**É stdlib-only acima do import do projeto.** Sem novas dependências. O script usa `argparse`, `json`, `sys`, `pathlib`. As únicas coisas específicas do projeto são os imports que o runtime já tem instalados. Isso significa que nunca preciso gerenciar um `requirements.txt` separado pra scripts de skills.
+
+**O modo resumo vem primeiro; o modo raw-json é opt-in.** A saída padrão é legível pra humanos. O agente lendo a saída consegue resumir de volta pra mim sem parsear JSON. A flag `--raw-json` existe pros casos em que o resumo não basta, mas a maioria das invocações não precisa disso.
+
+**A saída é grep-friendly.** `keys present:`, `current step:`, os check/cross marks — um humano consegue escanear isso em dois segundos, e o agente consegue extrair os fatos booleanos diretamente. Isso importa quando a saída da skill se torna a entrada pro próximo passo de raciocínio do agente.
+
+<ImageFigure alt="Desenho a grafite em página de caderno fora-de-branco, no estilo de caderno de trabalho de engenheiro. Um fluxo horizontal atravessa o centro da página: da esquerda pra direita, uma caixa retangular suave contendo uma pequena silhueta desenhada de cabeça robótica, depois uma seta, depois um contorno menor de janela de terminal desenhado com linhas de construção hachuradas, depois outra seta, depois um cilindro de banco de dados com linhas de preenchimento curvas sugerindo camadas empilhadas de dados. Abaixo da caixa de janela de terminal e levemente à direita, uma caixa secundária menor contém um ícone que parece uma engrenagem — e dessa caixa secundária, um loop tracejado a lápis sobe e reentra na caixa do terminal, indicando uma dependência interna. Ao redor do diagrama, marcas clássicas de margem de caderno: algumas formas vazias de balão de fala, linhas de construção finas, uma mancha de polegar, um fantasma de borracha de um diagrama anterior quase apagado. Sombreamento suave a grafite, nenhum texto ou letras legíveis em nenhum lugar da composição." src="/content/posts/2026-04-27-building-debug-skills-that-inspect-live-systems/checkpoint-architecture.png" caption="A skill é um conector fino. O agente fala com o script; o script importa o decoder real; o decoder real fala com o banco de dados em produção." />
+
+## Por que "importar a coisa real" é a regra mais importante
+
+Essa foi a decisão que eu mais defenderia com firmeza. Reimplementar o decoder no script — mesmo uma versão simplificada que resolve 95% dos casos — parece tentador. Significa que o script de debug é autocontido. Significa que você pode rodar sem configurar o ambiente do backend. Parece mais limpo.
+
+É uma armadilha.
+
+A serialização do runtime muda. Toda vez que muda, o decoder reimplementado no script fica errado. O agente usa o script. A saída é silenciosamente lixo, ou parcialmente lixo de formas difíceis de detectar. Quando você percebe, já tomou uma decisão de debugging baseada numa visão defasada do sistema.
+
+Importar o decoder real resolve isso por construção. O script não pode divergir do runtime, porque estão usando o mesmo código. Se o script quebra, quebra ruidosamente — um `ImportError` ou uma exceção clara — em vez de produzir uma resposta confiantemente errada.
+
+O custo é que o script precisa do ambiente do backend pra rodar. Na prática isso significa que o `Quick start` da skill inclui um `working_directory: ai-automation-backend` e usa `poetry run`. O agente lida com isso tranquilamente. O preço da dependência do backend é pequeno. O preço da divergência silenciosa seria muito, muito maior.
+
+## Iterando no formato de saída
+
+A primeira versão desse script imprimia tudo. JSON decodificado completo, todo campo, todo dict aninhado. Era inútil. O agente lendo a saída tinha que navegar por três páginas de dados estruturados pra achar o único booleano que interessava, e tinha a mesma chance de perder a resposta quanto de encontrar.
+
+A segunda versão não imprimia nada útil — retornava um resumo que não incluía o campo que eu realmente precisava pro bug que eu tava debugando naquele dia. Então rodei com `--raw-json`, que era equivalente à primeira versão. Inútil do mesmo jeito.
+
+O que funcionou, depois de algumas iterações, foi um formato de resumo com três propriedades:
+
+- **Sempre mostra a mesma forma.** O agente sabe o que esperar: keys presentes, step atual, presença-ou-ausência de uma lista conhecida de campos obrigatórios. A saída é previsível.
+- **Inclui as coisas que eu sempre quero saber.** Qual step o pipeline alcançou. Se os campos esperados estão populados. O timestamp do checkpoint.
+- **Mostra o que está faltando.** Um `✗` ao lado de um campo ausente é mais informativo que um resumo limpo que omite o campo inteiramente. Ausência é dado.
+
+Chegar nesse formato levou umas cinco iterações em sessões reais de debugging. Em cada sessão, quando o resumo não tinha a resposta que eu precisava, eu adicionava o campo que eu tinha procurado e não encontrado. Depois de mais ou menos uma semana o formato estabilizou.
+
+Esse loop de iteração é normal. Não tente projetar a saída de uma debug skill no abstrato. Projete a V1 pra ser minimamente funcional. Itere a partir de bugs reais.
+
+<ImageFigure alt="Desenho a grafite em página de caderno fora-de-branco com textura de papel visível, no estilo de caderno de trabalho de engenheiro. Centralizado na página está uma janela de terminal retangular desenhada à mão — suas bordas esboçadas com duas passadas de lápis pra leve imperfeição — com um trio de pontos num canto sugerindo controles de janela. Dentro do retângulo, em vez de texto digitado, a página mostra uma pilha de marcas horizontais placeholder: barras curtas hachuradas a lápis de comprimento variado empilhadas em linhas, sugerindo linhas de saída estruturada sem soletrar nada. A primeira linha é levemente deslocada e sublinhada como um cabeçalho. Abaixo dela, uma série de linhas cada uma começa com um pequeno símbolo desenhado na margem esquerda: três linhas são precedidas por um pequeno checkmark confiante a lápis, e uma linha é precedida por uma cruz clara a lápis. A cruz está circulada com um loop único de lápis vermelho — a única cor na composição que é cinza no resto. Da cruz circulada em vermelho, uma seta desenhada à mão segue pra margem direita e termina com um formato de exclamação a lápis (sem letras legíveis). Manchas de borracha, linhas de construção fracas, borda da página de caderno visível na lateral, nenhum texto ou letras legíveis em nenhum lugar da composição." src="/content/posts/2026-04-27-building-debug-skills-that-inspect-live-systems/terminal-output-with-annotation.png" caption="A saída é intencionalmente entediante. Mesma forma toda vez, com marcas de check e cross pra campos obrigatórios. O bug aparece na ausência, não num muro de dados." />
+
+## Outras debug skills que seguem o mesmo padrão
+
+A de checkpoint é uma de oito debug skills que escrevi pro mesmo projeto. As outras seguem a mesma estrutura — um SKILL.md e um script que importa a coisa real — mas inspecionam superfícies diferentes.
+
+- Uma debug skill de **cache** lê valores pré-computados e mostra a freshness em relação ao timestamp da fonte de verdade. *"Esse score cacheado tá stale?"*
+- Uma debug skill de **state** explica como um novo input inicial faz merge com o último estado persistido. Útil pra entender por que uma key de um turn anterior sobreviveu inesperadamente.
+- Uma debug skill de **trace** interpreta spans de tracing distribuído, mapeando nomes de span de volta pros nodes do pipeline. *"Qual step realmente executou nessa run?"*
+- Uma debug skill de **thread-context** busca uma thread de chat e imprime o mesmo contexto resumido que o runtime veria. *"O que o agente realmente tem acesso aqui?"*
+- Uma debug skill de **pipeline** roda um subset isolado do pipeline (só entity resolution, só routing, a chain completa) num input de amostra, opcionalmente com chamadas externas mockadas. *"O que esse node único produz nesse input?"*
+
+Cada uma dessas começou como uma investigação manual que demorava demais. Cada uma agora leva segundos quando o agente a invoca. Cada uma segue as mesmas regras estruturais: importa o código em produção, formato de saída previsível, modo raw opt-in, escopo estreito.
+
+## O que faz uma debug skill *não* valer a pena escrever
+
+Debug skills são baratas, mas não são de graça. Alguns padrões que aprendi a recusar.
+
+**Skills que encapsulam algo já trivialmente consultável.** Se a resposta é `SELECT * FROM users WHERE id = ?`, você não precisa de uma skill. Você precisa de uma nota de uma linha no readme de debugging do time.
+
+**Skills que dependem de infraestrutura transitória.** Se o único lugar pra ler esse estado é de um serviço que tá prestes a ser deprecado, a skill vai apodrecer antes de se pagar.
+
+**Skills sem um "quando" claro.** Se você não consegue escrever a description como *"use when …"* — se o propósito da skill é só "debugging geral" — não é uma skill ainda. É uma pasta de scripts.
+
+**Skills que tentam ser espertas.** Uma debug skill que tenta *interpretar* o estado e te dizer o que tá errado é uma fera diferente de uma que *mostra* o estado e te deixa decidir. As minhas mostram. Interpretação é trabalho do agente, não da skill.
+
+## O efeito composto
+
+Depois de oito debug skills, algo mudou silenciosamente na forma como eu trabalho nesse projeto. Quando algo tá errado, eu não penso mais em *como investigar*. Eu penso em *o que tá errado*. A investigação foi pré-cacheada, na forma de corpos de skills que o agente pega automaticamente.
+
+Esse é o resultado real. Não "eu tenho uma pasta de scripts." Uma pasta de scripts é um diretório de ferramentas, e diretórios de ferramentas existiam antes de agentes de IA. A mudança é que a camada de *invocação* agora é inteligente. O agente lê a skill, decide qual se aplica, roda, interpreta a saída, e alimenta o resultado no próximo passo de raciocínio. A skill é só a ponte. A inteligência está nos dois lados.
+
+É por isso que escrever elas parece tempo bem gasto. Cada uma é uma pequena ponte de "investigação na sua cabeça" pra "investigação no sistema." Uma vez que pontes suficientes existem, o sistema em si se torna inspecionável de um jeito que não era antes — e o agente atravessa elas por você.
+
+## Leitura adicional
+
+- [AI agent skills — por que escrevi 33 delas](/pt/2026/04/25/ai-agent-skills-why-i-wrote-33-of-them)
+- [Um revisor de segurança de IA read-only](/pt/2026/04/29/a-read-only-ai-security-reviewer)

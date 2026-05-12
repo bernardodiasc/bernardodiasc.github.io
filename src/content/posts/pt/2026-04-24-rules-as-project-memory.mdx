@@ -1,0 +1,172 @@
+---
+title: Rules como memória do projeto
+date: 2026-04-24
+category: developer-tooling
+series: ai-rules-and-skills
+lang: pt
+draft: true
+thumbnail: /content/posts/2026-04-24-rules-as-project-memory/rules-filing-cabinet.png
+tags:
+  - ai
+  - ai-agents
+  - vibecoding
+  - developer-experience
+  - yaml
+  - glob
+  - configuration
+  - markdown
+  - cursor
+  - claude
+  - ai-assisted
+excerpt: Agentes de código com IA começam cada conversa sem memória nenhuma. Rules são os pequenos arquivos Markdown que resolvem isso — dizem ao agente as convenções do seu projeto, anexados aos arquivos certos na hora certa. Aqui vai como funcionam e como eu penso na hora de escrevê-las.
+---
+
+Um agente de código com IA começa toda conversa com o mesmo problema: ele não faz ideia de como o *seu* projeto funciona. Ele sabe Python genérico, React genérico, Markdown genérico — mas não sabe que o seu codebase coloca funções utilitárias em `helpers/`, ou que esse serviço específico usa Pydantic v2, ou que todos os seus posts de blog precisam terminar com uma seção "Further reading".
+
+Você pode ensinar essas coisas pra ele no chat, toda sessão, pra sempre. Ou você pode escrever rules.
+
+Este post é sobre rules — o que são, como são carregadas, quando usar em vez de outras ferramentas, e o que faz uma boa rule. Os exemplos são da configuração deste próprio blog, porque é o mais concreto que tenho.
+
+<ImageFigure alt="Ilustração técnica isométrica em traço confiante de nanquim com hachura cruzada para sombreamento, sobre fundo de papel creme quente. Um arquivo alto de madeira em perspectiva isométrica de três quartos sobre uma base fina hachurada. O arquivo tem seis gavetas empilhadas verticalmente, cada gaveta sutilmente diferente da seguinte: diferentes estilos de puxador (botão redondo de latão, barra horizontal, concha embutida, argola) e diferentes formatos de etiqueta em cada frente de gaveta (retângulo pequeno, oval, hexágono, quadrado arredondado, losango, círculo), com diferentes densidades de hachura na face de cada gaveta. Os porta-etiquetas estão vazios — pequenas molduras desenhadas à mão sem nada dentro. Duas gavetas estão levemente abertas, revelando folhas de papel dobradas dentro, e em cada folha visível um pequeno ícone está desenhado — um traz um motivo de ponta de lápis, o outro um motivo de cadeado — para sugerir diferentes tipos de orientação. Ao redor do arquivo, várias formas pequenas e vazias de balões de chat arredondados flutuam no ar, cada uma conectada ao porta-etiqueta de uma gaveta específica por uma fina linha de nanquim, as linhas curvando com a precisão de um livro técnico vintage de como as coisas funcionam. Sombra hachurada suave se acumula sob o arquivo. Nanquim sépia e cinza quente sobre papel creme, contornos confiantes, espaço em branco generoso, nenhum texto ou letra legível em qualquer parte da composição." src="/content/posts/2026-04-24-rules-as-project-memory/rules-filing-cabinet.png" caption="Cada gaveta tem seu próprio padrão de abertura. O agente só abre as gavetas que correspondem ao que está trabalhando agora." />
+
+## A menor rule possível
+
+Uma rule é um arquivo Markdown com frontmatter YAML, dentro de uma pasta que o agente observa. O frontmatter é configuração. O corpo é orientação.
+
+```markdown
+---
+description: Voice and tone guide for blog posts
+globs:
+  - "src/content/posts/**/*.md"
+  - "src/content/posts/**/*.mdx"
+alwaysApply: false
+---
+
+# Blog writing conventions
+
+When editing a post, prefer short paragraphs in casual posts.
+Don't over-polish — leave the author's voice intact.
+```
+
+Essa é a forma completa. Três campos de frontmatter, um corpo em Markdown, salve como `.cursor/rules/blog-writing-conventions.mdc` (ou `CLAUDE.md` numa pasta, ou como quer que a sua ferramenta chame — o formato de arquivo varia, a ideia não), e o agente vai carregar na próxima vez que tocar num arquivo correspondente.
+
+A maioria dos agentes de código com IA modernos tem alguma versão disso. Cursor chama de rules. Claude Code chama de `CLAUDE.md`. Outras ferramentas têm seus próprios nomes. O formato de arquivo ainda não é padronizado, mas o conceito subjacente é: **orientação por projeto, por padrão de arquivo, carregada automaticamente no contexto do agente.**
+
+Vou escrever este post no formato `.mdc` do Cursor porque é o que eu uso. Os padrões se transferem. Se você está numa ferramenta diferente, os arquivos equivalentes vão parecer ligeiramente diferentes, mas o raciocínio é o mesmo.
+
+## O frontmatter faz o roteamento
+
+O corpo de uma rule é orientação direta — Markdown bem simples. A parte interessante é o frontmatter, porque ele controla **quando a rule é anexada**.
+
+Existem aproximadamente três modos:
+
+```markdown
+---
+alwaysApply: true
+---
+```
+
+Essa rule é carregada em toda conversa no projeto. Use com parcimônia. A janela de contexto do agente tem um orçamento, e rules sempre carregadas gastam esse orçamento quer sejam relevantes ou não. Reserve `alwaysApply: true` para coisas que genuinamente se aplicam a todo arquivo — padrões de código, guardrails de comportamento, políticas de segurança.
+
+```markdown
+---
+description: Voice guide for blog posts
+globs:
+  - "src/content/posts/**/*.md"
+alwaysApply: false
+---
+```
+
+Essa rule carrega só quando o agente está mexendo num arquivo que corresponde a um dos globs. Editando `src/content/posts/2026-04-24-rules-as-project-memory.md`? A rule é anexada automaticamente. Editando `src/components/Button.astro`? A rule fica fora do caminho.
+
+Esse é o modo que mais uso. Ele escala. Você pode ter uma dúzia de rules num projeto, cada uma com escopo para uma pasta ou tipo de arquivo diferente, e só as relevantes carregam para qualquer tarefa.
+
+```markdown
+---
+description: Add a new search filter to the AI agent pipeline
+alwaysApply: false
+---
+```
+
+Sem globs, não é always-applied. Essa rule aparece no catálogo de rules disponíveis do agente, mas só é anexada quando o agente decide que é relevante — geralmente porque o pedido do usuário corresponde à descrição. Use isso para rules procedurais que não estão vinculadas a um arquivo, tipo "os passos para adicionar uma nova feature do tipo X."
+
+Os três modos juntos permitem construir uma biblioteca de rules onde cada rule é carregada **apenas quando é útil**. Parece óbvio. Não é o que a maioria dos projetos faz. A maioria dos projetos ou joga tudo num único arquivo gigante sempre ativo (o que custa tokens em cada request e deixa as instruções do agente confusas) ou pula rules inteiramente (o que deixa o agente reinventando as convenções do projeto toda sessão). Rules roteadas são o caminho do meio.
+
+<ImageFigure alt="Ilustração técnica isométrica em traço confiante de nanquim com hachura cruzada para sombreamento, sobre fundo de papel creme quente. Uma longa faixa horizontal de retângulo arredondado atravessa o meio da composição, desenhada em perspectiva isométrica tridimensional com sombreamento hachurado sutil por baixo — este é o contexto de trabalho ativo. No canto superior esquerdo, uma coluna vertical de seis pequenas folhas de papel dobradas flutua no ar, cada folha renderizada com uma dobra de canto e um único ícone pequeno carimbado no topo (uma pena, uma pequena chave, uma engrenagem, uma pincelada, uma tag, um medidor — nenhum ícone repetido, sem texto em nenhuma folha). De cada folha, uma fina seta curva de nanquim desce em direção à faixa central: apenas três das seis linhas realmente se conectam à faixa e percorrem sua superfície superior; as outras três se desvanecem em traços pontilhados que afinam e se dissolvem antes de alcançá-la. Abaixo da faixa central, um pequeno corte transversal em detalhe mostra uma única folha de papel sendo tocada por uma pequena mão desenhada, indicando o arquivo em que o agente está trabalhando atualmente. Sombreamento hachurado de livro técnico em toda parte, nanquim sépia e cinza quente sobre papel creme, nenhum texto ou letra legível em qualquer parte da composição." src="/content/posts/2026-04-24-rules-as-project-memory/glob-routing-diagram.png" caption="O glob é a ficha de roteamento. A rule espera no arquivo até o agente abrir um arquivo que corresponda ao seu padrão." />
+
+## Para que rules servem
+
+Rules servem para **convenções que se aplicam a um arquivo ou pasta, que não mudam de sessão para sessão, e que o agente não descobriria sozinho**.
+
+Concretamente:
+
+- **Convenções específicas do projeto.** "Todas as rotas de API ficam em `apps/api/routes/`. Use injeção de dependência do FastAPI para auth. Schemas Pydantic v2 ficam em `schemas/`."
+- **Guias de voz ou estilo.** A rule de convenções de escrita deste blog é exatamente isso. O agente não tem como inferir a minha voz. A rule diz pra ele.
+- **Lógica de decisão que o agente deve seguir.** "Use a categoria X para posts sobre A, categoria Y para posts sobre B." Algumas linhas que economizam dezenas de follow-ups de "na verdade deveria ser Y".
+- **Guardrails de segurança.** "Não inclua nomes reais de clientes em nenhum arquivo dentro de `.cursor/rules/`." Esse é o tipo de restrição que, uma vez escrita, previne um erro recorrente para sempre.
+- **Estrutura obrigatória.** "Todo post de blog deve terminar com uma seção `## Further reading`." Sem a rule, o agente esquece uma em cada três vezes. Com ela, o agente não esquece.
+
+## Para que rules não servem
+
+Essa é a parte que demorei um pouco para entender.
+
+**Rules não são para tarefas pontuais.** Se você se pega escrevendo uma rule pra algo que vai fazer uma vez, você escreveu um prompt na verdade. Coloca esse texto na sua mensagem.
+
+**Rules não são para coisas que dependem de estado ao vivo.** Se a resposta muda de sessão para sessão — "qual é a contagem atual de vagas abertas no sistema?" — isso não é uma rule. É uma chamada de ferramenta ou uma skill (sobre a qual vou escrever depois).
+
+**Rules não são para código.** Se você está tentado a colocar uma função dentro do corpo de uma rule e fazer o agente colar em todo lugar, escreva um utilitário de código e deixe o agente importá-lo. Rules são para orientação que o agente deve seguir ao gerar código, não para código em si.
+
+**Rules não substituem revisão.** Uma rule que diz "sempre valide inputs" é útil mas não substitui realmente ler o que o agente produz. Rules elevam o piso; elas não colocam teto no que pode dar errado.
+
+O maior erro que vejo — inclusive da minha parte, repetidamente — é recorrer a uma rule quando a melhor ferramenta é uma abstração diferente. Rules são um mecanismo entre vários. Nem sempre são a resposta.
+
+## Uma rule é melhor quando é pequena
+
+A tentação, uma vez que você começa a escrever rules, é fazê-las longas. Grandes arquivos detalhados de rule que cobrem cada caso de borda. Rules com subseções e sub-subseções. Rules que tentam ser o design doc completo do projeto.
+
+Isso vai contra a forma como o agente as usa. O agente lê a rule e trata cada sentença como orientação. Rules longas diluem a orientação importante com orientação de baixa prioridade. Rules longas também gastam mais do orçamento de contexto, o que significa menos espaço para o arquivo que você está de fato editando.
+
+As rules que realmente mudaram o comportamento do agente, pra mim, foram as curtas e opinativas. Uma página de prosa concisa. Algumas seções com cabeçalho. Uma lista de coisas a evitar. Uma lista de coisas a manter. Isso é suficiente.
+
+Quando uma rule cresce além de duas páginas, começo a me perguntar se são duas rules tentando ser uma. Na maioria das vezes, são.
+
+## Rules e skills, em uma frase
+
+Algumas pessoas vão ler isso e perguntar: qual a diferença entre uma rule e uma "agent skill" ou um "subagent"? Ambos vão ter seus próprios posts. A versão bem curta:
+
+- **Rules** carregam automaticamente quando arquivos correspondem. Elas direcionam o comportamento do agente em tarefas existentes.
+- **Skills** são carregadas sob demanda pelo nome. São mais como procedimentos reutilizáveis ou playbooks.
+- **Subagents** são invocações isoladas de um agente menor para uma tarefa específica. Mantêm o trabalho fora do seu contexto principal.
+
+Você normalmente vai precisar dos três. Rules são a fundação porque são baratas e ambiente. Os outros dois entram em cena quando você supera o que rules sozinhas conseguem fazer.
+
+<ImageFigure alt="Díptico de ilustração técnica isométrica em nanquim com hachura cruzada, sobre fundo de papel creme quente. A cena é dividida ao meio por uma fina linha vertical de nanquim. O painel esquerdo mostra uma pequena figura desenhada em pé numa mesa em perspectiva isométrica de três quartos, na frente de uma tela da qual um longo rolo de papel se desenrola pela borda superior e se acumula na mesa; o rolo é representado como barras horizontais de hachura densamente empilhadas sugerindo muitas linhas de instruções, sem texto legível. Ao lado da mesa, uma pequena bandeja de saída contém uma pilha de papéis; o papel do topo carrega uma pequena bandeira desenhada à nanquim com um X carimbado. O painel direito mostra a mesma bancada isométrica, mas o rolo caindo da tela agora é apenas um pequeno cartão dobrado com duas linhas curtas de hachura. Acima da tela deste lado, uma pequena forma de paper de rule dobrada com dobra de canto flutua no ar e alimenta a tela por uma fina linha de nanquim. A bandeja de saída aqui contém uma pilha limpa de papéis, o do topo carregando um pequeno carimbo de floreio de marca de verificação. Sombreamento hachurado de livro técnico, nanquim sépia e cinza quente sobre papel creme, visual vintage de como as coisas funcionam, nenhum texto ou letra legível em qualquer parte da composição." src="/content/posts/2026-04-24-rules-as-project-memory/rule-vs-no-rule-output.png" caption="A rule move as convenções para fora de cada prompt e para dentro de um arquivo que o agente lê automaticamente. O chat fica mais curto; a saída fica mais estável." />
+
+## Como eu escrevo uma nova rule
+
+Quando sento para escrever uma nova rule, sigo mais ou menos isso:
+
+1. **Qual é o problema recorrente?** Vale a pena escrever uma rule quando o agente cometeu o mesmo erro duas vezes. Uma vez é azar; duas vezes é padrão.
+2. **Qual é a menor frase que resolve?** Tente escrever a rule em uma frase primeiro. Se for suficiente, você tem a sua rule. Se não, expanda só o quanto precisar.
+3. **Qual é o glob certo?** Onde o agente vai estar quando essa orientação importa? Esse é o glob. Resista ao impulso de fazer `**/*` — escopo estreito produz direcionamento mais preciso.
+4. **Vou querer encontrar isso daqui a seis meses?** Dê um nome de arquivo claro. `blog-writing-conventions.mdc` é greppable de um jeito que `style.mdc` não é.
+5. **Use por uma sessão e edite depois.** A primeira versão está sempre ligeiramente errada. Use numa tarefa real, observe onde o agente ainda erra, edite a rule. Duas ou três iterações é normal.
+
+Esse é o loop inteiro. A maioria das minhas rules levou trinta minutos de escrita e mais uma hora de edição ao longo das próximas sessões de uso.
+
+## Elas se acumulam
+
+A coisa que eu não previ, quando comecei a escrever rules alguns meses atrás, foi o quanto elas se acumulariam.
+
+Cada rule, por si só, é um pequeno direcionamento. Um empurrão. A saída fica um pouco melhor de uma forma específica. As primeiras rules parecem quase não valer a pena escrever — estou fazendo todo esse meta-trabalho pra economizar alguns segundos por sessão.
+
+Aí você tem uma dúzia de rules. O agente agora conhece a sua voz, a estrutura do seu projeto, a sua política de segurança, as suas convenções de teste, a sua lógica de categorias, o seu formato de imagem, os seus guardrails de segurança, o seu padrão de further-reading. Toda sessão começa com tudo isso já no lugar. A conversa não é *menos rica* — é o mesmo tipo de conversa de antes, mas agora a camada de baixo está resolvida. Seus prompts podem ser mais curtos. As saídas do agente podem ser mais precisas. Os erros que você corrigia repetidamente pararam de acontecer.
+
+Esse é o momento em que rules deixam de parecer configuração e passam a parecer **memória**. O projeto se lembra de como funciona. O agente pega essa memória automaticamente. Sua conversa pode ser sobre o problema real, não sobre lembrar o agente das decisões da semana passada.
+
+Isso não é pouco. É a maior parte do motivo pelo qual eu as escrevo.
+
+## Further reading
+
+- [AI agent skills — por que escrevi 33](/pt/2026/04/25/ai-agent-skills-why-i-wrote-33-of-them)
+- [Guardrails de comportamento para assistentes de código com IA](/pt/2026/05/01/behavioral-guardrails-for-ai-coding-assistants)

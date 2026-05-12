@@ -1,0 +1,150 @@
+---
+title: AI agent skills — por que escrevi 33
+date: 2026-04-25
+category: developer-tooling
+series: ai-rules-and-skills
+lang: pt
+draft: true
+thumbnail: /content/posts/2026-04-25-ai-agent-skills-why-i-wrote-33-of-them/skills-toolbox.png
+tags:
+  - ai
+  - ai-agents
+  - vibecoding
+  - developer-experience
+  - markdown
+  - yaml
+  - python
+  - automation
+  - postgresql
+  - bash
+  - cursor
+  - ai-assisted
+excerpt: Comecei com uma. Um pequeno arquivo Markdown com alguns comandos shell dentro, que o agente podia acessar pelo nome. Dois meses depois eram trinta e três. Aqui vai a história de como a gaveta de skills foi enchendo, e por que continuou se pagando.
+---
+
+Eu não sentei numa tarde e escrevi trinta e três skills. Ninguém faz isso. A gaveta foi enchendo do jeito que gavetas costumam encher: uma coisa de cada vez, geralmente porque eu precisava naquele dia, ocasionalmente porque tinha prometido a mim mesmo ser mais organizado.
+
+Este post é sobre como isso aconteceu. Não a taxonomia — isso é um post separado. Só a *história*. O que é uma skill, quando comecei a recorrer a uma, quando a contagem passou de "ferramenta útil" para "isso agora é uma biblioteca de verdade", e por que eu recomendaria o exercício inteiro a qualquer pessoa que trabalhe com um agente de código com IA no mesmo projeto por mais de algumas semanas.
+
+<ImageFigure alt="Prancha de espécimes de história natural vintage em aquarela e linha fina de nanquim, sobre papel creme com marca d'água sutil de envelhecimento e a textura delicada de uma folha de herbário antiga. Aproximadamente quatorze pequenos espécimes estão dispostos em uma grade solta pela prancha, cada um renderizado com técnica botânica ou zoológica diferente: uma fronde de samambaia prensada, um besouro iridescente pregado, uma flor silvestre seca com caule curvado, um corte transversal em aquarela de uma semente brotando, um fragmento mineral cristalino contornado em nanquim, um estudo de veias de folha, uma asa de borboleta única em pigmento pastel empoeirado, uma pequena concha de caracol, uma ponta de pena fina, uma mariposa com marcas sutis, um chapéu de cogumelo seco, um corte transversal espiralado estilo amonite, uma vagem de sementes com farpas e um raminho de lavanda. Cada espécime está pregado ao papel com um minúsculo alfinete de latão e cercado por uma pequena etiqueta de papel vazia — as etiquetas não carregam texto legível, apenas marcas abstratas de lápis e pequenos pontos gestuais. Os espécimes são renderizados em técnicas variadas de aquarela e nanquim: alguns totalmente pintados, alguns apenas contornos em nanquim, alguns diluídos e atmosféricos. Um traço suave de margem a lápis percorre três bordas da prancha, sem letras legíveis — apenas rabiscos desenhados à mão. Luz natural suave sobre papel creme, espaço em branco generoso, nenhum texto ou letra legível em qualquer parte da composição." src="/content/posts/2026-04-25-ai-agent-skills-why-i-wrote-33-of-them/skills-toolbox.png" caption="A prancha foi preenchida um espécime de cada vez. A maioria era pequena. Algumas delas eu agora consulto quase diariamente." />
+
+## A versão curta do que é uma skill
+
+Uma skill é um arquivo Markdown. Só isso. Tem um nome, uma descrição de uma linha, e um corpo que explica como fazer algo — geralmente com um trecho de shell ou código no topo que faz o trabalho de verdade.
+
+O agente não executa skills automaticamente. *Você* invoca uma skill pelo nome, e o agente lê o arquivo no seu contexto. A partir daí ele sabe o procedimento: onde está o script, quais flags passar, o que a saída significa, o que fazer com ela depois. A skill é um pequeno playbook que o agente pode pegar sob demanda.
+
+Uma skill mínima se parece com isso:
+
+```markdown
+---
+name: get-recent-commits
+description: List recent commits on the current branch with author and short message.
+---
+
+# Get recent commits
+
+Quick view of the last N commits on the current branch.
+
+## Quick start
+
+​```bash
+git log --pretty=format:"%h %an: %s" -n 20
+​```
+
+## Options
+
+- `-n N` — how many commits to show (default 20)
+```
+
+Isso é uma skill. O frontmatter tem um nome e uma descrição, o corpo explica o que faz, o bloco bash no topo é o que o agente vai executar quando eu pedir para "get recent commits." O formato que você vai ver varia por ferramenta — algumas chamam de skills, algumas de slash-commands, algumas de snippets — mas a estrutura básica é a mesma.
+
+## Como a primeira aconteceu
+
+A primeira skill que escrevi foi para um projeto de agente de IA em que trabalho. O agente persiste estado entre conversas usando um banco de dados de grafo, e a forma como esse estado é serializado é um pouco customizada. Quando algo parecia estranho em produção, o movimento natural de debug era abrir o banco de dados, decodificar o blob do checkpoint, e ver o que o agente realmente achava que estava fazendo.
+
+A primeira vez que fiz isso, escrevi um pequeno script Python. A segunda vez, esqueci em qual banco de dados o script conectava e queimei dez minutos descobrindo. A terceira vez, fiz minha primeira skill — um arquivo `SKILL.md` com o caminho do script, o comando, as flags, e uma nota sobre quais tabelas olhar se a primeira estivesse vazia.
+
+Na vez seguinte que algo ficou estranho, pedi ao agente: *verifica o último checkpoint dessa conversa.* O agente leu a skill, executou o script, parseou a saída, e me disse o que estava errado. Tempo total da pergunta à resposta, uns trinta segundos. A skill se pagou na primeira vez que foi usada.
+
+## O limiar para escrever uma
+
+Depois disso eu tinha uma regra prática: **na segunda vez que faço algo, escrevo uma skill.**
+
+Não na primeira vez. Na primeira vez você ainda não sabe qual é o procedimento. Está descobrindo. Anotar durante o caminho é principalmente ruído.
+
+Mas na segunda vez, o procedimento surgiu. Você sabe qual comando, quais flags, quais pegadinhas, quais comandos relacionados. Esse é o momento de capturar. Se você esperar pela terceira ou quarta vez, já queimou a economia que a skill teria dado.
+
+Uma skill nesse estágio é pequena — um ou dois parágrafos de contexto, o comando, uma lista de flags. Talvez um exemplo de saída se for o tipo de coisa que precisa de interpretação. Leva dez minutos para escrever. O custo é real mas trivial.
+
+O limiar importa pelo motivo inverso também. **Se algo só foi feito uma vez, não escreva uma skill pra isso.** Tentei isso no começo e produzi um cemitério de skills que nunca usei. Skills são caching. Se você faz cache de algo que nunca vai consultar de novo, está só pagando o custo de armazenamento.
+
+## Por que trinta e três é mais ou menos o número certo
+
+Esse número não é uma meta. É onde eu acabei chegando no projeto em que estava trabalhando, e olhando pra trás, faz sentido.
+
+O projeto tem algumas superfícies naturais:
+
+- **Estado ao vivo** — o que o agente está pensando no momento. Skills para inspecionar checkpoints, decodificar estado do grafo, ler a thread de mensagens que o agente está respondendo.
+- **Configuração / cache** — o que já foi computado antes. Skills para ler e limpar avaliações em cache, consultar rate limits, verificar timing.
+- **Sistemas externos** — as plataformas de terceiros com as quais o agente se comunica. Skills para buscar um registro por ID, executar uma query de busca, postar uma mensagem de volta.
+- **Procedimentos internos** — mudanças multi-step repetíveis. Skills que guiam o agente por "adicionar um novo filtro de busca" ou "conectar um novo intent pelo pipeline."
+- **Quality assurance** — replay de cenários, captura de outputs, verificações de regressão.
+
+Cada superfície produz algo entre três e dez skills conforme o projeto amadurece. Multiplique por cinco superfícies e você chega em algum lugar entre vinte e poucos e trinta e poucos. Isso não é mágica — é a forma natural de um sistema não trivial que uma pessoa mais um agente de IA opera.
+
+## Quando uma skill ganha de uma rule
+
+Essa foi a coisa que precisei acertar na minha própria cabeça. Rules e skills parecem similares por fora — ambas são arquivos Markdown numa pasta, ambas são carregadas no contexto do agente. Fazem coisas diferentes.
+
+Uma **rule** carrega automaticamente quando você está trabalhando num arquivo correspondente. É ambient. O agente lê quer você peça ou não. Rules servem para orientação de estado estável: voz, convenções, políticas de segurança, coisas que devem sempre moldar o comportamento do agente num determinado tipo de arquivo.
+
+Uma **skill** carrega sob demanda, pelo nome. É invocada. O agente pega só quando você manda (ou quando a descrição corresponde à solicitação do usuário de forma suficientemente próxima). Skills servem para procedimentos: coisas que você às vezes faz, com input e output definidos.
+
+Dois testes práticos que uso:
+
+- **Essa orientação se aplica toda vez que eu mexo num certo arquivo?** Isso é uma rule.
+- **Existe um comando que eu executo quando quero saber X?** Isso é uma skill.
+
+Você vai ter algumas que parecem ser as duas coisas. Quando isso acontece eu geralmente divido — uma rule pequena para a parte sempre-ativa, uma skill para a parte procedural — porque misturar faz a rule mais longa do que deveria e a skill mais difícil de encontrar.
+
+## A forma de um bom corpo de skill
+
+Depois de escrever algumas, um padrão surgiu sobre o que torna o corpo de uma skill realmente útil. O agente lê o corpo, decide o que fazer, e ou executa o comando ou responde com base no que sabe. A estrutura que serve bem os dois modos:
+
+1. **Frontmatter** com `name` (corresponde ao diretório) e `description` (explica *quando* usar a skill — não o que ela faz, mas quando o agente deveria recorrer a ela).
+2. **Um bloco de contexto de um parágrafo** que diz sobre o que a skill opera e quais premissas ela faz (ex.: *espera um `.env` com credenciais do banco de dados*).
+3. **O comando Quick start**, pronto para copiar e colar. Incluindo o diretório de trabalho se importar.
+4. **Tabela de opções** com cada flag e o que ela controla.
+5. **Uma referência curta** aos arquivos de implementação reais no codebase — para que o agente possa encontrar a fonte da verdade se o corpo da skill estiver errado.
+
+O quinto é a parte que a maioria das pessoas pula e não deveria. A skill é documentação; documentação defasa. Apontar o agente para o código-fonte vivo significa que, quando o corpo da skill estiver desatualizado, o agente pode recorrer à coisa real em vez de confiantemente executar o procedimento desatualizado errado.
+
+<ImageFigure alt="Prancha de estudo botânico de espécime único em aquarela e linha fina de nanquim, sobre papel creme com textura sutil de envelhecimento. O centro da prancha carrega um único grande espécime de planta prensada renderizado com cuidado: uma folha larga aberta com veias visíveis, um caule delgado ramificando para um botão, uma estrutura de raiz emparelhada espalhada abaixo, uma pequena flor aberta no topo, e uma vagem de sementes em desenvolvimento ao lado — cinco partes distinguíveis de um organismo. De cada uma das cinco partes, uma fina linha de chamada a lápis se estende para as margens, onde termina em um pequeno marcador de anotação vazio — um círculo não preenchido, um pequeno sigilo geométrico, um quadrado aberto, um diamante contornado, um triângulo vazio — nenhum dos marcadores contém letras ou números legíveis. Uma delicada barra de escala com régua fica na borda inferior da prancha, sem unidades de medida impressas. Pigmento suave de aquarela em verdes, ocres e ferrugem suaves sobre linhas nítidas de nanquim marrom; uma borda tênue de folha de herbário traça a borda externa a lápis. Visual de história natural vintage, nenhum texto ou letra legível em qualquer parte da composição." src="/content/posts/2026-04-25-ai-agent-skills-why-i-wrote-33-of-them/anatomy-of-a-skill-file.png" caption="A forma se estabilizou depois de cerca de uma dúzia de espécimes. Cinco partes distinguíveis, cada uma respondendo a uma pergunta diferente que o agente faz durante a leitura." />
+
+## O que eu não esperava
+
+Algumas coisas ficaram acontecendo que eu não previ.
+
+**As skills viraram uma espécie de doc de onboarding.** Entrei num projeto no meio do caminho, e as pessoas que estavam lá há mais tempo nem sempre sabiam o que cada parte do sistema fazia. A gaveta de skills foi lentamente acumulando um tour pelo sistema: leia esses nomes, você tem um mapa aproximado do que operamos. Novas conversas começam com o agente já apontando para skills relevantes, o que é mais rápido que qualquer wiki que eu já mantive.
+
+**As *descrições* das skills importaram mais que os corpos.** Quando você tem trinta e três skills, o agente não lê todas; ele lê o diretório de nomes e descrições, e puxa as poucas que parecem relevantes. Uma descrição ruim significa que a skill certa fica lá sem uso. Uma descrição boa ("Use when debugging why a cached score is stale") torna a skill descobrível. Reescrevi várias descrições algumas semanas depois, quando percebi quais o agente ficava perdendo.
+
+**Skills envelheceram melhor do que eu esperava.** Eu presumia que cada skill ia apodrecer quando o código subjacente mudasse. Algumas apodreceram. Mas muitas eram estáveis — um script que lista registros por ID não vai mudar muito. As que envelheceram mal foram as fortemente acopladas à lógica interna; essas foram reescritas ou deletadas. As chatas sobreviveram.
+
+**As skills mais difíceis de escrever foram as procedurais.** Skills que só executam um comando são fáceis. Skills que guiam o agente por uma mudança multi-arquivo ("adicionar um novo filtro ao pipeline") foram muito mais difíceis, porque o procedimento é o tipo de coisa que mora na cabeça de um engenheiro sênior. Escrever essas me forçou a realmente entender o procedimento, o que teve valor além da skill em si.
+
+## Você deveria ter trinta e três?
+
+Provavelmente não. Provavelmente você deveria ter quantas o seu projeto produzir naturalmente, escritas uma de cada vez, com o limiar que descrevi acima: *se faço isso duas vezes, capturo.*
+
+Alguns projetos são bem servidos por cinco skills. Outros por cinquenta. O número é consequência da complexidade do sistema e de quão frequentemente você opera nele. Contar suas skills é mais ou menos tão informativo quanto contar seus casos de teste — útil como cheiro, não como meta.
+
+O padrão que se sustenta entre tamanhos de projeto é o mais simples: quando um agente de código com IA opera no mesmo projeto repetidamente, **a memória dele sobre o projeto acaba no seu repositório**. Parte dessa memória acaba em rules, que direcionam comportamento em edições de arquivo. O resto acaba em skills, que permitem ao agente executar procedimentos sob demanda. Ambos se acumulam. Ambos são baratos de escrever na primeira vez, e a maioria deles continua se pagando enquanto o projeto viver.
+
+Isso é o que me fez continuar escrevendo. Não um plano. Só a percepção constante de que a sessão de debug de vinte minutos de ontem agora é a invocação de skill de trinta segundos de hoje.
+
+## Further reading
+
+- [Uma taxonomia de AI agent skills](/pt/2026/04/26/a-taxonomy-of-ai-agent-skills)
+- [Rules como memória do projeto](/pt/2026/04/24/rules-as-project-memory)

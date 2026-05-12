@@ -1,0 +1,145 @@
+---
+title: Uma lista de leitura para desenvolvimento aumentado por IA
+date: 2026-05-11
+category: ai-work
+series: ai-philosophy
+lang: pt
+draft: true
+thumbnail: /content/posts/2026-05-11-a-reading-list-for-ai-augmented-development/curated-bookshelf.png
+tags:
+  - ai
+  - learning
+  - community
+  - resources
+  - karpathy
+  - langgraph
+  - cursor
+  - claude
+  - openai
+  - anthropic
+  - prompt-engineering
+  - mcp
+  - human-written
+excerpt: Uma lista de leitura pequena e opinativa para engenheiros que querem ir mais fundo em desenvolvimento aumentado por IA. Anotada com notas pessoais sobre por que cada item importa e por onde começar. Não é exaustiva — só as coisas que eu recomendaria pra alguém me perguntando por onde começar.
+---
+
+Este é o último post da série. É uma lista de leitura. Não uma lista abrangente — não faltam dessas — mas uma pequena, opinativa, com notas pessoais sobre por que cada item está nela.
+
+A maioria dos itens abaixo são coisas às quais genuinamente voltei. Alguns são coisas que ainda não terminei mas sobre as quais me sinto seguro o suficiente pra recomendar. Agrupei de forma aproximada, com anotações curtas explicando o que cada um me ensinou e quando eu indicaria pra alguém.
+
+Este post está marcado como `human-written`. A lista é minha. As notas são minhas. Prefiro uma lista curta e honesta do que uma longa e polida.
+
+<ImageFigure alt="Natureza morta em estilo Idade de Ouro holandesa, pintura a óleo de uma pequena seção de biblioteca pessoal, vista frontalmente em escala íntima, iluminada dramaticamente por uma única vela quente fora do quadro. Três fileiras de livros encadernados em couro lotam uma pesada estante de madeira envelhecida, as lombadas em oxblood profundo, verde floresta, bege quente, azul meia-noite, mostarda e bordô desbotado. Algumas lombadas trazem ornamentos dourados e scrollwork decorativo — filigrana abstrata, rosetas ornamentais e detalhes de faixas em relevo — sem letras legíveis. Outras lombadas mostram couro liso gasto com leves marcas e vincos. Pequenos detalhes repousam entre os livros: um castiçal de bronze com uma vela bruxuleante cuja chama projeta luz quente chiaroscuro de um lado; um instrumento polido de latão tipo astrolábio apoiado contra uma pilha; um pequeno tinteiro de cerâmica com uma pena descansando; um par de óculos redondos de arame dobrados sobre um livro inclinado; um marcador de seda desbotado saindo de um volume. No topo da fileira superior, um pequeno conjunto de três livros deitados horizontalmente com um ramo seco de louro prensado entre eles. A madeira da estante mostra grão envelhecido com arranhões sutis e marca de anel de copo. Iluminação lateral quente, sombras aveludadas de umber profundo nos recuos atrás dos livros e brilho dourado luminoso nas lombadas e ornamentos. Textura rica de tinta a óleo, pinceladas visíveis nos destaques, sfumato suave nas sombras, fundo em umber profundo. Nenhum texto legível em qualquer lugar — apenas ornamentos dourados abstratos e padrões de scrollwork em algumas lombadas." src="/content/posts/2026-05-11-a-reading-list-for-ai-augmented-development/curated-bookshelf.png" caption="Não é exaustiva. Só os volumes que eu volto a consultar." />
+
+## Fundamentos — por que modelos de linguagem fazem o que fazem
+
+Se você está trabalhando com AI coding agents a sério, ter ao menos um modelo mental aproximado de *o que realmente está dentro* do modelo se paga em tudo mais que você fizer.
+
+**Andrej Karpathy — talks *Intro to Large Language Models* e *State of GPT*.** O melhor resumo conciso que encontrei. A pedagogia do Karpathy é excepcionalmente clara; ele constrói a intuição camada por camada. Se você nunca assistiu um talk que explica o que é um transformer, o que o treino faz, e o que um modelo instruction-tuned está fazendo diferente de um modelo base, comece aqui. Os talks estão no YouTube. Duas horas no total. Vale a pena.
+
+**Andrej Karpathy — *Deep Dive into LLMs Like ChatGPT*.** Uma versão mais recente e mais longa da mesma ideia, com mais profundidade em RLHF, instruction tuning, e o formato das capacidades de modelos modernos. Se você só for assistir um talk do Karpathy, assista este.
+
+**Andrej Karpathy no X / Twitter.** Eu checo o feed dele quando quero saber quais observações sobre trabalhar com LLMs estão prestes a virar consenso. As guidelines comportamentais que codifiquei nas minhas próprias rules — levantar premissas, empurrar de volta, simplificar, definir sucesso — foram afiadas observando os comentários dele sobre erros comuns de coding com LLM. Ele posta esporadicamente e a maioria do que posta vale a leitura.
+
+**Stephen Wolfram — *What Is ChatGPT Doing… and Why Does It Work?***. Leitura longa, levemente idiossincrática, mas te dá um ângulo diferente sobre o mesmo conteúdo. Vale ler uma vez se Karpathy te deixou querendo mais profundidade na matemática.
+
+## Praticantes escrevendo sobre trabalhar com ferramentas de IA
+
+Esse é o gênero mais difícil de fazer bem. A maioria dos posts sobre ferramental de IA são hype sem fôlego ou genéricos. Os escritores abaixo consistentemente acertam o meio útil.
+
+**Simon Willison — *Simon Willison's Weblog*.** Provavelmente o recurso de trabalho mais útil que tenho pra ficar atualizado. Ele posta quase diariamente, com observações hands-on sobre ferramentas, modelos e padrões. As páginas de tags dele — *prompt engineering*, *llm*, *agents* — são densas com exemplos concretos e replicáveis. Quando sai um novo modelo ou ferramenta, o post dele geralmente é o que te diz se é realmente diferente.
+
+**Geoffrey Litt — ensaios em *geoffreylitt.com*.** Peças reflexivas sobre IA como colaborador criativo, frequentemente ancoradas em projetos específicos. Os textos dele sobre programação para o usuário final e software pessoal na era da IA moldaram como penso sobre as ferramentas pequenas que construo pra mim mesmo.
+
+**Maggie Appleton — ensaios e gráficos sobre IA e computação.** Visual, reflexiva, com cadência mais lenta e horizonte de tempo mais longo. O texto dela sobre a *floresta escura em expansão* e *modelos de linguagem como ferramentas em formato de pessoa* me ajudaram a pensar sobre os custos e oportunidades mais sutis desses sistemas.
+
+**Subbu Allamaraju — textos sobre IA em times de engenharia reais.** Prático, gentil, escrito de dentro de uma organização de engenharia real. Útil quando quero pensar sobre como essas coisas escalam além de um único praticante.
+
+## Documentação de ferramentas que realmente vale ler
+
+Alguma documentação de ferramentas é material de referência que você só lê quando algo quebra. As seguintes valem ser lidas proativamente, mesmo quando nada está quebrado.
+
+**Docs do Cursor** — particularmente as páginas de rules, agent skills (antes slash commands), e subagents. O modelo conceitual nessa documentação é no que construí a maior parte desta série do blog. Se você usa Cursor e nunca leu a seção de rules do começo ao fim, leia.
+
+**Documentação do Claude Code** — particularmente as seções sobre `CLAUDE.md`, configuração no nível de projeto vs. no nível de usuário, e integrações de ferramentas. Mesmo que você não use Claude Code, o enquadramento é claro e complementar ao do Cursor.
+
+**Anthropic — *Building with Claude* e documentação de *Prompt Engineering*.** A documentação de prompt engineering da Anthropic é excepcionalmente high-signal pra documentação de um vendor. O *prompt engineering interactive tutorial* em particular vale ser trabalhado.
+
+**OpenAI — *Prompt Engineering Guide* e o *Cookbook*.** Mesma recomendação num sabor diferente. O Cookbook em particular tem muitos pequenos exemplos trabalhados que são bons pra construir intuição, mesmo que você acabe usando um provider diferente.
+
+**Documentação do LangGraph.** Eu admiti no post anterior que meu modelo mental do LangGraph é mais nebuloso do que deveria. A documentação oficial é mais densa do que parece na primeira leitura; uma segunda passagem lenta é onde comecei a realmente entender o runtime. Seções específicas que merecem tempo focado: as páginas de *checkpointing*, *streaming*, e *human-in-the-loop*.
+
+**Especificação do Model Context Protocol (MCP).** A spec do MCP em modelcontextprotocol.io é curta e vale ler mesmo que você não planeje escrever um servidor hoje. Saber o que são tools, resources e prompts no nível do protocolo muda como você pensa sobre capacidades de agentes.
+
+## Prompt engineering, além do básico
+
+Além dos tutoriais introdutórios, alguns recursos me ensinaram coisas que eu não esperava.
+
+**OpenAI — *GPT-5 Prompting Guide* (e o equivalente pra qualquer que seja o atual).** Os guias de prompting específicos por modelo valem a leitura porque cada geração tem mudanças pequenas mas reais no que funciona. Ler o guia do modelo que você está realmente usando pega quirks específicos que de outra forma levariam semanas pra descobrir.
+
+**Anthropic — posts de *Constitutional AI* e *Claude's Constitution*.** Leitura de contexto sobre como o modelo foi treinado pra empurrar de volta, preferir honestidade sobre bajulação, e reconhecer limites. Contexto útil pra entender por que alguns padrões de prompt funcionam melhor que outros especificamente no Claude.
+
+**Lilian Weng — ensaios em *lilianweng.github.io*.** Longos, técnicos, detalhados. Os posts dela sobre prompt engineering, padrões de agentes, e alucinações de LLM são qualidade de referência. Leituras lentas, muitas citações, densos.
+
+## Livros que valem uma leitura lenta
+
+Sou criterioso com livros nessa área. A maioria está desatualizada quando é impressa. Os abaixo têm algo mais durável pra oferecer além da sua atualidade.
+
+**Ethan Mollick — *Co-Intelligence***. O livro mais legível sobre como é trabalhar com IA tanto pra engenheiros quanto pra não-engenheiros. Mollick escreve sobre como IA muda como trabalhamos, com dados reais de sala de aula e ambiente de trabalho por trás das observações. Leve em ferramental, forte no lado humano.
+
+**Cal Newport — *Deep Work* e *A World Without Email***. Não são sobre IA diretamente, mas o enquadramento de atenção como recurso escasso é mais relevante do que nunca. A separação que Newport faz entre *deep work* e *shallow work* mapeia bem pra o que a IA delega bem versus o que não delega.
+
+**Sönke Ahrens — *How to Take Smart Notes***. O livro que realmente mudou como eu faço journaling e como estruturo notas de longo prazo. O método *zettelkasten* que ele descreve é algo que sistemas de IA podem amplificar dramaticamente, mas a disciplina por baixo é o que importa.
+
+**Andy Clark — *Surfing Uncertainty* ou *The Experience Machine***. Livros de ciência cognitiva sobre como a mente funciona como um motor de predição. Te dão um ângulo diferente sobre o que modelos de linguagem são e não são. Longos, densos, opcionais mas recompensadores.
+
+## Papers e pesquisa de formato mais longo
+
+Nada exaustivo. Só os poucos que eu volto a consultar.
+
+**Anthropic — paper *Sleeper Agents* (2024).** Uma leitura sóbria sobre os limites de safety training. Vale não pelo conselho prático imediato mas pra calibrar quanta confiança depositar em qualquer mitigação individual.
+
+**OpenAI / Anthropic — literatura sobre *Faithful chain-of-thought reasoning*.** Um corpo crescente de trabalho sobre se as explicações que modelos produzem realmente refletem seu raciocínio interno. O resumo honesto é "às vezes, condicionalmente, menos do que você esperaria." Vale ler pra calibração mesmo que os detalhes técnicos estejam acima do nível que você precisa no dia a dia.
+
+**Os vários papers de *agent benchmark*.** Não mantenho uma opinião forte sobre nenhum benchmark individual, mas ler alguns ajuda a ver com que tipo de falhas o campo está realmente lutando. SWE-bench, GAIA e benchmarks de agentes similares são bons pontos de entrada.
+
+## Comunidades e conversas em andamento
+
+Listas de leitura são estáticas. A conversa não é. Alguns lugares onde eu checo:
+
+**Hacker News.** Qualidade errática, ouro ocasional. As threads de `whoishiring`, os lançamentos de novas ferramentas de IA, e as longas discussões sobre papers relacionados a agentes são geralmente onde eu vejo novos participantes sendo debatidos com honestidade.
+
+**Podcast Latent Space.** Provavelmente o melhor programa de entrevistas longas sobre engenharia de IA especificamente. Episódios longos, convidados fortes, o host realmente entende o conteúdo técnico. Eu escuto em velocidade reduzida.
+
+**Twitter/X — o canto de engenharia de IA.** Apesar do declínio geral da plataforma, a conversa específica de engenharia de IA ainda está ativa. Karpathy, Simon Willison, os times da Anthropic e OpenAI, e uma longa cauda de praticantes afiados. Você vai ter que curar agressivamente.
+
+**Comunidades específicas de Discord e Slack.** Essas se movem rápido demais pra eu mencioná-las num post de blog que envelhece — links apodrecem. Pergunte por aí. As boas existem.
+
+## Como ler esta lista
+
+Algumas sugestões se você quiser realmente usar isto ao invés de só admirar.
+
+**Não leia linearmente.** Escolha a seção que mapeia pra lacuna que você está sentindo agora. Se está inseguro sobre o que são modelos, comece com Karpathy. Se seus prompts não estão funcionando, comece com a seção de prompt engineering. Se está tentando entender o cenário de ferramental de agentes, comece com os praticantes. A lista é estruturada pra amostragem, não pra sequenciamento.
+
+**Leia na cadência que a fonte pede.** Os talks do Karpathy são pra assistir devagar. O blog do Simon Willison é leitura diária rápida. Os posts da Lilian Weng são deep-dives de fim de semana. Livros são meses. Não tente igualar todos na mesma velocidade; respeite a cadência que cada um pede.
+
+**Mantenha suas próprias notas.** Esta é a meta-recomendação que se liga aos posts de journaling nesta série. Leitura sem escrita é na maioria entretenimento. O ponto de uma lista de leitura é semear suas próprias notas de trabalho — *o que grudou, o que me surpreendeu, o que quero experimentar*. As notas são onde a leitura se transforma em capacidade.
+
+**Atualize.** Esta lista vai estar parcialmente errada em seis meses. Alguns dos recursos terão rotacionado; novos vão merecer estar nela. Mantenha sua própria versão. A minha vai estar desatualizada no próximo ano, e vou ficar feliz com isso — significa que o campo continuou se movendo.
+
+<ImageFigure alt="Natureza morta em estilo Idade de Ouro holandesa, pintura a óleo de um único livro encadernado em couro aberto deitado sobre uma pesada mesa de madeira envelhecida, visto de um ângulo leve de cima e iluminado dramaticamente de um lado por uma vela quente fora do quadro. O livro é gasto nos cantos, com páginas de cor creme envelhecida e uma curva suave natural na lombada. Ambas as páginas visíveis são preenchidas com linhas impressas abstratas — traços horizontais finos de lápis espaçados que sugerem blocos de texto denso sem formar letras legíveis. Várias das linhas de texto abstrato na página direita são sublinhadas em lápis suave com traços confiantes; nas margens ao lado das passagens sublinhadas, loops abstratos escritos à mão em lápis — marcas em forma de cursiva que sugerem anotação cuidadosa mas não se resolvem em palavras reais. Um pequeno marcador de papel dobrado sai do topo do livro mostrando apenas rabiscos abstratos de lápis na aba visível. Ao lado do livro na mesa: um lápis de madeira com ponta de grafite gasta descansando meio na página; um pequeno peso de papel de latão captando um brilho quente; uma xícara de cerâmica meio vazia com marca de anel desbotada na madeira abaixo; uma única folha de carvalho seca curvada nas bordas; e o topo fechado de um segundo caderno encadernado em couro apenas dentro do quadro, sua lombada portando apenas ornamento dourado abstrato. Iluminação quente e lateral, com destaques em âmbar profundo nas bordas das páginas e sombras aveludadas de umber na calha do livro. Textura rica de tinta a óleo, sfumato suave nas sombras, paleta quente de umber e siena queimada. Nenhuma letra ou palavra legível em qualquer lugar na página — apenas linhas impressas abstratas e marcas de anotação abstratas em lápis." src="/content/posts/2026-05-11-a-reading-list-for-ai-augmented-development/annotated-reading.png" caption="Leitura sem escrita é na maioria entretenimento. O ponto de uma lista como esta é semear suas próprias notas." />
+
+## Um pequeno agradecimento
+
+Este é o último post da série. Vinte e um posts ao longo de três semanas. Se você chegou até aqui, obrigado — eu subestimei o tamanho do pedido, e o fato de que você leu qualquer parte disso (quanto mais vários) significa algo pra mim.
+
+A série foi um experimento em duas direções. *Consigo planejar e escrever vinte e um posts em lotes, com um agente de IA ajudando em cada camada, sem perder a voz?* Essa resposta acabou sendo: na maioria sim, com esforço. O trabalho de voz foi real; o trabalho de planejamento foi real; a IA fez o trabalho pesado na geração de rascunhos mas nunca o trabalho editorial. A tag em cada post — `human-written` ou `ai-assisted` — é minha melhor declaração honesta de quem fez o quê.
+
+A outra direção era: *uma série como esta pode ser útil pra alguém tentando resolver as mesmas coisas?* Ainda não sei. Se foi, ficaria feliz em saber. Os canais de contato estão no final do site. Os comentários em cada post estão abertos.
+
+De qualquer forma, vou voltar a escrever um post de cada vez, no ritmo que o trabalho sugerir, sem tag de série. Obrigado por ler.
+
+## Leitura complementar
+
+- [O que eu ainda não aprendi](/pt/2026/05/09/what-i-havent-learned-yet)
+- [Guardrails comportamentais para assistentes de coding com IA](/2026/05/01/behavioral-guardrails-for-ai-coding-assistants)
