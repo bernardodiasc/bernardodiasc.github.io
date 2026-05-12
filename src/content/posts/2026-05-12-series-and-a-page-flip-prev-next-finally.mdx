@@ -12,16 +12,18 @@ tags:
   - navigation
   - typescript
   - ai-assisted
-excerpt: Twenty-one drafts deep into a batch and the archive still read like a flat list. So I added a series field, a small floating list that says "you're in post 2 of 4", and a pair of page-flip arrows on the sides of the card. Here's what they do and what I had to fight with along the way.
+excerpt: Twenty-one drafts deep into a batch of posts about AI-augmented development and the archive still read like a flat list. So I added a series field, a small floating list that says "you're in post 2 of 4", and a prev/next bar at the bottom. Here's what they do and what I had to fight with along the way.
 ---
 
 Twenty-one drafts piled up before I noticed the obvious thing.
 
-A bunch of them are not standalone posts. They are sequences. Rules, then skills, then a taxonomy of skills, then a deep dive into debug skills. Subagents, then a specific subagent, then standards as code. And so on. If you landed on post three of a four-post arc, you'd have no way of knowing the other three existed, let alone that they were meant to be read in order.
-
-And — separately — the chronological prev/next links that most blogs have on a post page just weren't there. Each post was a dead end. To find the next one in time, you had to go back to the index and scroll.
+I'd been writing a batch of posts about AI-augmented development — rules, skills, agent architecture, tooling philosophy — drafting them all at once before publishing any. (The whole thing started with [Planning 22 blog posts with an AI agent](/2026/04/21/planning-22-blog-posts-with-an-ai-agent), if you want to read from the beginning.) But as the pile grew I realized the archive itself had a problem that had nothing to do with the content.
 
 <ImageFigure alt="A wide horizontal mixed-media illustration on warm cream paper. In the center, an open book is drawn in soft pencil and ink, its two pages curling slightly as if mid-flip. The left page edge lifts away from the binding with a hand-drawn arrow chevron pointing left etched faintly into its margin; the right page lifts toward the viewer with a corresponding right-pointing chevron in its margin. Above and behind the book, a vertical column of four small numbered paper cards is taped onto the cream surface with strips of pastel washi tape, the second card highlighted with a thin colored border to mark the current position. The whole image has a quiet, hand-drafted feel — pencil scribbles for crop marks, a single faint coffee-cup ring near a corner, slightly raked daylight, deep paper texture, no readable text in the book or on the cards." src="/content/posts/2026-05-12-series-and-a-page-flip-prev-next-finally/series-and-page-flip-cover.png" caption="A small floating list on the side, a lift at the edge of the page. Two little additions that change how the archive reads." />
+
+A bunch of those posts are not standalone. They are sequences. Rules, then skills, then a taxonomy of skills, then a deep dive into debug skills. Subagents, then a specific subagent, then standards as code. And so on. If you landed on post three of a four-post arc, you'd have no way of knowing the other three existed, let alone that they were meant to be read in order.
+
+And — separately — the chronological prev/next links that most blogs have on a post page just weren't there. Each post was a dead end. To find the next one in time, you had to go back to the index and scroll.
 
 So this past evening I sat down to fix both, and ended up with a few small features that together make the archive feel less like a flat list and more like something you can read your way through.
 

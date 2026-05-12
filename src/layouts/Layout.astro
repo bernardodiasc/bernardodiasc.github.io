@@ -51,6 +51,18 @@ const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
     <meta property="og:description" content={description} />
     <meta property="og:site_name" content={siteName} />
 
+    <script is:inline>
+      (function () {
+        var isLocal = window.location.hostname === 'localhost';
+        var hasParam = new URLSearchParams(window.location.search).has('draft');
+        if (hasParam) {
+          try { sessionStorage.setItem('showDrafts', '1'); } catch (e) {}
+        }
+        var stored = false;
+        try { stored = sessionStorage.getItem('showDrafts') === '1'; } catch (e) {}
+        if (isLocal || hasParam || stored) document.documentElement.classList.add('show-drafts');
+      })();
+    </script>
     <link rel="shortcut icon" href="/favicon.ico" />
     <meta name="google-site-verification" content="w8owtTJwheQ0pp3DJ-bwIKX67nyi2bdCZs8fLs-r-Wc" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -74,12 +86,6 @@ const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
         </div>
       </article>
     </main>
-    <script is:inline>
-      (function () {
-        var show = window.location.hostname === 'localhost' || new URLSearchParams(window.location.search).has('draft');
-        if (show) document.documentElement.classList.add('show-drafts');
-      })();
-    </script>
     <script is:inline>
       if (window.location.hostname !== 'localhost') {
         window.dataLayer = window.dataLayer || [];

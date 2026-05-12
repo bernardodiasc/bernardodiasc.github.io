@@ -154,8 +154,33 @@ const seriesWithCount = allSeriesIds.map((id) => ({
 </Layout>
 
 <script is:inline define:vars={{ items }}>
-  var showDrafts = window.location.hostname === 'localhost' || new URLSearchParams(window.location.search).has('draft');
+  var showDrafts = document.documentElement.classList.contains('show-drafts');
   var visibleItems = showDrafts ? items : items.filter(function (i) { return !i.draft; });
+
+  (function updateCounts() {
+    document.querySelectorAll('.category-card').forEach(function (card) {
+      var catId = card.getAttribute('data-category');
+      var count = visibleItems.filter(function (i) { return i.categoryId === catId; }).length;
+      var countEl = card.querySelector('.category-card__count');
+      if (countEl) countEl.textContent = count + ' posts';
+      if (count === 0) card.style.display = 'none';
+    });
+    document.querySelectorAll('.series-chip').forEach(function (chip) {
+      var seriesId = chip.getAttribute('data-series');
+      var count = visibleItems.filter(function (i) { return i.series === seriesId; }).length;
+      var countEl = chip.querySelector('.series-chip__count');
+      if (countEl) countEl.textContent = '(' + count + ')';
+      if (count === 0) chip.style.display = 'none';
+    });
+    var visibleTags = {};
+    visibleItems.forEach(function (i) {
+      i.tags.forEach(function (t) { visibleTags[t] = true; });
+    });
+    document.querySelectorAll('.tag-chip').forEach(function (chip) {
+      var tag = chip.getAttribute('data-tag');
+      if (!visibleTags[tag]) chip.style.display = 'none';
+    });
+  })();
 
   const searchInput = document.getElementById('search-input');
   const resultsSection = document.getElementById('results-section');
