@@ -1,13 +1,7 @@
 <!DOCTYPE html><html lang="en" data-astro-cid-sckkx6r4> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="generator" content="Astro v5.18.1"><title>The active listening - Bernardo Dias da Cruz</title><meta name="description" content="The most powerful groups are made with people who knows the time to talk and the time to listen."><link rel="canonical" href="https://bernardodiasdacruz.com/2018/04/10/the-active-listening/"><meta name="twitter:site" content="@bernardodiasc"><meta name="twitter:title" content="The active listening"><meta name="twitter:description" content="The most powerful groups are made with people who knows the time to talk and the time to listen."><meta name="twitter:creator" content="@bernardodiasc"><meta name="twitter:image" content="https://bernardodiasdacruz.com/images/thumbnail.png"><meta property="og:title" content="The active listening"><meta property="og:type" content="article"><meta property="og:url" content="https://bernardodiasdacruz.com/2018/04/10/the-active-listening/"><meta property="og:image" content="https://bernardodiasdacruz.com/images/thumbnail.png"><meta property="og:description" content="The most powerful groups are made with people who knows the time to talk and the time to listen."><meta property="og:site_name" content="Bernardo Dias da Cruz"><script>
       (function () {
-        var isLocal = window.location.hostname === 'localhost';
-        var hasParam = new URLSearchParams(window.location.search).has('draft');
-        if (hasParam) {
-          try { sessionStorage.setItem('showDrafts', '1'); } catch (e) {}
-        }
-        var stored = false;
-        try { stored = sessionStorage.getItem('showDrafts') === '1'; } catch (e) {}
-        if (isLocal || hasParam || stored) document.documentElement.classList.add('show-drafts');
+        var show = window.location.hostname === 'localhost' || new URLSearchParams(window.location.search).has('draft');
+        if (show) document.documentElement.classList.add('show-drafts');
       })();
     </script><link rel="shortcut icon" href="/favicon.ico"><meta name="google-site-verification" content="w8owtTJwheQ0pp3DJ-bwIKX67nyi2bdCZs8fLs-r-Wc"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=IBM+Plex+Serif:wght@400&family=Permanent+Marker&display=swap" rel="stylesheet"><link rel="stylesheet" href="/_astro/_title_.DOXEbBAt.css">
 <style>.icon[data-astro-cid-patnjmll]{fill:currentColor;width:100%;height:100%;display:block}
@@ -40,6 +34,23 @@ const url = "https://bernardodiasdacruz.com/2018/04/10/the-active-listening/";
     (d.head || d.body).appendChild(s);
   }
 })();</script>  <nav class="postnav-bar" aria-label="Post navigation"><a href="/2018/04/10/integrate-google-analytics-with-react-router-v4" class="postnav-bar__link postnav-bar__link--prev" aria-label="Previous post: Integrate Google Analytics with React Router v4"><span class="postnav-bar__text"><span class="postnav-bar__label"><svg class="postnav-bar__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></svg>Previous post</span><span class="postnav-bar__title">Integrate Google Analytics with React Router v4</span></span></a><a href="/2018/04/17/render-web-animations-with-react-lottie" class="postnav-bar__link postnav-bar__link--next" aria-label="Next post: Render web animations with React Lottie"><span class="postnav-bar__text"><span class="postnav-bar__label">Next post<svg class="postnav-bar__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.59 16.59 10 18l6-6-6-6-1.41 1.41L13.17 12z"></path></svg></span><span class="postnav-bar__title">Render web animations with React Lottie</span></span></a></nav>  </div> </article> </main> <script>
+      (function () {
+        if (!document.documentElement.classList.contains('show-drafts')) return;
+        if (window.location.hostname === 'localhost') return;
+        document.querySelectorAll('a[href]').forEach(function (a) {
+          var href = a.getAttribute('href');
+          if (!href || href.charAt(0) === '#') return;
+          try {
+            var url = new URL(href, window.location.origin);
+            if (url.origin !== window.location.origin) return;
+            if (!url.searchParams.has('draft')) {
+              url.searchParams.set('draft', '');
+              a.setAttribute('href', url.pathname + url.search + url.hash);
+            }
+          } catch (e) {}
+        });
+      })();
+    </script> <script>
       if (window.location.hostname !== 'localhost') {
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
