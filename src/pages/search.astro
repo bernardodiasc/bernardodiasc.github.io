@@ -237,8 +237,9 @@ const seriesWithCount = allSeriesIds.map((id) => ({
     }
 
     noResults.style.display = 'none';
+    var draftSuffix = showDrafts && window.location.hostname !== 'localhost' ? '?draft' : '';
     resultsList.innerHTML = filtered.map(function (item) {
-      return '<a href="' + item.url + '" class="result-item">' +
+      return '<a href="' + item.url + draftSuffix + '" class="result-item">' +
         '<h3 class="result-item__title">' +
           (item.categoryIcon
             ? '<span class="result-item__icon"><svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet"><use href="#icon-' + item.categoryIcon + '" /></svg></span>'

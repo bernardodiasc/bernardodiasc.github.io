@@ -53,14 +53,8 @@ const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
 
     <script is:inline>
       (function () {
-        var isLocal = window.location.hostname === 'localhost';
-        var hasParam = new URLSearchParams(window.location.search).has('draft');
-        if (hasParam) {
-          try { sessionStorage.setItem('showDrafts', '1'); } catch (e) {}
-        }
-        var stored = false;
-        try { stored = sessionStorage.getItem('showDrafts') === '1'; } catch (e) {}
-        if (isLocal || hasParam || stored) document.documentElement.classList.add('show-drafts');
+        var show = window.location.hostname === 'localhost' || new URLSearchParams(window.location.search).has('draft');
+        if (show) document.documentElement.classList.add('show-drafts');
       })();
     </script>
     <link rel="shortcut icon" href="/favicon.ico" />
@@ -86,6 +80,24 @@ const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
         </div>
       </article>
     </main>
+    <script is:inline>
+      (function () {
+        if (!document.documentElement.classList.contains('show-drafts')) return;
+        if (window.location.hostname === 'localhost') return;
+        document.querySelectorAll('a[href]').forEach(function (a) {
+          var href = a.getAttribute('href');
+          if (!href || href.charAt(0) === '#') return;
+          try {
+            var url = new URL(href, window.location.origin);
+            if (url.origin !== window.location.origin) return;
+            if (!url.searchParams.has('draft')) {
+              url.searchParams.set('draft', '');
+              a.setAttribute('href', url.pathname + url.search + url.hash);
+            }
+          } catch (e) {}
+        });
+      })();
+    </script>
     <script is:inline>
       if (window.location.hostname !== 'localhost') {
         window.dataLayer = window.dataLayer || [];

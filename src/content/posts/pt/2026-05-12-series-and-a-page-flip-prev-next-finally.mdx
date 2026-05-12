@@ -16,21 +16,21 @@ tags:
 excerpt: Vinte e um drafts acumulados num batch de posts sobre desenvolvimento com IA e o arquivo ainda parecia uma lista achatada. Aí adicionei um campo `series`, uma listinha flutuante que diz "você está no post 2 de 4" e uma barra de prev/next no rodapé. Aqui está o que elas fazem e o que eu tive que brigar pra resolver no caminho.
 ---
 
-<ImageFigure alt="Uma ilustração horizontal larga em técnica mista sobre papel creme. No centro, um livro aberto desenhado em lápis suave e tinta, com as duas páginas curvando levemente como se estivessem no meio de uma virada. A borda da página esquerda se afasta da lombada com uma seta chevron desenhada à mão apontando para a esquerda, gravada de leve na margem; a página direita se levanta em direção ao leitor com uma chevron correspondente apontando para a direita na margem. Acima e atrás do livro, uma coluna vertical de quatro pequenos cartões numerados está colada na superfície creme com tiras de washi tape pastel, o segundo cartão destacado com uma fina borda colorida para marcar a posição atual. A imagem inteira tem um ar quieto, feito à mão — rabiscos de lápis como marcas de corte, uma marca de café desbotada num canto, luz natural de leve no plano inclinado, textura de papel forte, nenhum texto legível no livro ou nos cartões." src="/content/posts/2026-05-12-series-and-a-page-flip-prev-next-finally/series-and-page-flip-cover.png" caption="Uma listinha flutuante na lateral, um pequeno levantar na borda da página. Duas adições pequenas que mudam como o arquivo se lê." />
-
 Vinte e um drafts acumulados antes de eu notar o óbvio.
 
 Eu estava escrevendo um batch de posts sobre desenvolvimento com IA — rules, skills, arquitetura de agents, filosofia de tooling — rascunhando tudo de uma vez antes de publicar qualquer um. (A coisa toda começou com [Planejando 22 posts com um agente de IA](/pt/2026/04/21/planning-22-blog-posts-with-an-ai-agent), se você quiser ler desde o início.) Mas conforme a pilha crescia, percebi que o arquivo em si tinha um problema que não tinha nada a ver com o conteúdo.
 
-Boa parte desses posts não são isolados. São sequências. Rules, depois skills, depois uma taxonomia de skills, depois um deep dive em debug skills. Subagents, depois um subagent específico, depois standards como código. E por aí vai. Se você caísse no terceiro post de um arco de quatro, não teria como saber que os outros três existiam — quanto mais que era pra serem lidos numa ordem.
+<ImageFigure alt="Uma ilustração horizontal larga em técnica mista sobre papel creme. No centro, um livro aberto desenhado em lápis suave e tinta, com as duas páginas curvando levemente como se estivessem no meio de uma virada. A borda da página esquerda se afasta da lombada com uma seta chevron desenhada à mão apontando para a esquerda, gravada de leve na margem; a página direita se levanta em direção ao leitor com uma chevron correspondente apontando para a direita na margem. Acima e atrás do livro, uma coluna vertical de quatro pequenos cartões numerados está colada na superfície creme com tiras de washi tape pastel, o segundo cartão destacado com uma fina borda colorida para marcar a posição atual. A imagem inteira tem um ar quieto, feito à mão — rabiscos de lápis como marcas de corte, uma marca de café desbotada num canto, luz natural de leve no plano inclinado, textura de papel forte, nenhum texto legível no livro ou nos cartões." src="/content/posts/2026-05-12-series-and-a-page-flip-prev-next-finally/series-and-page-flip-cover.png" caption="Uma listinha flutuante na lateral, um pequeno levantar na borda da página. Duas adições pequenas que mudam como o arquivo se lê." />
 
-E — separado disso — aqueles links de prev/next cronológicos que a maioria dos blogs tem na página do post simplesmente não existiam. Cada post era um beco sem saída. Pra achar o próximo no tempo, você tinha que voltar pro index e rolar.
+Boa parte desses posts não são isolados. São sequências — rules, depois skills, depois uma taxonomia, depois um deep dive. Se você caísse no terceiro post de um arco de quatro, não teria como saber que os outros três existiam.
 
-Então hoje à noite eu sentei pra resolver os dois, e acabei com algumas pequenas features que juntas fazem o arquivo parecer menos uma lista achatada e mais alguma coisa pela qual dá pra ler em sequência.
+E aqueles links de prev/next cronológicos que a maioria dos blogs tem simplesmente não existiam. Cada post era um beco sem saída.
+
+Então sentei pra resolver os dois.
 
 ## O que é "series" na prática
 
-Adicionei um campo `series` no schema do post. É só uma string opcional em kebab-case minúsculo:
+Adicionei um campo `series` no schema do post — uma string opcional em kebab-case:
 
 ```yaml
 ---
@@ -41,15 +41,13 @@ series: ai-rules-and-skills
 ---
 ```
 
-Se dois ou mais posts compartilham essa string, eles estão numa série. A ordem dentro da série é a que `date` te dá. Um post solo pode ter `series` preenchido, mas se não existir irmão, nada é renderizado. O default é string vazia.
+Se dois ou mais posts compartilham essa string, eles estão numa série. A ordem vem de `date`. Um post solo pode ter `series` preenchido, mas nada é renderizado até um irmão existir.
 
-`series` não é categoria. Categoria é o balde temático — "isso é sobre developer tooling". Series é o arco narrativo — "este é o terceiro post do walkthrough de rules para skills". Eles se cruzam de propósito. O arco de quatro posts de AI-philosophy que fecha esse batch atravessa duas categorias e um deles está num mês diferente. O arco continua se sustentando.
-
-Quase coloquei series dentro do array de `tags` (`series:ai-rules-and-skills` como tag). Desisti porque tags são achatadas, sem ordem, e servem como chips visuais nas listagens. Uma série é ordenada, hierárquica, e só faz sentido em dois lugares: dentro do corpo do post e como pista sobre ordem de leitura. Merece o próprio campo.
+É um campo separado de tags porque séries são ordenadas e só fazem sentido dentro do post ou como pista de ordem de leitura — tags são chips achatados e sem ordem nas listagens.
 
 ## A listinha flutuante
 
-Dentro de cada post de uma série, um painel pequeno flutua à direita do texto. O título é o próprio nome da série, formatado a partir do slug kebab-case — `ai-rules-and-skills` vira "AI Rules And Skills":
+Dentro de cada post de uma série, um painel pequeno flutua à direita do texto:
 
 ```
 ┌────────────────────────┐
@@ -62,15 +60,9 @@ Dentro de cada post de uma série, um painel pequeno flutua à direita do texto.
 └────────────────────────┘
 ```
 
-Três coisas que eu queria desse box.
+O título é o nome da série formatado a partir do slug. O post que você está lendo aparece em negrito e sem link — a pista de "você está aqui". No mobile (abaixo de 1024px) o float some e vira um bloco normal acima do texto.
 
-Um — ele não pode empurrar o texto pra baixo. Se eu coloco um parágrafo acima do artigo, todo post em série vira de repente um post com banner. Não quero isso. `float: right` mantém o box na lateral e deixa o texto contornar ao redor. Tem um porém: uma imagem posicionada logo antes do box da série acaba sendo empurrada pra baixo dele. Então, em posts com série, o conteúdo abre com texto primeiro e a imagem vem um pouco mais abaixo. Vale a troca — o float é mais útil do que ter a imagem no topo absoluto.
-
-Dois — o post que você está lendo aparece na lista como texto puro, não como link. E em negrito. Fiquei indo e vindo nisso. A pista de "você está aqui" tinha que ser óbvia sem ser barulhenta, e tinha que ser o tipo certo de óbvio: não um botão, não um badge de "esta é a página atual", só o peso visual do texto dizendo *eu sou a coisa que você abriu agora*.
-
-Três — no mobile o float some. Abaixo de 1024px o box deixa de flutuar e empilha como bloco normal acima do texto. Sem toggle esperto. É uma listinha — deixa ela ali. O usuário já rolou até aqui, dá pra dedicar três linhas.
-
-O componente em si é meio bobo de propósito. Recebe um `currentPostId`, um `seriesName` e um idioma. Faz query na collection, filtra por idioma e id de série, ordena por data ascendente. Se houver menos de dois posts na série, não renderiza nada. Esse último check importa — significa que um id de série pode ficar num frontmatter sem produzir barulho visual se em algum momento ele acabar sendo o único post do arco.
+Se houver menos de dois posts na série, o componente não renderiza nada — um id de série pode ficar no frontmatter sem produzir barulho até um irmão aparecer.
 
 ## A barra de prev/next
 

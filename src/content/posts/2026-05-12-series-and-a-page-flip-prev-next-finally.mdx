@@ -21,15 +21,15 @@ I'd been writing a batch of posts about AI-augmented development — rules, skil
 
 <ImageFigure alt="A wide horizontal mixed-media illustration on warm cream paper. In the center, an open book is drawn in soft pencil and ink, its two pages curling slightly as if mid-flip. The left page edge lifts away from the binding with a hand-drawn arrow chevron pointing left etched faintly into its margin; the right page lifts toward the viewer with a corresponding right-pointing chevron in its margin. Above and behind the book, a vertical column of four small numbered paper cards is taped onto the cream surface with strips of pastel washi tape, the second card highlighted with a thin colored border to mark the current position. The whole image has a quiet, hand-drafted feel — pencil scribbles for crop marks, a single faint coffee-cup ring near a corner, slightly raked daylight, deep paper texture, no readable text in the book or on the cards." src="/content/posts/2026-05-12-series-and-a-page-flip-prev-next-finally/series-and-page-flip-cover.png" caption="A small floating list on the side, a lift at the edge of the page. Two little additions that change how the archive reads." />
 
-A bunch of those posts are not standalone. They are sequences. Rules, then skills, then a taxonomy of skills, then a deep dive into debug skills. Subagents, then a specific subagent, then standards as code. And so on. If you landed on post three of a four-post arc, you'd have no way of knowing the other three existed, let alone that they were meant to be read in order.
+A bunch of those posts are not standalone. They are sequences — rules, then skills, then a taxonomy, then a deep dive. If you landed on post three of a four-post arc, you'd have no way of knowing the other three existed.
 
-And — separately — the chronological prev/next links that most blogs have on a post page just weren't there. Each post was a dead end. To find the next one in time, you had to go back to the index and scroll.
+And the chronological prev/next links that most blogs have just weren't there. Each post was a dead end.
 
-So this past evening I sat down to fix both, and ended up with a few small features that together make the archive feel less like a flat list and more like something you can read your way through.
+So I sat down to fix both.
 
 ## What "series" actually is
 
-I added a `series` field to the post schema. It's just an optional lowercase kebab-case string:
+I added a `series` field to the post schema — an optional kebab-case string:
 
 ```yaml
 ---
@@ -40,15 +40,13 @@ series: ai-rules-and-skills
 ---
 ```
 
-If two or more posts share that string, they're in a series. The order inside the series is whatever the `date` ordering gives you. A solo post can have `series` set, but if no sibling exists, nothing renders. The default is the empty string.
+If two or more posts share that string, they're in a series. Order comes from `date`. A solo post can have `series` set, but nothing renders until a sibling exists.
 
-`series` is not a category. Category is the topical bucket — "this is about developer tooling". Series is the narrative arc — "this is the third post in the rules-to-skills walkthrough". They cut across each other on purpose. The four-post AI-philosophy arc that closes out this batch crosses two categories and one of them is in a different month. The arc still holds.
-
-I almost folded series into the `tags` array (`series:ai-rules-and-skills` as a tag). I decided against it because tags are flat, unordered, and meant to be visual chips on listings. A series is ordered, hierarchical, and only meaningful in two places: inside a post body, and as a hint about reading order. Worth its own field.
+It's a separate field from tags because series are ordered and only meaningful inside a post or as a reading-order hint — tags are flat, unordered chips on listings.
 
 ## The little floating list
 
-Inside each post in a series, a small panel floats to the right of the prose. The heading is the series name itself, formatted from the kebab-case slug — `ai-rules-and-skills` becomes "AI Rules And Skills":
+Inside each post in a series, a small panel floats to the right of the prose:
 
 ```
 ┌────────────────────────┐
@@ -61,44 +59,20 @@ Inside each post in a series, a small panel floats to the right of the prose. Th
 └────────────────────────┘
 ```
 
-Three things I wanted from it.
+The heading is the series name formatted from the slug. The post you're reading shows up bold and unlinked — the "you are here" cue. On mobile (below 1024px) the float collapses into a normal block above the prose.
 
-One — it should not push the prose down. If I add a paragraph above the article, every post in a series suddenly has a header banner. I don't want that. `float: right` keeps it on the right side and lets the text wrap around it. There's one catch, though: a lead image placed right before the series box will get pushed below it. So for posts in a series, the content opens with prose first and the image comes a bit further down. Worth the trade-off — the float is more useful than having the image at the very top.
-
-Two — the post you are reading is in the list as plain text, not a link. It's also bold. I went back and forth on this. The "you are here" cue had to be obvious without being loud, and it had to be the right kind of obvious: not a button, not a "this is the current page" badge, just the visual weight of the text saying *I am the thing you have open right now*.
-
-Three — on mobile the float collapses. Below 1024px the box stops floating and stacks as a normal block above the prose. No clever toggle. It's a small list — let it sit there. The user has scrolled this far, they can spare three lines.
-
-The component itself is dumb on purpose. It gets a `currentPostId`, a `seriesName`, and a language. It queries the collection, filters by language and series id, sorts by date ascending. If there are fewer than two posts in the series, it renders nothing. That last check is important — it means a series id can sit in a frontmatter without producing visual noise if it ever ends up being the only post in its arc.
+If there are fewer than two posts in the series, the component renders nothing — a series id can sit in frontmatter without producing noise until a sibling shows up.
 
 ## The prev/next bar
 
-The second piece is a sticky bottom bar for navigating between posts chronologically. Prev on the left, next on the right, each with a small label ("Previous post" / "Next post") and the target title underneath. Tap targets are at least 44px tall, and there's `padding-bottom: 4em` on the body so the bar never covers the last paragraph or the Disqus thread.
+A sticky bottom bar for navigating between posts chronologically. Prev on the left, next on the right, each with a label and the target title. Tap targets are at least 44px tall, and the body has enough bottom padding so the bar never covers the last paragraph or the Disqus thread.
 
-I originally built lateral arrows on the left and right edges of the post card — the classic page-flip affordance. They looked fine in mockup, but once I tested them on real viewports they felt off: the icons didn't center well, the shape was awkward at small widths, and on anything below desktop they just duplicated the bottom bar. So I dropped them. The bottom bar works at every size, stays out of the way, and readers already know the pattern. Sometimes the simpler version is the version.
-
-The prev/next themselves are computed at build time. The post page asks for every post in its language, sorts them chronologically, finds itself, and passes the neighbors to the nav component. Drafts are included in the chronology but marked with `data-draft=""` on the nav links, so in production they disappear via the same CSS that hides drafts on listings. When the whole batch is still in draft, you can read the chain locally; once published, the nav reflects what readers can actually reach.
+Drafts are included in the chronology locally but hidden in production by the same CSS that hides them on listings. When the batch publishes, the nav reflects what readers can actually reach.
 
 ## What this changes
 
-Before, every post was an island. You finished reading, you scrolled past the Disqus thread, and the implicit answer to "what now?" was "I don't know, the back button I guess."
+Before, every post was an island. You finished reading, scrolled past Disqus, and the implicit answer to "what now?" was the back button.
 
-Now, three things happen.
+Now, if the post is part of a sequence the side box tells you so — series name, post count, where you are, links to siblings. If you finish and want to keep going, the bottom bar is there. And on the search page, a new Series filter lets you click a series chip and see only posts in that arc, combined with category, tag, or text filters.
 
-If the post is part of a sequence, the side box quietly tells you so. You can see the series name, how many posts are in the arc, where you are in it, what's before and after, and you can jump to any one of them. The decision to keep reading the series is yours, but you have the information to make it.
-
-If you finish the post and want to go on, the bottom bar is there. You don't go back to the index. You tap next and keep reading.
-
-And on the search page, a new Series filter sits between Categories and Tags. Each series shows up as a clickable chip with its post count. You can combine it with category, tag, and text filters — click "AI Rules And Skills" and "developer-tooling" and you see only the posts in that intersection. It's another way to surface the arcs that were always there but invisible.
-
-It's a small thing and it took me an evening. But the archive feels different now — less like a flat list of files and more like a book you can navigate your way through.
-
-## What I'd still tweak
-
-A few things I left as compromises and will probably revisit:
-
-- The series box only renders when there are at least two posts. That means if I create a series with one post intending to add a sibling later, the box is invisible until I commit the second one. Fine in practice; might be worth a "this will be a series" placeholder one day.
-- The series filter on the search page shows the same formatted name as the in-post box. But the formatting is duplicated — one in the Astro component, one in the search page frontmatter. Worth extracting into a shared utility at some point.
-- I considered showing the series in `PostsListing` too — a tiny badge next to each post title on the index page. The search page covers the discovery case now, but the index listing could still benefit. Maybe later.
-
-For everything else, the rule file (`blog-post-structure.mdc`) now documents `series` as a frontmatter field, including when to use it and when to leave it empty. The next time I sit down to draft a sequence, the agent picking up the work will know.
+Small thing, took an evening. But the archive feels less like a flat list and more like a book you can navigate through.
