@@ -21,11 +21,7 @@ tags:
 excerpt: Um agente de diário que lê dos canais Slack da sua equipe para ter contexto e posta atualizações formatadas de volta é um wrapper Python pequeno mais alguns bot tokens bem nomeados. Esta é a integração real — setup de tokens, conversations.history, recibos de postagem, aliases de canais, e as pequenas escolhas que mantêm tudo seguro de rodar.
 ---
 
-O post anterior foi sobre *por que* manter um diário de engenharia. Este é sobre uma peça específica de infraestrutura que adicionei ao meu: uma integração com Slack que permite ao agente de diário ler contexto do chat e postar atualizações finalizadas de volta, sem eu ter que copiar e colar nada.
-
-A integração em si são algumas centenas de linhas de Python e um punhado de arquivos de skill pequenos. Não é impressionante; simplesmente funciona. A parte interessante é quais escolhas tornaram seguro deixar rodando sozinho.
-
-Este post é o passo a passo — setup de tokens, os endpoints da API que uso, as pequenas abstrações que impedem o agente de fazer algo estúpido, e o padrão de recibo que significa que eu sempre consigo ver o que realmente foi postado.
+Este é o passo a passo de uma pequena integração com Slack que adicionei ao meu diário de engenharia: setup de tokens, os endpoints da API que uso, as abstrações que impedem o agente de fazer algo estúpido, e o padrão de recibo que significa que eu sempre consigo ver o que realmente foi postado.
 
 <ImageFigure alt="Esquema estilo manual de eletrônica vintage dos anos 1960 sobre fundo de papel creme-bege quente com textura sutil de papel envelhecido. A página é disposta com as cores chapadas e o trabalho de linhas geométricas limpas de um diagrama de manual técnico dos anos 1960: teal profundo, laranja-ferrugem quente, ameixa abafado e verde-abacate contra o fundo creme, sem sombreamento ou gradientes — apenas blocos geométricos chapados e linhas conectoras finas. No lado esquerdo, um ícone estilizado único representa a plataforma de chat: um hash em ameixa abafado feito de três paralelogramos entrecruzados, desenhado em cor chapada. Abaixo do hash, dois pequenos formatos abstratos de token sentam lado a lado — pequenos retângulos chapados com marcações geométricas distintas, um em teal profundo carregando um pequeno triângulo inscrito, um em laranja-ferrugem carregando um pequeno círculo inscrito. Do token teal, uma linha de seta direcional teal limpa flui para a direita através da página passando por um pequeno bloco esquemático chapado e continua até um ícone de pasta chapado na borda direita. Abaixo deste fluxo teal, um fluxo paralelo corre na direção oposta: começando em um ícone de documento chapado na borda direita, uma linha de seta laranja-ferrugem limpa se move para a esquerda através de um segundo pequeno bloco esquemático, passa pelo token laranja-ferrugem, e volta ao ícone hash ameixa. Os dois fluxos nunca se cruzam no meio da página; convergem apenas no ícone de chat à esquerda. Paleta de cores chapadas estrita, linhas geométricas finas, nenhum texto ou letra legível em lugar algum da composição." src="/content/posts/2026-05-04-wiring-a-journal-agent-with-slack/slack-journal-pipeline.png" caption="Fluxo de leitura vai numa direção. Fluxo de postagem vai na outra. Os dois nunca compartilham estado, nunca compartilham um token, e nunca se misturam." />
 
@@ -123,11 +119,7 @@ def fetch_recent(channel_id: str, hours: int) -> list[dict]:
     return list(reversed(data["messages"]))
 ```
 
-Duas observações sobre as escolhas.
-
-**Apenas stdlib.** Sem `requests`, sem `slack_sdk`. O script pode rodar em qualquer ambiente Python sem instalar dependências. Isso importa porque o script mora numa pasta de skill que é clonada em múltiplas máquinas; ser livre de dependências significa que simplesmente funciona.
-
-**Janela temporal por padrão.** O endpoint aceita um parâmetro `oldest`; o script sempre o define. Não existe caminho de código que busca *todo* o histórico. Se eu precisar de uma janela maior, passo um valor de `hours` maior. O padrão — vinte e quatro horas — cobre a maioria dos usos.
+Duas escolhas importam: apenas stdlib, então o script roda em qualquer lugar sem instalar dependências, e janela temporal por padrão. O endpoint aceita um parâmetro `oldest`; o script sempre o define. Não existe caminho de código que busca *todo* o histórico. Se eu precisar de uma janela maior, passo um valor de `hours` maior. O padrão — vinte e quatro horas — cobre a maioria dos usos.
 
 O script então pega as mensagens brutas e as renderiza num arquivo de contexto legível:
 
@@ -188,7 +180,6 @@ def post_message(channel_id: str, text: str, thread_ts: str | None = None) -> di
     return data
 ```
 
-Mesmo formato do script de fetch. Stdlib, escopo restrito, erros claros.
 
 A conversão de Markdown para Slack-mrkdwn é a peça pequena que faz o output ficar bonito. O sabor de markup do Slack não é bem Markdown — negrito usa `*` em vez de `**`, itálico usa `_` em vez de `*`, links usam `<url|texto>` em vez de `[texto](url)`, e blocos de código são parecidos mas não idênticos. O script de render cuida da conversão antes do script de post tocar nele.
 
@@ -247,15 +238,5 @@ Algumas funcionalidades que considerei e descartei.
 **Sem filtragem "inteligente".** O script de fetch retorna a lista bruta de mensagens (menos as vazias). Não tenta filtrar para mensagens "importantes". O agente lendo o arquivo de contexto pode decidir o que é importante. Pré-filtrar só esconderia sinal sob uma heurística.
 
 O efeito cumulativo dessas omissões é que a integração é pequena, previsível e entediante. Entediante é uma feature.
-
-## Uma nota sobre a camada de skills
-
-Cada script é encapsulado numa skill que o agente de IA pode invocar pelo nome:
-
-- `journal-fetch-slack` — busca de um alias de canal, escreve um arquivo de contexto, imprime o caminho.
-- `journal-post-slack` — recebe um arquivo Markdown, renderiza o irmão Slack, posta, escreve o recibo.
-- `journal-render-slack` — renderiza Markdown para Slack-mrkdwn sem postar (útil para revisão).
-
-O corpo da skill é a descrição voltada ao usuário de quando e como invocar o script. O script é o executável. O agente lê a skill, escolhe a certa para a tarefa, e a executa. Da perspectiva do usuário, a integração é *"pedir ao agente em linguagem natural."* Da perspectiva do sistema, é uma separação limpa entre intenção (skill) e execução (script).
 
 É isso a integração. Dois tokens, dois fluxos, aliases de canais, recibos, e uma recusa em adicionar qualquer coisa que não justifique sua complexidade. O diário se beneficia do contexto do Slack sem herdar a superfície do Slack. Era tudo que eu queria.

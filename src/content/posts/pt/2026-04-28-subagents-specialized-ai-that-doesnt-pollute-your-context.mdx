@@ -76,7 +76,6 @@ Um subagent tem três propriedades que definem quando vale a pena usar.
 
 O contexto do subagent é dele. O que ele lê, o pai não precisa ler. O que ele conclui, o pai recebe como resumo, não como a cadeia bruta de raciocínio. O contexto do pai fica focado na tarefa real do pai.
 
-Isso parece coisa pequena. Não é. Com conversas longas em projetos reais, o orçamento de contexto é o gargalo. Qualquer coisa que reduz o que está no contexto do pai está comprando mais trabalho útil pra depois na mesma sessão.
 
 #
 
@@ -84,7 +83,6 @@ Isso parece coisa pequena. Não é. Com conversas longas em projetos reais, o or
 
 Porque o subagent tem seu próprio system prompt, ele pode ser afinado pra um trabalho específico. O subagent de security-review não precisa ser bom em escrever código ou gerar testes; precisa ser bom em ler regras e comparar implementações com elas. Quanto mais estreita a especialização, mais limpa a saída.
 
-Um agente de propósito geral fazendo uma revisão de segurança é aceitável. Um subagent dedicado a esse único trabalho, com regras embutidas no prompt e um formato de report definido de antemão, é confiavelmente melhor nisso.
 
 #
 
@@ -116,7 +114,6 @@ A tentação, depois de escrever o primeiro, é usar pra tudo. Resista.
 
 **Não use subagent pra contexto que você realmente quer poluído.** Às vezes a "poluição" é exatamente o ponto. Se você está tentando construir o entendimento do pai sobre um sistema, fazer a leitura no pai é o correto. O subagent te dá um resumo; o pai te dá fluência. Necessidades diferentes.
 
-**Não use subagent pra fugir de uma pergunta difícil.** Se o agente pai está patinando com algo, mandar pra um subagent não facilita o problema subjacente. Só esconde a dificuldade dentro de uma caixa opaca.
 
 ## O que o pai e o subagent cuidam de cada lado
 
@@ -154,19 +151,13 @@ Esse é o terceiro vértice do triângulo, depois de rules e skills.
 - **Skills** são procedimentos sob demanda que o pai invoca por nome. Rodam no contexto do pai.
 - **Subagents** são instâncias de IA isoladas spawnadas pelo pai. Rodam no próprio contexto.
 
-Cada um endereça uma necessidade diferente:
-
-- Rules elevam o piso do comportamento do pai.
-- Skills dão ao pai procedimentos reutilizáveis.
-- Subagents dão ao pai *colegas* reutilizáveis — contrapartes especializadas que cuidam do trabalho que o pai não deveria estar fazendo.
-
-Normalmente você vai querer os três num projeto não-trivial. Rules fazem o pai melhor no projeto. Skills fazem o pai mais rápido em tarefas recorrentes. Subagents tiram o trabalho pesado especializado do prato do pai.
+Normalmente você vai querer os três num projeto não-trivial: rules elevam o piso, skills dão procedimentos, e subagents cuidam do trabalho especializado pesado que o pai não deveria manter no próprio contexto.
 
 ## Um pequeno conselho
 
-Se você nunca escreveu um subagent e está considerando, o primeiro que eu sugeriria escrever é exatamente o padrão de security-review: read-only, especialização estreita, saída estruturada. O post de amanhã é um walkthrough de um que eu realmente uso. A razão de eu sugerir esse primeiro é que te dá valor visível imediato — você pergunta pro pai "essa mudança é segura?" e recebe de volta um relatório estruturado que teria levado vinte minutos pra montar manualmente.
+Se você nunca escreveu um subagent, comece pelo formato de security-review: read-only, especialização estreita, saída estruturada. O post de amanhã mostra um que eu realmente uso.
 
-Uma vez que você sentir como isso é diferente de fazer a mesma revisão no contexto do pai, vai começar a identificar outras tarefas que encaixam no mesmo formato. A gaveta enche do mesmo jeito que a gaveta de skills encheu, um colega especializado por vez.
+Uma vez que você sentir como isso é diferente de fazer a mesma revisão no contexto do pai, vai começar a identificar outras tarefas que encaixam no mesmo formato.
 
 ## Leitura adicional
 

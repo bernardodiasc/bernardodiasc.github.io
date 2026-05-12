@@ -37,11 +37,7 @@ Todo coding agent de IA espera sua configuração num lugar ligeiramente diferen
 - Claude Code lê de um `CLAUDE.md` no nível raiz mais um diretório `.claude/` (com subpastas similares).
 - Outros agents têm suas próprias convenções, nenhuma delas harmonizada.
 
-A abordagem ingênua é ter um conjunto de arquivos na pasta de uma ferramenta e aceitar que trocar de ferramenta significa reescrever tudo. É assim que a maioria dos projetos começa.
-
-A abordagem um pouco menos ingênua é manter *duas* cópias — uma em `.cursor/`, uma em `.claude/` — e mantê-las sincronizadas manualmente. Isso funciona para umas três skills antes de desmoronar. Na décima skill, as duas pastas divergiram, e você está gastando mais tempo reconciliando do que escrevendo.
-
-A abordagem realmente boa é a que vou descrever: escolha um local de fonte-da-verdade, e faça o diretório esperado de cada ferramenta apontar via symlink para ele. Uma edição de arquivo, toda ferramenta vê a mudança.
+Os modos de falha comuns são prender os arquivos na pasta de uma ferramenta ou manter cópias duplicadas entre ferramentas. A abordagem que se sustentou pra mim é mais simples: escolha um local de fonte-da-verdade, e faça o diretório esperado de cada ferramenta apontar via symlink para ele. Uma edição de arquivo, toda ferramenta vê a mudança.
 
 ## O layout
 
@@ -71,9 +67,7 @@ Esse é o padrão inteiro.
 
 Algumas escolhas nesse layout estão fazendo mais trabalho do que parecem.
 
-**`src/` é genérico.** Não tem nome de nenhum coding agent específico. Se uma nova ferramenta aparecer que espera sua config em `.someother/`, eu adiciono mais três symlinks apontando para `src/` e a nova ferramenta começa a funcionar sem mover nenhum arquivo.
-
-**`src/` fica por conta própria na raiz do projeto.** Fica como irmão das pastas específicas de ferramenta, não dentro de nenhuma delas. Isso é proposital. Se eu deletasse `.cursor/` amanhã — digamos que saí do Cursor — `src/` não é afetado. O conteúdo canônico não tem dependência da existência do diretório de nenhuma ferramenta.
+**`src/` é genérico e independente.** Não tem nome de nenhum coding agent específico, e fica como irmão das pastas específicas de ferramenta. Se uma nova ferramenta espera config em `.someother/`, adiciono três symlinks apontando para `src/`. Se eu deletar `.cursor/` amanhã, o conteúdo canônico não é afetado.
 
 **Os symlinks são no nível de diretório, não de arquivo.** Cada pasta de ferramenta tem três symlinks (rules, skills, agents), não um symlink por arquivo de skill. Isso significa que eu nunca preciso atualizar os symlinks quando adiciono uma nova skill — o symlink já está apontando para o diretório pai, então a nova skill fica visível imediatamente.
 
@@ -152,7 +146,7 @@ Algumas coisas para esperar:
 
 **Formatos de definição de subagent diferem ligeiramente.** Os campos e estrutura de prompt variam. Para subagents, às vezes mantenho dois arquivos de definição — um por ferramenta — porque as diferenças são grandes o suficiente para que um arquivo não consiga servir ambos de forma limpa. Eles ficam em `src/agents/cursor/` e `src/agents/claude/`, e os symlinks no diretório de cada ferramenta apontam para o correto.
 
-**Padrões glob podem variar.** Os matchers de glob de algumas ferramentas se comportam diferentemente em edge cases (caminhos profundamente aninhados, arquivos ocultos). Quando isso importa, escrevo o glob na forma mais ampla e aceito leve overmatching em uma ferramenta.
+**Padrões glob podem variar.** Os matchers de glob de algumas ferramentas se comportam diferentemente em edge cases (caminhos profundamente aninhados, arquivos ocultos). Quando isso importa, escrevo o glob na forma mais ampla e aceito leve casamento amplo demais em uma ferramenta.
 
 O padrão: **compartilhe o que é verdadeiramente compartilhado, aceite pequenos forks nas bordas genuínas, e nunca deixe as bordas se espalharem para as partes compartilhadas.**
 
@@ -166,7 +160,7 @@ Mas alguns benefícios inesperados apareceram depois que eu vinha rodando isso h
 
 **Onboarding de novas ferramentas é rápido.** A primeira vez que experimentei Claude Code num projeto que já tinha `src/`, o único passo de setup foi criar o diretório `.claude/` e adicionar três symlinks. Tempo total: menos de um minuto. Toda skill existente ficou imediatamente disponível.
 
-**Experimentos entre ferramentas se tornam possíveis.** Às vezes quero comparar como a mesma skill performa em dois agents diferentes. Com esse layout, "a mesma skill" é *literalmente* o mesmo arquivo. Qualquer diferença de comportamento é do modelo ou do runtime, não de drift na skill.
+**Experimentos entre ferramentas se tornam possíveis.** Às vezes quero comparar como a mesma skill performa em dois agents diferentes. Com esse layout, "a mesma skill" é *literalmente* o mesmo arquivo. Qualquer diferença de comportamento é do modelo ou do runtime, não de desvio na skill.
 
 **A biblioteca sobrevive às ferramentas.** Esse é o benefício de cauda longa. Ferramentas de IA mudam rápido. Uma biblioteca fortemente acoplada a uma ferramenta envelhece com aquela ferramenta. Uma biblioteca vendor-agnostic envelhece com os *conceitos*, que envelhecem muito mais devagar. A skill que me ajudou a debugar um checkpoint no ano passado é a mesma skill me ajudando hoje, mesmo que o runtime ao redor tenha mudado duas vezes.
 

@@ -32,8 +32,6 @@ Este post é sobre essa prática e o jeito pequeno e deliberado como eu a conduz
 
 ## Quatro audiências, quatro necessidades diferentes
 
-Antes de entrar em como o workflow funciona, quero apresentar as quatro audiências e o que cada uma delas realmente quer. Essas não são as únicas quatro, mas cobrem a maior parte do que engenheiros em times distribuídos precisam comunicar.
-
 #
 
 ## O gestor
@@ -100,33 +98,6 @@ Mesma fonte. Seleção, ordenação e ênfase diferentes.
 
 Isso funciona porque a *informação* é invariante — o que eu fiz nessa semana é o que eu fiz nessa semana. O que muda por audiência é *qual subconjunto importa e como é enquadrado*. Seleção e enquadramento são o que você deveria fazer pra cada audiência de qualquer forma. Fazê-los sob demanda a partir de uma única fonte é a versão barata do mesmo trabalho.
 
-## O que as lentes realmente fazem
-
-Concretamente, quando gero um relatório para uma das quatro audiências a partir de uma semana de entradas no diário, o output é moldado de forma diferente em cinco aspectos visíveis.
-
-**Seleção.** Bullets diferentes são incluídos. O relatório do gestor inclui os três resultados mais consequentes; o relatório do time inclui os itens em andamento mesmo quando ainda não são entregáveis; o relatório pessoal inclui o atrito mesmo quando ainda não está resolvido.
-
-**Ordenação.** Relatórios do gestor abrem com resultados; relatórios do time abrem com trabalho em andamento; relatórios pessoais abrem com padrões; relatórios do revisor abrem com o que mudou. A abertura é o sinal de ordenação — o que a audiência lê primeiro define o tom.
-
-**Vocabulário.** Relatórios do gestor traduzem trabalho técnico em linguagem de produto ("reduzimos a taxa de falha de autenticação pela metade" ao invés de "corrigimos o handler de expiração do JWT"). Relatórios do time usam o vocabulário técnico que o time já compartilha. Relatórios pessoais usam qualquer vocabulário que pareça honesto. Relatórios do revisor usam o vocabulário do artefato sendo revisado.
-
-**Nível de detalhe.** Relatórios do gestor são densos — cada frase precisa merecer seu lugar. Relatórios do time são mais soltos, com espaço pra textura que ajuda colegas. Relatórios pessoais são os mais detalhados; essa é a única audiência onde ser prolixo às vezes é o movimento certo. Relatórios do revisor são cirúrgicos: precisos, sem decoração.
-
-**Fechamento.** Relatórios do gestor fecham com riscos e pedidos. Relatórios do time fecham com o que está prestes a ser entregue. Relatórios pessoais fecham com o que fazer diferente na próxima semana. Relatórios do revisor fecham com lacunas conhecidas.
-
-Cinco dimensões, quatro audiências. O mesmo input produz vinte decisões de enquadramento distintas. Feitas à mão toda semana, são algumas horas. Feitas com a ajuda de um assistente de IA que foi informado do que cada lente enfatiza, são vinte minutos no total — e os relatórios resultantes são indiscutivelmente melhores, porque as regras de enquadramento deliberado não oscilam de sessão pra sessão.
-
-## A questão da cadência
-
-Audiências diferentes têm cadências naturais diferentes.
-
-- **Relatórios do gestor** são semanais pra mim. Alguns times fazem quinzenais ou em standups assíncronos; o princípio é o mesmo.
-- **Updates do time** são diários a semanais, dependendo do quanto o time conversa. Eu pessoalmente prefiro um update curto diário mais um resumo semanal.
-- **Relatórios pessoais** são semanais com uma retrospectiva mensal. A versão semanal é pra correção de rota; a mensal é pra perceber padrões que a versão semanal perde.
-- **Relatórios do revisor** são por artefato. Sempre que algo está sendo entregue pra revisão, um relatório do revisor faz parte do artefato.
-
-Se você empilha as quatro cadências, pode acabar escrevendo *muitos* relatórios. Isso parece caro. Costumava ser. Com o modelo de fonte-e-lente e um assistente de IA fazendo a aplicação da lente, o tempo total por semana fica mais perto de trinta minutos do que quatro horas.
-
 ## O que eu não delego
 
 A aplicação da lente — traduzir das entradas do diário para output moldado por audiência — pode ser amplamente delegada a um assistente de IA. As regras de enquadramento são estáveis; o input é texto; a transformação é razoavelmente mecânica.
@@ -143,7 +114,7 @@ A revisão editorial de cinco minutos — *eu leio o que o assistente produziu e
 
 Uma coisa sobre comunicar pra múltiplas audiências que eu subestimei por muito tempo: **o tom de cada relatório é parte da mensagem**.
 
-Um relatório do gestor em linguagem casual de chat sinaliza "isso não é importante o suficiente pra pensar com cuidado." Um relatório do time em linguagem corporativa rígida sinaliza "eu não quero de verdade conversar sobre isso com vocês." Um relatório pessoal em linguagem performática sinaliza (pra si mesmo) que você não está sendo honesto. Um relatório do revisor em prosa vaga sinaliza "eu não fiz meu dever de casa."
+Um relatório do gestor em linguagem casual de chat sinaliza "isso não é importante o suficiente pra pensar com cuidado." Um relatório do revisor em prosa vaga sinaliza "eu não fiz meu dever de casa."
 
 O vocabulário e o tom estão fazendo um trabalho que os bullet points sozinhos não conseguem. Quando reviso meus próprios rascunhos, essa checagem de tom é a última coisa que faço antes de enviar. Isso *soa* certo pra quem vai ler? Se não, o que especificamente parece fora?
 
@@ -160,6 +131,6 @@ Uma sexta-feira típica pra mim, final do dia, funciona mais ou menos assim.
 
 Tempo total: trinta a quarenta minutos pra semana inteira. Sem o modelo de fonte-e-lente, o mesmo conjunto de relatórios costumava levar mais de duas horas e frequentemente era pulado.
 
-A versão de trinta minutos não é de qualidade inferior. De certa forma é superior, porque as regras de enquadramento não oscilam entre relatórios — o gestor sempre recebe relatórios liderados por resultados, o time sempre recebe relatórios liderados por andamento, o formato é consistente o suficiente pra que a audiência saiba o que procurar. A comunicação compõe, do jeito que boa comunicação faz.
+A versão de trinta minutos não é de qualidade inferior. De certa forma é superior, porque as regras de enquadramento não oscilam entre relatórios e cada audiência sabe o que procurar.
 
-Esse é o pitch inteiro. Comunique com frequência, comunique de forma diferente pra audiências diferentes, e deixe a fonte ser uma e as lentes serem muitas. Mesmo trabalho de engenharia, muito mais legível pras pessoas que precisam enxergar.
+Esse é o pitch inteiro. Comunique com frequência, comunique de forma diferente pra audiências diferentes, e deixe a fonte ser uma e as lentes serem muitas.

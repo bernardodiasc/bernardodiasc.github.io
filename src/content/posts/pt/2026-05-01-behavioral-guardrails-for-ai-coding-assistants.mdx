@@ -21,19 +21,11 @@ tags:
 excerpt: Existem quatro comportamentos que quero que qualquer agente de IA de programação siga, independente do modelo por trás. Pense antes de codificar. Mantenha simples. Faça mudanças cirúrgicas. Defina o que significa estar pronto. Cada um veio de um erro real que eu vi o agente cometer. Aqui vai por que os codifiquei como um arquivo de rule.
 ---
 
-Tenho um arquivo de rule always-on no topo de cada projeto em que trabalho. Tem umas cem linhas. Ele não descreve minha stack, meu estilo de código nem minhas convenções de projeto. Ele descreve quatro comportamentos que quero que o agente de IA siga quando está escrevendo ou revisando código.
+Tenho um arquivo de rule always-on no topo de cada projeto em que trabalho. Ele não descreve minha stack, meu estilo de código nem minhas convenções de projeto. Descreve quatro comportamentos agnósticos de ferramenta que quero que o agente de IA siga quando escreve ou revisa código.
 
-A rule é carregada em toda conversa. Todo modelo que uso a lê antes de fazer qualquer coisa. Os comportamentos são deliberadamente agnósticos de ferramenta — não dependem de qual agente de IA estou rodando hoje, nem de qual modelo de linguagem está por trás. São sobre os mesmos tipos de erros que qualquer fluxo de trabalho de programação assistida por LLM comete quando você não faz pushback.
-
-Cada comportamento veio de observar o agente errar algo, mais de uma vez, de um jeito que parecia estrutural em vez de acidental. Este post é sobre esses quatro comportamentos, por que cada um merece sua própria seção no arquivo de rule, e o trabalho que cada um faz na prática.
+Cada comportamento veio de ver o agente errar algo mais de uma vez. Os quatro são adaptações livres de observações que Andrej Karpathy compartilhou sobre armadilhas de LLMs ao escrever código; as palavras e o enquadramento aqui são meus.
 
 <ImageFigure alt="Renderização arquitetônica clássica greco-romana em traço confiante de bico-de-pena com sombreamento dramático em hachura cruzada, sobre papel pergaminho creme. Quatro colunas altas com caneluras dóricas estão dispostas em fileira no primeiro plano, cada uma renderizada com as caneluras verticais precisas, capitéis em equino afiados e base em estilobata escalonada da arquitetura de templo grego clássica. Cada coluna carrega um pequeno medalhão em relevo na altura onde o capitel encontra o fuste, e os quatro medalhões são visivelmente diferentes entre si: o medalhão da primeira coluna mostra um pequeno perfil de cabeça pensativa com sobrancelha levemente franzida, o segundo mostra um ramo estilizado com folhas podadas como se aparadas, o terceiro mostra uma pequena ferramenta em formato de bisturi finamente detalhada, e o quarto mostra uma pequena coroa de louros ao redor de um alvo circular. Atrás e entre as colunas, uma estrada de pedra pavimentada com lajes retangulares em fuga se estende até uma linha de horizonte distante onde a névoa atmosférica embaça a perspectiva. As linhas de lajes convergem para um único ponto de fuga no centro superior da composição. Luz forte entrando do canto superior esquerdo, lançando sombras clássicas precisas atrás de cada coluna. Fundo em pergaminho creme; sem texto ou letras legíveis em nenhum lugar da composição." src="/content/posts/2026-05-01-behavioral-guardrails-for-ai-coding-assistants/four-pillars.png" caption="Quatro comportamentos, quatro colunas. A estrada passa entre elas. O agente caminha por ali." />
-
-## De onde vieram os quatro
-
-Os quatro são adaptações livres de observações que Andrej Karpathy compartilhou sobre os tipos de armadilhas em que LLMs caem ao escrever código. As palavras são minhas, o enquadramento é meu, mas a observação subjacente é dele: existem modos de falha recorrentes que são previsíveis assim que você sabe o que procurar, e vale a pena nomeá-los explicitamente para que o agente (e você) possam evitá-los.
-
-Vou percorrer cada um com a redação que realmente uso, o modo de falha que ele aborda, e o tipo de trabalho que faz em tarefas reais.
 
 ## 1. Pense antes de codificar
 
@@ -80,7 +72,7 @@ If yes, simplify.
 
 O check *"um engenheiro sênior diria que isso é complicado demais?"* é o que faz mais trabalho. É um único teste mental que o agente pode aplicar ao seu próprio output antes de confirmar. O modelo é bom em rodar esse teste nele mesmo uma vez que é instruído a fazê-lo. Sem o prompt, ele simplesmente não roda.
 
-Vou escrever um post inteiro amanhã sobre como isso se parece na prática — as formas específicas de overengineering, os diffs antes/depois, os momentos em que tive que fazer pushback em uma solução de 200 linhas que queria ser 50. A versão curta: essa rule, sozinha, mudou mais sobre a qualidade do código gerado do que qualquer outra mudança individual que fiz.
+A versão curta: essa rule, sozinha, mudou mais sobre a qualidade do código gerado do que qualquer outra mudança individual que fiz.
 
 ## 3. Mudanças cirúrgicas
 
@@ -157,13 +149,9 @@ Também tentei adicionar comportamentos mais específicos — "sempre escreva te
 
 Os quatro comportamentos que ficaram são os que se aplicam *independente de stack, projeto ou tarefa*. Pense antes de agir. Não faça overengineering. Toque o que precisa, nada mais. Defina "pronto". Esses quatro se sustentam em todo codebase em que já trabalhei.
 
-## Um breve tradeoff de encerramento
-
-Essas diretrizes enviesam o agente para cautela em detrimento de velocidade. Para tarefas triviais — renomear uma variável, corrigir um typo — são overhead. O arquivo de rule diz isso explicitamente, com uma linha no topo: *"Para tarefas triviais, use julgamento."*
-
-Essa válvula de escape importa. Uma rule que transforma um fix de uma linha num exercício de planejamento em múltiplos passos está deixando o sistema mais lento, não melhor. O objetivo da rule é instalar bons defaults para o caso *não-trivial*, onde a tendência do agente de agir prematuramente ou fazer overengineering produziria dano real. Em tarefas triviais, o agente reconhece as stakes menores e pula o cerimonial.
-
 ## Como eu saberia que a rule está funcionando
+
+Essas diretrizes enviesam o agente para cautela em vez de velocidade. Para tarefas triviais — renomear uma variável, corrigir um typo — são overhead, então o arquivo de rule tem uma válvula de escape: *"Para tarefas triviais, use julgamento."* Para trabalho não-trivial, o critério de sucesso é simples.
 
 O arquivo de rule termina com um breve critério de sucesso próprio:
 
@@ -176,4 +164,4 @@ after mistakes.
 
 Esse é o teste. Se os diffs estão mais enxutos, se estou reescrevendo menos, e se o agente está fazendo a pergunta inteligente no início de uma tarefa em vez de depois — a rule está fazendo seu trabalho. Se esses sinais não estão se movendo, a rule não está merecendo seu lugar no contexto always-on.
 
-Até agora, nos projetos em que a usei, os sinais se moveram na direção certa. Não completamente. O agente ainda ocasionalmente produz uma solução de 200 linhas que quer ser 50, e eu ainda me pego aceitando mudanças too-clever que violam o princípio de mudanças cirúrgicas. Mas o piso está significativamente mais alto do que estava antes, que é para isso que guardrails servem.
+Até agora, nos projetos em que a usei, os sinais se moveram na direção certa. Não completamente. O agente ainda ocasionalmente produz uma solução de 200 linhas que quer ser 50, e eu ainda me pego aceitando mudanças espertas demais que violam o princípio de mudanças cirúrgicas. Mas o piso está significativamente mais alto do que estava antes, que é para isso que guardrails servem.

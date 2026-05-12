@@ -11,3 +11,6 @@ dist/
 .DS_Store
 *.local
 npm-debug.log*
+
+# cursor
+.cursor/plans/

@@ -98,9 +98,7 @@ That's the entire skill body. The agent reads this, knows the command, knows the
 
 1. **The `description` is about *when* to use the skill.** Not "this reads checkpoint state" — that's just the name in different words. *"Use when debugging persisted graph state vs the input that produced it"* tells the agent when to reach for this skill instead of a different one.
 2. **The Quick start is copy-paste ready.** Including the working directory. The agent doesn't have to guess.
-3. **The options table is small.** Three flags. If a debug skill is growing past five or six options, it's probably two skills trying to be one.
-4. **The Backend reference points at the live source.** When the skill body is out of date, the agent has a fallback.
-5. **No prose lecture about *why* this matters.** The agent doesn't need it. The skill is a procedure, not an essay.
+3. **No prose lecture about *why* this matters.** The agent doesn't need it. The skill is a procedure, not an essay.
 
 ## The script
 
@@ -169,31 +167,15 @@ A handful of design choices in this thirty-line script are doing more work than 
 
 <ImageFigure alt="Graphite pencil drawing on an off-white sketchbook page, in the style of an engineer's working sketchbook. A horizontal flow runs across the center of the page: from left to right, a soft rectangular box containing a small drawn silhouette of a robotic head, then an arrow, then a smaller terminal-window outline drawn with hatched construction lines, then another arrow, then a cylindrical database drum with curved fill-lines suggesting stacked data layers. Below the terminal-window box and slightly to its right, a smaller secondary box contains a small icon that looks like an interlocking gear — and from this secondary box, a dashed pencil loop arcs upward and re-enters the terminal box, indicating an internal dependency. Around the diagram, classic sketchbook margin marks: a couple of small empty speech-bubble shapes, a few thin construction lines, a thumbprint smudge, an eraser ghost from an earlier diagram now mostly rubbed out. Soft graphite shading throughout, no readable text or letters anywhere in the composition." src="/content/posts/2026-04-27-building-debug-skills-that-inspect-live-systems/checkpoint-architecture.png" caption="The skill is a thin connector. The agent talks to the script; the script imports the real decoder; the real decoder talks to the live database." />
 
-## Why "import the real thing" is the most important rule
-
-This was the single decision I'd argue with hardest. Reimplementing the decoder in the script — even a simplified version that handles 95% of cases — looks tempting. It means the debug script is self-contained. It means you can run it without setting up the backend's environment. It feels cleaner.
-
-It is a trap.
-
-The runtime serialization changes. Every time it does, the script's reimplemented decoder is wrong. The agent uses the script. The output is silently garbage, or partially garbage in ways that are hard to detect. By the time you notice, you've made a debugging decision based on a stale view of the system.
-
-Importing the real decoder fixes this by construction. The script can't drift from the runtime, because they're using the same code. If the script breaks, it breaks loudly — an `ImportError` or a clear exception — instead of producing a confidently wrong answer.
-
-The cost is that the script needs the backend's environment to run. In practice this means the skill's `Quick start` includes a `working_directory: ai-automation-backend` and uses `poetry run`. The agent handles that fine. The price of the dependency on the backend is small. The price of silent drift would be much, much larger.
-
 ## Iterating on the output format
 
-The first version of this script printed everything. Full decoded JSON, every field, every nested dict. It was useless. The agent reading the output had to wade through three pages of structured data to find the one boolean it cared about, and was as likely to miss the answer as find it.
-
-The second version printed nothing useful — it returned a summary that didn't include the field I actually needed for the bug I was debugging that day. So I reran with `--raw-json`, which was equivalent to the first version. Still useless.
-
-What worked, after a few iterations, was a summary format with three properties:
+The first versions printed either everything or nothing useful. What worked, after a few iterations, was a summary format with three properties:
 
 - **It always shows the same shape.** The agent knows what to expect: keys present, current step, presence-or-absence of a known list of required fields. The output is predictable.
 - **It includes the things I always want to know.** Which step the pipeline reached. Whether the expected fields are populated. The timestamp of the checkpoint.
 - **It surfaces what's missing.** A `✗` next to a missing field is more informative than a clean summary that omits the field entirely. Absence is data.
 
-Getting to that format took maybe five iterations across actual debugging sessions. Each session, when the summary didn't have the answer I needed, I added the field I'd reached for and didn't found. After about a week the format stabilized.
+Getting to that format took maybe five iterations across actual debugging sessions. Each session, when the summary didn't have the answer I needed, I added the field I'd reached for and didn't find. After about a week the format stabilized.
 
 That iteration loop is normal. Don't try to design the output of a debug skill in the abstract. Design the V1 to be barely functional. Iterate from real bugs.
 
@@ -229,4 +211,4 @@ After eight debug skills, something quietly changed about how I work on this pro
 
 That's the actual outcome. Not "I have a folder of scripts." A folder of scripts is a tools directory, and tools directories existed before AI agents. The change is that the *invocation* layer is now intelligent. The agent reads the skill, decides which one applies, runs it, interprets the output, and feeds the result into its next reasoning step. The skill is just the bridge. The intelligence is on both ends.
 
-That's why writing them feels like time well spent. Each one is a small bridge from "investigation in your head" to "investigation in the system." Once enough bridges exist, the system itself becomes inspectable in a way it wasn't before — and the agent walks across them on your behalf.
+That's why writing them feels like time well spent. Each one moves a little more investigation out of my head and into the system. Once enough of them exist, the system itself becomes inspectable in a way it wasn't before.

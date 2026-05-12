@@ -36,11 +36,7 @@ Every AI coding agent expects its configuration in a slightly different place.
 - Claude Code reads from a top-level `CLAUDE.md` plus a `.claude/` directory (with similar subfolders).
 - Other agents have their own conventions, none of them harmonized.
 
-The naive approach is to have one set of files in one tool's folder, and accept that switching tools means rewriting everything. That's how most projects start.
-
-The slightly less naive approach is to maintain *two* copies — one in `.cursor/`, one in `.claude/` — and keep them in sync manually. That works for about three skills before it falls apart. By the tenth skill, the two folders have drifted, and you're spending more time reconciling than writing.
-
-The actually-good approach is the one I'll describe: pick one source-of-truth location, and have every tool's expected directory symlink to it. One file edit, every tool sees the change.
+The common failure modes are either locking the files into one tool's folder or maintaining duplicate copies across tools. The approach that has held up for me is simpler: pick one source-of-truth location, and have every tool's expected directory symlink to it. One file edit, every tool sees the change.
 
 ## The layout
 
@@ -70,9 +66,7 @@ That's the whole pattern.
 
 A few choices in this layout are doing more work than they look.
 
-**`src/` is generic.** It's not named after any specific AI coding agent. If a new tool comes along that expects its config in `.someother/`, I add three more symlinks pointing at `src/` and the new tool starts working without any file moving.
-
-**`src/` is on its own at the project root.** It sits as a sibling of the tool-specific folders, not inside any of them. That's deliberate. If I deleted `.cursor/` tomorrow — say I switched away from Cursor — `src/` is unaffected. The canonical content has no dependency on any one tool's directory existing.
+**`src/` is generic and independent.** It's not named after any specific AI coding agent, and it sits as a sibling of the tool-specific folders. If a new tool expects config in `.someother/`, I add three symlinks pointing at `src/`. If I delete `.cursor/` tomorrow, the canonical content is unaffected.
 
 **The symlinks are at the directory level, not the file level.** Each tool folder has three symlinks (rules, skills, agents), not one symlink per skill file. This means I never have to update the symlinks when I add a new skill — the symlink is already pointing at the parent directory, so the new skill is visible immediately.
 

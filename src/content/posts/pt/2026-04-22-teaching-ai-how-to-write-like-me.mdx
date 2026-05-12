@@ -17,7 +17,7 @@ tags:
   - astro
   - content-strategy
   - ai-assisted
-excerpt: Meu blog tem uma voz. A IA, por padrão, não tem — ela tem a voz de toda a internet calculada numa média. Então escrevi três arquivos de rules que ensinam o agente como eu soo, o que evitar e o que conta como "pronto."
+excerpt: Meu blog tem uma voz. A IA, por padrão, não tem — ela tem a voz de toda a internet calculada numa média. Então escrevi três arquivos de rules que ensinam o agente como é a minha voz, o que evitar e o que conta como "pronto."
 ---
 
 Quando comecei a deixar uma IA me ajudar a rascunhar posts para este blog, a saída tinha um problema. Não era um problema de gramática. A gramática estava perfeita. O problema era que **não soava como eu**.
@@ -30,26 +30,7 @@ Então escrevi três arquivos de rules. O agente os lê toda vez que toca num po
 
 ## O que são rules, afinal
 
-Rules são pequenos arquivos Markdown com frontmatter YAML que um agente de IA para código carrega quando está trabalhando num projeto. A maioria das ferramentas modernas de agentes tem alguma versão disso — Cursor chama de rules, Claude Code chama de `CLAUDE.md`, outros têm seu próprio nome. O formato é o mesmo: uma descrição, um glob pattern que diz "carregue este arquivo quando trabalhar nesses caminhos", e um corpo de orientações.
-
-Vou mostrar como ficam as minhas para o blog.
-
-```yaml
----
-description: Voice, tone, content safety, and tool-agnostic framing for blog posts in this project.
-globs:
-  - "src/content/posts/**/*.md"
-  - "src/content/posts/**/*.mdx"
-alwaysApply: false
----
-
-# Blog writing conventions
-
-Voice and tone guide for posts in `src/content/posts/`. Read this before
-drafting, translating, or editing any post body or excerpt.
-```
-
-Esse é o topo do arquivo que o agente carrega toda vez que estou editando um post. O glob pattern importa — significa que a rule de escrita só se conecta quando estou num arquivo de post, não quando estou mexendo num componente ou config. Outras rules se conectam a outros globs. O agente monta o contexto certo por arquivo, automaticamente.
+Rules são pequenos arquivos Markdown com orientação que o agente carrega quando está trabalhando em arquivos correspondentes. Para este post, o ponto importante é simples: escrevi o conselho de escrita uma vez, apliquei aos posts do blog, e parei de reensinar isso em todo chat.
 
 <ImageFigure alt="Composição sumi-e em nanquim sobre papel de arroz creme. No lado esquerdo repousa um pequeno selo carimbado — uma forma precisa e blocada em vermelho escuro e preto, como a marca de assinatura de um artista. A partir dele, um único fio de lavagem de tinta cinza curva para a direita pela página como um filete de incenso e alcança um espalhamento irregular de pequenos retângulos de papel em branco dispostos como folhas flutuando. O fio só pousa em dois dos retângulos, envolvendo-os num halo suave de tons de cinza e tornando seu papel de um creme levemente mais quente; os outros retângulos ficam intocados e secos, suas bordas nítidas. As duas peças abraçadas ficam em alturas levemente diferentes, como se sinalizadas de um grupo maior. Textura de pincel suave no fio, variação de pincel seco no selo, bordas de papel irregulares feitas à mão, uma grande quantidade de espaço negativo, sem texto legível ou caracteres em lugar nenhum da composição." src="/content/posts/2026-04-22-teaching-ai-how-to-write-like-me/rule-and-draft-side-by-side.png" caption="A rule se conecta aos arquivos certos e fica longe dos errados. O agente monta o contexto certo por arquivo, automaticamente." />
 
@@ -83,7 +64,7 @@ Used for: posts about workflow philosophy, why something matters.
 
 Esse trecho sozinho mudou a saída de forma perceptível. Antes, cada post saía na mesma voz de andamento médio — nem casual, nem reflexivo, só blog-genérico. Depois, eu podia dizer ao agente "este é casual, tipo os posts de sexta no estilo diário de dev" e ele acertava o registro, quase sempre.
 
-A parte seguinte é um pequeno inventário de **o que manter**. Reli dez dos meus posts mais antigos e extraí os padrões recorrentes. Muletas conversacionais que uso muito ("Bom,", "Olha,", "Sinceramente,"). O leve sabor de ESL — sou brasileiro, vivo em inglês faz tempo, mas minhas frases às vezes não soam como as de um nativo, e isso é parte da voz. Enquadramentos autoconscientes onde nomeio o que vou fazer ("Deixa eu voltar um passo.", "A questão é essa."). Números e datas específicos em vez de quantidades vagas.
+A parte seguinte é um pequeno inventário de **o que manter**. Reli dez dos meus posts mais antigos e extraí os padrões recorrentes. Cacoetes conversacionais que uso muito ("Bom,", "Olha,", "Sinceramente,"). O leve sabor de ESL — sou brasileiro, vivo em inglês faz tempo, mas minhas frases às vezes não soam como as de um nativo, e isso é parte da voz. Enquadramentos autoconscientes onde nomeio o que vou fazer ("Deixa eu voltar um passo.", "A questão é essa."). Números e datas específicos em vez de quantidades vagas.
 
 Esse último importa mais do que eu esperava. Escrevi "muitos anos atrás" uma vez e o agente deixou. Corrigi para "quase oito anos atrás" e coloquei uma nota na rule: **prefira quantidades específicas**. A saída ficou mais concreta na hora.
 
@@ -123,7 +104,7 @@ The PT file additionally requires `lang: pt`.
 
 Sem isso, cada tradução desviava um pouco. Conjuntos de tags diferentes entre EN e PT, nomes de arquivos de imagem levemente diferentes, um campo de data faltando. Com a rule, eu só digo "traduz esse post pra PT" e o agente produz um arquivo paralelo com o formato certo.
 
-Tem uma seção de qualidade de tradução também. Português brasileiro, não de Portugal. Manter vocabulário de trabalho em inglês que devs brasileiros realmente usam ("deploy", "build", "frontend"). Não formalizar demais o registro casual. As frases de assinatura têm equivalentes — "Bom,", "Olha,", "Sinceramente,", "Deixa eu te contar…" — e devem aparecer na versão PT também, sem serem alisadas.
+Tem uma seção de qualidade de tradução também: português brasileiro, vocabulário de trabalho em inglês onde devs brasileiros realmente usam, e um registro casual que não fica formalizado demais.
 
 ## Rule três: a estrutura
 
@@ -146,7 +127,6 @@ Inline image pattern (use raw HTML, not Markdown):
 
 O motivo disso importar: o agente agora escreve posts com blocos `<figure>` apontando para caminhos de imagem que ainda não existem. O `alt` é detalhado o suficiente para eu alimentar diretamente num modelo de imagem. O `figcaption` é editorial. Eu gero as imagens numa passada separada, salvo nos caminhos sugeridos, e o post de repente está ilustrado. A rule mantém o fluxo consistente em cada post.
 
-Daqui a três meses, quando os posts desta série estiverem espalhados pelo arquivo, os blocos de leitura complementar transformam o arquivo num grafo em vez de uma lista plana. Compromisso pequeno agora, efeito composto grande depois.
 
 <ImageFigure alt="Composição sumi-e em nanquim sobre papel de arroz creme, com duas faixas horizontais paralelas empilhadas verticalmente e separadas por generoso espaço negativo. A faixa superior é construída a partir de uma sequência de gestos de pincel curtos, soltos e energéticos com comprimentos variados e espaçamento irregular — pinceladas úmidas rápidas, respingos ocasionais de tinta, intervalos deliberados entre elas — capturando o ritmo de uma escrita conversacional e entrecortada. A faixa inferior é construída a partir de gestos de pincel mais longos, medidos e suaves com espaçamento uniforme e peso mais estável, capturando a cadência de uma prosa mais lenta e construída. As duas faixas compartilham a mesma linguagem de pincel e tinta mas têm temperamentos visivelmente diferentes — uma staccato, outra legato. Uma leve mudança tonal vertical no papel entre as duas faixas se lê como uma fronteira silenciosa. Um pequeno selo quadrado vermelho acentua um canto. Sem letras, sem caracteres, sem texto legível em lugar nenhum — puramente ritmo gestual." src="/content/posts/2026-04-22-teaching-ai-how-to-write-like-me/two-registers-diagram.png" caption="Dois registros, um autor. As pinceladas compartilham a mesma mão mas respiram em tempos diferentes." />
 
@@ -169,9 +149,5 @@ A rule de voz não substitui a edição.
 O modelo ainda ocasionalmente escreve uma frase que está *tecnicamente* no meu registro mas lê como uma paródia dele. Muitos "Sinceramente," seguidos. Um "Bom," que é só filler. Frases que forçam demais o sinal de ESL até parecerem um sotaque encenado. Eu corto essas quando vejo. A rule enviesou a saída; ela não faz a leitura final.
 
 A outra coisa que não resolve é **o que dizer**. Rules de voz governam *como* algo é dito. O argumento, a ordem, as omissões — essa parte ainda é comigo. Um post perfeitamente na minha voz sobre nada continua sendo um post sobre nada.
-
-## Por que vale a pena fazer isso uma vez
-
-Escrever esses três arquivos de rules levou talvez uma hora. Editá-los ao longo do caminho foi mais uma hora espalhada em algumas sessões. Eles ficam em `.cursor/rules/` e funcionam para cada post que eu escrever aqui. O custo é inicial e pequeno. O benefício se compõe em cada rascunho, cada tradução, cada ajuste rápido.
 
 Esse é o padrão, mais ou menos. Não tente coachear a voz do agente na janela de chat a cada post. Escreva o coaching uma vez. Deixe o agente reler a cada arquivo. Edite as rules quando identificar uma falha recorrente. A conversa fica mais curta e a saída fica mais estável.

@@ -35,7 +35,6 @@ Antes de entrar nos padrões, o teste de uma linha que importa mais do que qualq
 
 Esse é o check. Está no arquivo de rule always-on que o agente carrega no início de toda conversa. A maioria do que segue são apenas formas específicas nas quais, quando você olha o código resultante, a resposta é claramente *sim*.
 
-O check funciona porque engenheiros sêniores — do tipo que mantiveram codebases ao longo de anos — têm uma alergia forte a código que faz mais do que o momento exige. Eles já viram helpers abstraídos com elegância se calcificarem em legado. Já debugaram testes que mockam tudo. Sabem que 50 linhas que qualquer um consegue ler vencem 200 linhas que só o autor original consegue estender.
 
 O agente, quando instruído a aplicar esse check ao seu próprio output, fica razoavelmente bom em simplificar. Não perfeito, mas razoavelmente bom.
 
@@ -285,37 +284,18 @@ A regra: **teste o comportamento que o usuário se importa, não a implementaç�
 
 ## Padrão seis: comentários que narram o código
 
-Um pequeno, mas que se acumula. O agente tem uma tendência a adicionar comentários que simplesmente reafirmam o que a próxima linha de código faz.
-
-A primeira versão:
+Um pequeno, mas que se acumula: o agente adiciona comentários que repetem a próxima linha de código.
 
 ```python
 # Open the config file
 with open(path) as f:
-    # Read the contents
     content = f.read()
 
 # Parse the YAML
 data = yaml.safe_load(content)
-
-# Return a Config instance
-return Config(**data)
 ```
 
-Todo comentário é verdadeiro. Todo comentário também é redundante. Um leitor desse código consegue ver que `with open(path) as f` abre o arquivo de configuração. Dizer de novo num comentário adiciona linhas, não entendimento.
-
-A simplificação: apenas remova os comentários.
-
-```python
-with open(path) as f:
-    content = f.read()
-data = yaml.safe_load(content)
-return Config(**data)
-```
-
-A regra, no arquivo de rule always-on: *não adicione comentários que apenas narram o que o código faz.* Comentários devem explicar *por que*, não *o que*. O *o que* está ali mesmo no código. O *por que* — a restrição que não é visível no código, o tradeoff que foi considerado, a pegadinha que pegou alguém uma vez — é para isso que comentários servem.
-
-Code review sênior consistentemente marca comentários narrativos como ruído. A rule codifica esse sinal para que o agente não os gere em primeiro lugar.
+Um leitor consegue ver o que `open` e `yaml.safe_load` fazem. A regra é simples: comentários devem explicar *por que*, não *o que*. O *o que* já está no código.
 
 ## Padrão sete: o pior deles, a feature não solicitada
 
@@ -344,13 +324,11 @@ A simplificação:
 
 Uma linha. O post agora tem o campo. Se filtragem e alertas forem necessários, são mudanças *separadas* com seu próprio escopo, sua própria revisão, sua própria mensagem de commit. Juntar tudo no diff de "adicionar flag de draft" torna esse diff mais difícil de revisar e mais difícil de reverter.
 
-Esse padrão é difícil de pegar porque cada adição individual parece útil. A correção é a rule de mudanças cirúrgicas do post anterior: *cada linha alterada deve rastrear diretamente ao pedido do usuário.* Linhas que não rastreiam de volta ao pedido — mesmo boas linhas, mesmo linhas bem-intencionadas — não pertencem ao diff.
+Esse padrão é difícil de pegar porque cada adição individual parece útil. A correção é o teste de mudanças cirúrgicas: *cada linha alterada deve rastrear diretamente ao pedido do usuário.*
 
 ## Como é o pushback na prática
 
-O arquivo de rule é necessário mas não suficiente. Mesmo com a rule carregada, o agente às vezes vai produzir output com overengineering, especialmente na primeira passada. O trabalho restante é meu: eu tenho que realmente fazer pushback quando vejo um desses padrões.
-
-Como o pushback se parece, na prática, é curto e direto.
+O arquivo de rule é necessário mas não suficiente. Eu ainda preciso fazer pushback quando vejo um desses padrões. Na prática, o pushback é curto e direto.
 
 - *"Isso não precisa de uma classe. Faça como função."*
 - *"Remova todos os parâmetros de configuração exceto os dois que usamos."*
@@ -358,7 +336,7 @@ Como o pushback se parece, na prática, é curto e direto.
 - *"Remova a classe base abstrata e a única implementação concreta. Apenas inline a função."*
 - *"Eu pedi uma mudança. Reduza o diff a essa mudança."*
 
-O agente sempre obedece. A próxima iteração é sempre mais enxuta. O custo de uma rodada de pushback é pequeno. O custo de aceitar a versão com overengineering é que você agora fez o commit, e remover depois é mais caro do que recusar adicionar agora.
+A próxima iteração quase sempre é mais enxuta. Uma rodada de pushback é mais barata do que commitar a versão com overengineering e remover depois.
 
 ## O efeito composto
 

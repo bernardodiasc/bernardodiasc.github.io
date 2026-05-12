@@ -20,11 +20,7 @@ tags:
 excerpt: A journal agent that reads from your team's Slack channels for context and posts polished updates back is a small Python wrapper plus a few well-named bot tokens. This is the actual integration — token setup, conversations.history, posting receipts, channel aliases, and the small choices that keep the whole thing safe to run.
 ---
 
-The previous post was about *why* to keep an engineering journal. This one is about a specific piece of infrastructure I added to mine: a Slack integration that lets the journal agent read context from chat and post finished updates back without me having to copy-paste anything.
-
-The integration itself is a couple hundred lines of Python and a handful of small skill files. It's not impressive; it just works. The interesting part is which choices made it safe to leave alone.
-
-This post is the walkthrough — token setup, the API endpoints I use, the small abstractions that keep the agent from doing something stupid, and the receipt pattern that means I can always see what was actually posted.
+This is the walkthrough for a small Slack integration I added to my engineering journal: token setup, the API endpoints I use, the abstractions that keep the agent from doing something stupid, and the receipt pattern that means I can always see what was actually posted.
 
 <ImageFigure alt="Mid-century vintage electronics-manual-style schematic on a warm cream-tan paper background with subtle aged paper texture. The page is laid out with the flat colors and clean geometric line work of a 1960s technical-manual diagram: deep teal, warm rust-orange, muted plum, and avocado-green ink against the cream ground, with no shading or gradients — just flat geometric blocks and thin connecting lines. On the left side, a single stylized icon stands in for the chat platform: a muted-plum hash-mark made of three intersecting parallelograms, drawn in flat color. Below the hash, two small abstract token shapes sit side by side — small flat rectangles with distinct geometric markings, one in deep teal carrying a small inscribed triangle, one in rust-orange carrying a small inscribed circle. From the teal token, a clean teal directional arrow line flows rightward across the page through a small flat schematic block (a rectangle with two horizontal hatch-bars suggesting a circuit element) and continues to a flat folder icon at the right edge. Below this teal flow, a parallel flow runs in the opposite direction: starting at a flat document icon at the right edge, a clean rust-orange arrow line moves leftward through a second small schematic block, past the rust-orange token, and back into the muted-plum hash icon. The two flows never cross in the middle of the page; they converge only at the chat icon on the left. A few small decorative dots and a thin rule-mark sit in the margins, typical of vintage manual layout. Strict flat color, thin geometric lines, no shading, no readable text or letters anywhere in the composition." src="/content/posts/2026-05-04-wiring-a-journal-agent-with-slack/slack-journal-pipeline.png" caption="Read flow goes one direction. Post flow goes the other. The two never share state, never share a token, and never blur." />
 
@@ -122,11 +118,7 @@ def fetch_recent(channel_id: str, hours: int) -> list[dict]:
     return list(reversed(data["messages"]))
 ```
 
-Two notes on the choices.
-
-**Stdlib only.** No `requests`, no `slack_sdk`. The script can run in any Python environment without a dependency install. That matters because the script lives in a skill folder that gets cloned to multiple machines; making it dependency-free means it just works.
-
-**Time-windowed by default.** The endpoint accepts an `oldest` parameter; the script always sets it. There's no codepath that fetches *all* history. If I need a longer window, I pass a larger `hours` value. The default — twenty-four hours — covers most uses.
+Two choices matter: stdlib only, so the script runs anywhere without installing dependencies, and time-windowed by default. The endpoint accepts an `oldest` parameter; the script always sets it. There's no codepath that fetches *all* history. If I need a longer window, I pass a larger `hours` value. The default — twenty-four hours — covers most uses.
 
 The script then takes the raw messages and renders them into a readable context file:
 
@@ -187,7 +179,6 @@ def post_message(channel_id: str, text: str, thread_ts: str | None = None) -> di
     return data
 ```
 
-Same shape as the fetch script. Stdlib, narrow scope, clear errors.
 
 The Markdown-to-Slack-mrkdwn conversion is the small piece that makes the output look right. Slack's flavor of markup isn't quite Markdown — bold uses `*` instead of `**`, italics use `_` instead of `*`, links use `<url|text>` instead of `[text](url)`, and code blocks are similar but not identical. The render script handles the conversion before the post script touches it.
 
@@ -246,15 +237,5 @@ A few features I considered and dropped.
 **No "smart" filtering.** The fetch script returns the raw message list (minus empties). It doesn't try to filter to "important" messages. The agent reading the context file can decide what's important. Pre-filtering would just hide signal under a heuristic.
 
 The cumulative effect of those omissions is that the integration is small, predictable, and boring. Boring is a feature.
-
-## A note on the skills layer
-
-Each script is wrapped in a skill the AI agent can invoke by name:
-
-- `journal-fetch-slack` — fetches from a channel alias, writes a context file, prints the path.
-- `journal-post-slack` — takes a Markdown file, renders the Slack sibling, posts it, writes the receipt.
-- `journal-render-slack` — renders Markdown to Slack-mrkdwn without posting (useful for review).
-
-The skill body is the user-facing description of when and how to invoke the script. The script is the executable. The agent reads the skill, picks the right one for the task, and runs it. From the user's perspective, the integration is *"ask the agent in plain language."* From the system's perspective, it's a clean separation between intent (skill) and execution (script).
 
 That's the integration. Two tokens, two flows, channel aliases, receipts, and a refusal to add anything that doesn't earn its complexity. The journal benefits from Slack's context without inheriting Slack's surface area. That's all I wanted.

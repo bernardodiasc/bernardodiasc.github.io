@@ -75,7 +75,6 @@ A subagent has three properties that shape when it's worth using.
 
 The subagent's context is its own. Whatever it reads, the parent doesn't have to read. Whatever it concludes, the parent receives as a summary, not as the raw chain of reasoning. The parent's context stays focused on the parent's actual task.
 
-This sounds like a small thing. It is not. With long-running conversations on real projects, context budget is the bottleneck. Anything that reduces what's in the parent's context is buying you more useful work later in the same session.
 
 #
 
@@ -83,7 +82,6 @@ This sounds like a small thing. It is not. With long-running conversations on re
 
 Because the subagent has its own system prompt, it can be tuned for one specific job. The security-review subagent doesn't have to be good at writing code or generating tests; it has to be good at reading rules and comparing implementations against them. The narrower the specialization, the cleaner the output.
 
-A general-purpose agent doing a security review is acceptable. A subagent dedicated to that one job, with rules baked into the prompt and a reporting format defined in advance, is reliably better at it.
 
 #
 
@@ -115,7 +113,6 @@ The temptation, once you've written one, is to use them for everything. Resist.
 
 **Don't subagent for context you actually want polluted.** Sometimes the "pollution" is exactly the point. If you're trying to build up the parent's understanding of a system, doing the reading in the parent is correct. The subagent gives you a summary; the parent gives you fluency. Different needs.
 
-**Don't subagent to escape from a tough question.** If the parent agent is struggling with something, sending it to a subagent doesn't make the underlying problem easier. It just hides the struggle inside an opaque box.
 
 ## What the parent and subagent each handle
 
@@ -153,16 +150,10 @@ This is the third leg of the triangle, after rules and skills.
 - **Skills** are on-demand procedures the parent invokes by name. They run in the parent's context.
 - **Subagents** are isolated AI instances spawned by the parent. They run in their own context.
 
-Each addresses a different need:
-
-- Rules raise the floor on the parent's behavior.
-- Skills give the parent reusable procedures.
-- Subagents give the parent reusable *colleagues* — specialized counterparts that handle the work the parent shouldn't be doing.
-
-You'll usually want all three on a non-trivial project. Rules make the parent better at the project. Skills make the parent faster at recurring tasks. Subagents take the heavy specialized work off the parent's plate.
+You'll usually want all three on a non-trivial project: rules raise the floor, skills give procedures, and subagents handle the heavy specialized work the parent shouldn't keep in its own context.
 
 ## A small piece of advice
 
-If you've never written a subagent and you're considering one, the first one I'd suggest writing is exactly the security-review pattern: read-only, narrow specialization, structured output. Tomorrow's post is a walkthrough of one I actually use. The reason I'd suggest that one first is that it gives you immediate, visible value — you ask the parent "is this change safe?" and you get back a structured report that would have taken twenty minutes to assemble manually.
+If you've never written a subagent, start with the security-review shape: read-only, narrow specialization, structured output. Tomorrow's post walks through the one I actually use.
 
-Once you've felt how that's different from doing the same review in the parent's context, you'll start spotting other tasks that fit the same shape. The drawer fills up the same way the skill drawer did, one specialized colleague at a time.
+Once you've felt how that's different from doing the same review in the parent's context, you'll start spotting other tasks that fit the same shape.

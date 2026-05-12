@@ -19,7 +19,7 @@ tags:
 excerpt: Sentei com um agente de IA para planejar uma série de 22 posts. Não esperava que o planejamento em si fosse a parte mais interessante — mas foi, e a maior parte do que aprendi é sobre como usar essas ferramentas, não sobre o que escrever.
 ---
 
-Sentei com um agente de IA para planejar uma série sobre agentes de IA. Sim, é recursivo. Não, eu não tinha previsto isso quando comecei.
+Sentei com um agente de IA para planejar uma série sobre agentes de IA.
 
 O resultado foi um arquivo de planejamento de 500 linhas com 22 posts agrupados em 6 lotes temáticos, com categorias atribuídas, datas agendadas, briefings de imagem escritos e uma política de segurança de conteúdo anexada. Mas o plano em si não foi o que me surpreendeu. O que me surpreendeu é o quanto a *sessão de planejamento* me ensinou sobre como trabalhar com essas ferramentas — e o quanto disso agora aparece no resto do meu fluxo de trabalho.
 
@@ -33,7 +33,7 @@ A maioria das ferramentas de IA para código tem algo que chamam de **plan mode*
 
 Por muito tempo eu tratei o plan mode como uma versão pior do modo "real" de agente. Menos poder, menos throughput, menos satisfatório. Então eu pulava. Abria o agent mode direto, despejava minha ideia e ficava vendo o agente começar a editar arquivos em segundos. Às vezes isso funciona. Para qualquer coisa maior que uma mudança de uma linha, é um pequeno desastre.
 
-Olha o que eu não tinha percebido: no agent mode, o modelo quer *fazer alguma coisa*. Ele é enviesado a produzir diffs. Faça uma pergunta vaga e ele vai começar a "corrigir" coisas. Quando você percebe que não queria aquilo, já tem um design meio implementado grudado na árvore.
+Olha o que eu não tinha percebido: no agent mode, o modelo quer *fazer alguma coisa*. Ele é enviesado a produzir diffs. Faça uma pergunta vaga e ele vai começar a "corrigir" coisas. Quando você percebe que não queria aquilo, já tem um design meio implementado grudado no código.
 
 O plan mode remove essa pressão. O agente não pode agir, então tudo que ele pode fazer é pensar em voz alta com você. Modelo mais barato, menos em jogo, sem diffs para limpar. Você separa o pensar do fazer, e o pensar melhora porque ninguém está correndo para um commit.
 
@@ -45,7 +45,7 @@ Comecei esta série de posts no plan mode. Deveria ter feito isso para tudo que 
 
 A outra coisa que mudei no meio da sessão foi como eu fazia perguntas.
 
-Quando você diz "o que você acha sobre como organizar as categorias?", o modelo te dá um parágrafo ponderado. Você lê, concorda em grande parte, acena, e avançou exatamente um centímetro. Aí ele te faz uma pergunta de volta, você devolve um parágrafo, e depois de trinta minutos disso você percebe que teve uma conversa agradável e tomou três decisões reais.
+Quando você diz "o que você acha sobre como organizar as categorias?", o modelo te dá um parágrafo ponderado. Você lê, concorda em grande parte, acena, e avança exatamente um centímetro. Aí ele te faz uma pergunta de volta, você devolve um parágrafo, e depois de trinta minutos disso você percebe que teve uma conversa agradável e tomou três decisões reais.
 
 O que funcionou melhor — pra mim, nesse tipo de tarefa — foi pedir ao agente que me desse **opções estruturadas**. Três ou quatro alternativas, cada uma com uma justificativa de uma linha, e uma recomendação. Aí eu escolhia. Às vezes pedia uma segunda rodada quando ele tinha mais contexto.
 
@@ -62,7 +62,7 @@ O que mudava a cada vez não era a *quantidade* de conteúdo — essa cresceu de
 - **Segurança de conteúdo**: os arquivos de rules que eu estaria escrevendo para o blog seriam commitados num repositório público. Então não podem conter nomes de projetos internos do meu trabalho, nomes de clientes, nomes de colegas, nenhum dado. Isso adicionou uma seção inteira à rule de convenções de escrita e mudou como eu escrevi os próprios tópicos dos posts.
 - **Neutralidade de vendor**: eu quase intitulei metade da série "Cursor Skills", "subagents do Cursor", etc. Aí notei que estava efetivamente escrevendo material de marketing para um produto. A série é sobre **agentes de IA para código** como categoria — Cursor, Claude Code, Copilot, o que vier depois. Fiz o agente voltar e reescrever cada título para refletir isso. (Uma exceção: um post especificamente sobre portabilidade entre ferramentas.)
 - **Convenções de imagem**: no começo os posts tinham uma mistura de "precisa de um diagrama", "talvez uma imagem aqui" e nada. Deixei explícito: cada post recebe pelo menos três imagens, cada bloco `<figure>` tem um `alt` bom o suficiente para ser um prompt de geração de imagem, cada `figcaption` adiciona algo que o alt não tem.
-- **Datas e cronologia**: posts no blog são listados por data. Se eu simplesmente desse a todos a data de hoje, a ordem se dissolveria em ruído. Então retroagimos as datas — um por dia, terminando hoje, começando três semanas atrás — para dar a cada post uma URL limpa e uma posição legível no arquivo.
+- **Datas e cronologia**: posts no blog são listados por data. Se eu simplesmente desse a todos a data de hoje, a ordem se dissolveria em ruído. Então recuamos as datas — um por dia, terminando hoje, começando três semanas atrás — para dar a cada post uma URL limpa e uma posição legível no arquivo.
 - **Categorias**: comecei com cinco categorias e uma regra de bolso vaga. No final eram seis (a nova é "developer-tooling") e uma árvore de decisão real sobre qual post cai onde.
 
 Nada disso era visível no início. Cada restrição surgiu porque eu tentei aplicar o plano a um post específico e algo não encaixou.
@@ -93,13 +93,8 @@ Então: planeje uma vez, planeje tudo, depois execute em lotes temáticos. Mais 
 
 ## O que eu faria diferente da próxima vez
 
-Algumas coisas teriam me economizado umas duas horas se eu soubesse desde o início.
-
-- **Decida as categorias antes de qualquer coisa.** Mudei a lista de categorias no meio do caminho e tive que revisitar cada tópico de post. O conjunto de categorias é a coisa barata de acertar cedo.
-- **Escreva a política de segurança primeiro.** Mesma lógica. Se eu tivesse escrito "sem nomes internos, sem nomes de clientes, sem IDs reais" logo na primeira mensagem, as ideias de tópicos teriam chegado já abstraídas.
-- **Escolha um registro de voz por post explicitamente.** Alguns posts são casuais, outros são reflexivos. Eu estava deixando implícito, e os rascunhos voltavam num cinza neutro de LLM. Nomear o registro de antemão resolve isso na hora.
-- **Não dê título às coisas no plan mode.** Títulos são a parte mais opinada de um post. A primeira tentativa do agente para um título geralmente é genérica demais; a minha é geralmente esperta demais. Deveria ter deixado títulos por último.
+Algumas coisas teriam me economizado tempo se eu soubesse desde o início: decidir as categorias antes de qualquer coisa, escrever a política de segurança primeiro, escolher um registro de voz por post explicitamente, e deixar títulos por último.
 
 Sinceramente, a maior lição é essa: **a sessão de planejamento é o trabalho.** Uma vez que o plano existe, a escrita é em grande parte transcrição com notas de estilo. A parte difícil — o que dizer, em que ordem, com que omissões — acontece antes de qualquer post ser escrito. Isso é verdade para escrita normal também, mas com uma IA no loop o gargalo se move tão para cima que dá quase para ver acontecendo.
 
-Enfim. Mais vinte e um posts na fila depois desse. Vamos ver como isso vai.
+

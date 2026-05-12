@@ -34,7 +34,6 @@ Before I get into the patterns, the one-line test that matters more than any of 
 
 That's the check. It's in the always-on rule file the agent loads at the start of every conversation. Most of what follows is just specific shapes that, when you look at the resulting code, the answer is clearly *yes*.
 
-The check works because senior engineers — the kind who've maintained codebases over years — have a strong allergy to code that does more than the moment requires. They've seen too many cleverly-abstracted helpers calcify into legacy. They've debugged too many mock-everything tests. They know that 50 lines that anyone can read beats 200 lines that only the original author can extend.
 
 The agent, asked to apply that check to its own output, becomes pretty good at simplifying. Not perfect, but pretty good.
 
@@ -284,37 +283,18 @@ The rule: **test the behavior the user cares about, not the implementation that 
 
 ## Pattern six: comments that narrate the code
 
-A small one, but it adds up. The agent has a tendency to add comments that simply restate what the next line of code does.
-
-The first take:
+A small one, but it adds up: the agent adds comments that restate the next line of code.
 
 ```python
 # Open the config file
 with open(path) as f:
-    # Read the contents
     content = f.read()
 
 # Parse the YAML
 data = yaml.safe_load(content)
-
-# Return a Config instance
-return Config(**data)
 ```
 
-Every comment is true. Every comment is also redundant. A reader of this code can see that `with open(path) as f` opens the config file. Stating it again in a comment adds line count, not understanding.
-
-The simplification: just remove the comments.
-
-```python
-with open(path) as f:
-    content = f.read()
-data = yaml.safe_load(content)
-return Config(**data)
-```
-
-The rule, in the always-on rule file: *don't add comments that just narrate what the code does.* Comments should explain *why*, not *what*. The *what* is right there in the code. The *why* — the constraint that's not visible from the code, the trade-off that was considered, the gotcha that bit somebody once — is what comments are for.
-
-Senior code review consistently flags narration comments as noise. The rule encodes that signal so the agent doesn't generate them in the first place.
+A reader can see what `open` and `yaml.safe_load` do. The rule is simple: comments should explain *why*, not *what*. The *what* is already in the code.
 
 ## Pattern seven: the worst one, the unrequested feature
 
@@ -343,13 +323,11 @@ The simplification:
 
 One line. The post now has the field. If filtering and warnings are needed, they're *separate* changes with their own scope, their own review, their own commit message. Bundling them into the diff for "add draft flag" makes that diff harder to review and harder to revert.
 
-This pattern is hard to catch because each individual addition feels helpful. The fix is the surgical-changes rule from the previous post: *every changed line should trace directly to the user's request.* Lines that don't trace back to the request — even good lines, even well-intentioned lines — don't belong in the diff.
+This pattern is hard to catch because each individual addition feels helpful. The fix is the surgical-changes test: *every changed line should trace directly to the user's request.*
 
 ## What pushback actually looks like
 
-The rule file is necessary but not sufficient. Even with the rule loaded, the agent will sometimes produce overengineered output, especially on the first pass. The remaining work is mine: I have to actually push back when I see one of these patterns.
-
-What pushback looks like, in practice, is short and direct.
+The rule file is necessary but not sufficient. I still have to push back when I see one of these patterns. In practice, the pushback is short and direct.
 
 - *"This doesn't need a class. Make it a function."*
 - *"Drop all the configuration parameters except the two we use."*
@@ -357,7 +335,7 @@ What pushback looks like, in practice, is short and direct.
 - *"Drop the abstract base class and the single concrete implementation. Just inline the function."*
 - *"I asked for one change. Reduce the diff to that change."*
 
-The agent always complies. The next iteration is always tighter. The cost of one round of pushback is small. The cost of accepting the overengineered version is that you've now committed it, and removing it later is more expensive than refusing to add it now.
+The next iteration is almost always tighter. One round of pushback is cheaper than committing the overengineered version and removing it later.
 
 ## The compound effect
 

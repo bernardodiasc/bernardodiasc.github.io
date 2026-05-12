@@ -24,9 +24,6 @@ I've spent the last few weeks writing posts about how I use AI coding agents. Ru
 
 I'm going to write that list anyway. Not because vulnerability is content — it can be, and that's a different post — but because I think the list itself is interesting. The shape of what an early-but-not-beginner practitioner is still figuring out probably says something useful about where the field actually is.
 
-If you know any of this better than I do — and several of you almost certainly do — I'd be glad to hear from you. The contact channels for the blog are at the bottom; the comment thread is open under each post. Honest corrections are the most valuable thing I get out of writing publicly.
-
-This post is tagged `human-written`. No assistant helped me put this list together. I wanted the discomfort to be on the page exactly as I'm carrying it.
 
 <ImageFigure alt="Antique cartography on aged parchment paper with deckled edges, slight foxing stains, and the warm sepia tone of a 17th-century explorer's hand-drawn map. The composition shows several distinct landmasses scattered across the page like islands in an unknown sea, separated by hand-inked ripple-lines suggesting ocean. Several of the landmasses are rendered in confident sepia line work with finely detailed cross-hatching, tiny inset symbols (small mountain peaks, miniature huts, tiny tree clusters, decorative inland flourishes), and clean cross-hatched coastline shading — these are the surveyed regions, fully inked in. Other landmasses are drawn only as light dashed sepia outlines with vague boundaries that fade off into the surrounding sea, their interiors empty of detail. Above the dashed regions, small filigree question-mark glyphs float in delicate sepia ink. From the sea around the dashed regions, two small antique sea-monster silhouettes — a coiled serpent head and a tentacled creature — rise as if in classic 'here be dragons' style. In the lower-right corner of the map, an ornate compass rose sits with eight delicate points; in the upper-left corner, an empty decorative cartouche banner. A few tiny silhouettes of three-masted ships dot the open water. Sepia ink on aged parchment, hand-drawn flourishes throughout, no readable text or letters anywhere in the composition." src="/content/posts/2026-05-09-what-i-havent-learned-yet/knowledge-map-with-gaps.png" caption="The inked regions are where I can write confidently. The dashed regions are where I either copy charts or hand off. The whole point of this post is to name the second territory out loud." />
 
@@ -48,12 +45,7 @@ If you've built an MCP server and have opinions about when it's the right tool v
 
 This is an embarrassing one. The agent project I work on is built on LangGraph — a Python framework for building stateful, multi-step AI agents using a graph of nodes. I've contributed plenty of code to that project. The graph runs. Things go through it.
 
-But if I'm honest, my mental model of *how the runtime actually works* is fuzzier than it should be. Specifically:
-
-- **Checkpointing.** I know LangGraph persists state to a checkpointer (Postgres in our case). I know the format is roughly msgpack. I do not have a deep model of how the checkpointer reconciles concurrent updates, how the channel system interacts with the runtime in edge cases, what the failure modes are when the graph is interrupted mid-step.
-- **Streaming and interruption.** The graph supports streaming intermediate results and human-in-the-loop interrupts. I've used both. I don't have a clear sense of the exact lifecycle — what gets saved, when, in what order — when an interrupt happens mid-node.
-- **Subgraph composition.** I've written graphs that use subgraphs. I roughly know how state flows in and out. The exact semantics of channel mapping at the boundary, especially when the parent and subgraph have overlapping channel names, I've worked around rather than understood.
-- **The serialization layer.** Custom Pydantic models with non-trivial fields (datetimes, enums, nested models) sometimes don't round-trip cleanly through the checkpointer. I have a few workarounds. I do not have a unified model of *why* certain shapes break.
+But if I'm honest, my mental model of *how the runtime actually works* is fuzzier than it should be. I know the broad pieces — checkpointing, streaming, interruption, subgraph composition, serialization — but I don't have the deep model I want for their edge cases. What gets saved, when, in what order? How do overlapping channels behave at subgraph boundaries? Why do some Pydantic shapes round-trip cleanly through the checkpointer and others don't?
 
 I've shipped working code despite these gaps. The pattern is: copy a shape that works elsewhere in the codebase, adapt it to my case, run the tests. When something is weird, ask the agent or a teammate. The teammate, in particular, has a much deeper model of LangGraph than I do, and several of these gaps closed only when they explained the runtime to me.
 
@@ -117,22 +109,12 @@ What I want to know: which signals indicate that fine-tuning is the right move? 
 
 ## What I'm doing about it
 
-I'm not doing nothing. I've been chipping away at these gaps with low-friction reading and small experiments. I've started — and abandoned — a couple of toy projects to push specific pieces of LangGraph that I don't understand.
+I'm not doing nothing, but I'm also trying not to dabble shallowly in all of it. The first area I should genuinely commit to is evaluation infrastructure, because better evals make better prompt engineering possible, and better prompt engineering makes better skills and subagents. After that, probably LangGraph internals, because the project I work on uses them daily.
 
-But I've also been deliberate about not rushing. Each of these areas needs sustained investment, and I'd rather pick one and get to real fluency than dabble in all of them and remain shallow across the board.
-
-The first one I'll genuinely commit to is probably evaluation infrastructure. It's the one whose payback compounds across every other gap on this list. Better evals make better prompt engineering possible. Better prompt engineering makes better skills and subagents. The whole stack levels up if the bottom layer (objective measurement) gets stronger.
-
-After that, probably the LangGraph internals — because the project I work on uses them daily, and the gap there has the most direct cost on my work.
-
-MCP servers, multi-agent coordination, fine-tuning — those will wait. They're not adjacent enough to my current work to merit the investment yet.
+MCP servers, multi-agent coordination, and fine-tuning can wait until they're closer to my current work.
 
 ## A small request
 
-I'll close with the same request I started with. If any of this is something you know well, I want to learn from you.
+If any of this is something you know well, I want to learn from you. Nobody has a complete map of this territory yet, and pretending otherwise ages badly.
 
-The community of practitioners working on this stuff seriously is not large. Each of us is sitting on private knowledge that would be valuable to the rest. I've tried to share what I know in this series. I'd be glad to be on the receiving end of corrections, in particular for the parts of the list above where I'm clearly fumbling.
-
-The honest version is that nobody, today, has a complete map of the territory. We're all early. Pretending otherwise is the kind of thing that ages badly. So I'm naming what I haven't learned yet, on purpose, because I'd rather be on the receiving end of useful corrections than on the receiving end of "you confidently posted that and you were wrong."
-
-If you've read this far and you have something to teach me — about MCP, LangGraph, evaluation, prompts, anything else on the list — please send it. I'll read it carefully.
+If you have something to teach me — about MCP, LangGraph, evaluation, prompts, anything else on the list — please send it. I'll read it carefully.

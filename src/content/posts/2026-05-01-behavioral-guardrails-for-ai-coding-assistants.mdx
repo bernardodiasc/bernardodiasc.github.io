@@ -20,19 +20,11 @@ tags:
 excerpt: There are four behaviors I want any AI coding agent to follow, regardless of what model is behind it. Think before coding. Keep it simple. Make surgical changes. Define what done means. Each one came from a real mistake I watched the agent make. Here's why I encoded them as a rule file.
 ---
 
-I have an always-on rule file at the top of every project I work in. It's about a hundred lines long. It doesn't describe my tech stack, my coding style, or my project conventions. It describes four behaviors I want the AI coding agent to follow when it's writing or reviewing code.
+I have an always-on rule file at the top of every project I work in. It doesn't describe my tech stack, coding style, or project conventions. It describes four tool-agnostic behaviors I want the AI coding agent to follow when it's writing or reviewing code.
 
-The rule is loaded into every conversation. Every model I use reads it before doing anything. The behaviors are deliberately tool-agnostic — they don't depend on which AI agent I'm running today, or which language model is behind it. They're about the same kinds of mistakes any LLM-assisted coding workflow makes when you don't push back.
-
-Each behavior came from watching the agent get something wrong, more than once, in a way that felt structural rather than incidental. This post is about those four behaviors, why they're each worth their own section in the rule file, and the work each one does in practice.
+Each behavior came from watching the agent get something wrong more than once. The four are loosely adapted from observations Andrej Karpathy has shared about LLM coding pitfalls; the wording and framing here are mine.
 
 <ImageFigure alt="Classical Greco-Roman architectural rendering in confident pen-and-ink line work with dramatic cross-hatched chiaroscuro shading, on cream parchment paper. Four tall fluted Doric columns are arranged in a row across the foreground, each rendered with the precise vertical fluting, sharp echinus capitals, and stepped stylobate base of classical Greek temple architecture. Each column carries a small carved relief medallion at the height where its capital meets the shaft, and the four medallions are visibly different from one another: the first column's medallion shows a small profile of a thoughtful head with a slightly furrowed brow, the second shows a small stylized branch with several leaves clipped close as if pruned, the third shows a small finely-detailed scalpel-shaped tool, and the fourth shows a small laurel wreath surrounding a circular target. Behind and between the columns, a stone road paved in receding rectangular flagstones extends toward a distant horizon line where soft atmospheric haze blurs the perspective. The flagstone lines converge cleanly to a single vanishing point in the upper middle of the composition. Strong raking light enters from the upper left, casting precise classical shadows behind each column. Confident pen-and-ink cross-hatching for the shaded sides of the columns and the underside of the architrave detail; cream parchment background; no readable text or letters anywhere in the composition." src="/content/posts/2026-05-01-behavioral-guardrails-for-ai-coding-assistants/four-pillars.png" caption="Four behaviors, four columns. The road runs between them. The agent walks through." />
-
-## Where the four came from
-
-The four are loosely adapted from observations Andrej Karpathy has shared about the kinds of pitfalls LLMs fall into when writing code. The wording is mine, the framing is mine, but the underlying observation is his: there are recurring failure modes that are predictable once you know what to look for, and worth naming explicitly so the agent (and you) can avoid them.
-
-I'll walk through each one with the wording I actually use, the failure mode it addresses, and the kind of work it does on real tasks.
 
 ## 1. Think Before Coding
 
@@ -79,7 +71,7 @@ If yes, simplify.
 
 The "would a senior engineer say this is overcomplicated?" check is the one that does the most work. It's a single mental test the agent can apply to its own output before committing it. The model is good at running that test on itself once it's been told to. Without the prompt, it doesn't run it at all.
 
-I'll write a whole post tomorrow about what this looks like in practice — the specific shapes of overengineering, the before/after diffs, the moments where I had to push back on a 200-line solution that wanted to be 50. The short version: this rule, on its own, changed more about the quality of generated code than any other single change I made.
+The short version: this rule, on its own, changed more about the quality of generated code than any other single change I made.
 
 ## 3. Surgical Changes
 
@@ -156,13 +148,9 @@ I also tried adding more specific behaviors — "always write tests," "prefer fu
 
 The four behaviors that stayed are the ones that apply *regardless of stack, project, or task*. Think before you act. Don't overengineer. Touch what you must, no more. Define done. Those four hold across every codebase I've ever worked in.
 
-## A short closing tradeoff
-
-These guidelines bias the agent toward caution over speed. For trivial tasks — renaming a variable, fixing a typo — they're overhead. The rule file says so explicitly, with one line at the top: *"For trivial tasks, use judgment."*
-
-That escape hatch matters. A rule that turns a one-line fix into a multi-step planning exercise is making the system slower, not better. The point of the rule is to install good defaults for the *non-trivial* case, where the agent's tendency to act prematurely or overengineer would otherwise produce real damage. On trivial tasks, the agent recognizes the lower stakes and skips the ceremony.
-
 ## How I'd know the rule is working
+
+These guidelines bias the agent toward caution over speed. For trivial tasks — renaming a variable, fixing a typo — they're overhead, so the rule file has an escape hatch: *"For trivial tasks, use judgment."* For non-trivial work, the success criterion is simple.
 
 The rule file ends with a short success criterion of its own:
 

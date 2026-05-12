@@ -52,7 +52,6 @@ Essa é a forma completa. Três campos de frontmatter, um corpo em Markdown, sal
 
 A maioria dos agentes de código com IA modernos tem alguma versão disso. Cursor chama de rules. Claude Code chama de `CLAUDE.md`. Outras ferramentas têm seus próprios nomes. O formato de arquivo ainda não é padronizado, mas o conceito subjacente é: **orientação por projeto, por padrão de arquivo, carregada automaticamente no contexto do agente.**
 
-Vou escrever este post no formato `.mdc` do Cursor porque é o que eu uso. Os padrões se transferem. Se você está numa ferramenta diferente, os arquivos equivalentes vão parecer ligeiramente diferentes, mas o raciocínio é o mesmo.
 
 ## O frontmatter faz o roteamento
 
@@ -90,7 +89,7 @@ alwaysApply: false
 
 Sem globs, não é always-applied. Essa rule aparece no catálogo de rules disponíveis do agente, mas só é anexada quando o agente decide que é relevante — geralmente porque o pedido do usuário corresponde à descrição. Use isso para rules procedurais que não estão vinculadas a um arquivo, tipo "os passos para adicionar uma nova feature do tipo X."
 
-Os três modos juntos permitem construir uma biblioteca de rules onde cada rule é carregada **apenas quando é útil**. Parece óbvio. Não é o que a maioria dos projetos faz. A maioria dos projetos ou joga tudo num único arquivo gigante sempre ativo (o que custa tokens em cada request e deixa as instruções do agente confusas) ou pula rules inteiramente (o que deixa o agente reinventando as convenções do projeto toda sessão). Rules roteadas são o caminho do meio.
+Os três modos juntos permitem construir uma biblioteca de rules onde cada rule é carregada **apenas quando é útil**. Parece óbvio. Não é o que a maioria dos projetos faz. Rules roteadas são o caminho do meio entre um arquivo gigante sempre ativo e deixar o agente reinventar as convenções do projeto toda sessão.
 
 <ImageFigure alt="Ilustração técnica isométrica em traço confiante de nanquim com hachura cruzada para sombreamento, sobre fundo de papel creme quente. Uma longa faixa horizontal de retângulo arredondado atravessa o meio da composição, desenhada em perspectiva isométrica tridimensional com sombreamento hachurado sutil por baixo — este é o contexto de trabalho ativo. No canto superior esquerdo, uma coluna vertical de seis pequenas folhas de papel dobradas flutua no ar, cada folha renderizada com uma dobra de canto e um único ícone pequeno carimbado no topo (uma pena, uma pequena chave, uma engrenagem, uma pincelada, uma tag, um medidor — nenhum ícone repetido, sem texto em nenhuma folha). De cada folha, uma fina seta curva de nanquim desce em direção à faixa central: apenas três das seis linhas realmente se conectam à faixa e percorrem sua superfície superior; as outras três se desvanecem em traços pontilhados que afinam e se dissolvem antes de alcançá-la. Abaixo da faixa central, um pequeno corte transversal em detalhe mostra uma única folha de papel sendo tocada por uma pequena mão desenhada, indicando o arquivo em que o agente está trabalhando atualmente. Sombreamento hachurado de livro técnico em toda parte, nanquim sépia e cinza quente sobre papel creme, nenhum texto ou letra legível em qualquer parte da composição." src="/content/posts/2026-04-24-rules-as-project-memory/glob-routing-diagram.png" caption="O glob é a ficha de roteamento. A rule espera no arquivo até o agente abrir um arquivo que corresponda ao seu padrão." />
 
@@ -129,15 +128,15 @@ As rules que realmente mudaram o comportamento do agente, pra mim, foram as curt
 
 Quando uma rule cresce além de duas páginas, começo a me perguntar se são duas rules tentando ser uma. Na maioria das vezes, são.
 
-## Rules e skills, em uma frase
+## Rules, skills e subagents
 
-Algumas pessoas vão ler isso e perguntar: qual a diferença entre uma rule e uma "agent skill" ou um "subagent"? Ambos vão ter seus próprios posts. A versão bem curta:
+A versão curta antes dos próximos posts entrarem mais fundo:
 
 - **Rules** carregam automaticamente quando arquivos correspondem. Elas direcionam o comportamento do agente em tarefas existentes.
 - **Skills** são carregadas sob demanda pelo nome. São mais como procedimentos reutilizáveis ou playbooks.
 - **Subagents** são invocações isoladas de um agente menor para uma tarefa específica. Mantêm o trabalho fora do seu contexto principal.
 
-Você normalmente vai precisar dos três. Rules são a fundação porque são baratas e ambiente. Os outros dois entram em cena quando você supera o que rules sozinhas conseguem fazer.
+Você normalmente vai precisar dos três. Rules são a fundação porque são baratas e silenciosas. Os outros dois entram em cena quando você supera o que rules sozinhas conseguem fazer.
 
 <ImageFigure alt="Díptico de ilustração técnica isométrica em nanquim com hachura cruzada, sobre fundo de papel creme quente. A cena é dividida ao meio por uma fina linha vertical de nanquim. O painel esquerdo mostra uma pequena figura desenhada em pé numa mesa em perspectiva isométrica de três quartos, na frente de uma tela da qual um longo rolo de papel se desenrola pela borda superior e se acumula na mesa; o rolo é representado como barras horizontais de hachura densamente empilhadas sugerindo muitas linhas de instruções, sem texto legível. Ao lado da mesa, uma pequena bandeja de saída contém uma pilha de papéis; o papel do topo carrega uma pequena bandeira desenhada à nanquim com um X carimbado. O painel direito mostra a mesma bancada isométrica, mas o rolo caindo da tela agora é apenas um pequeno cartão dobrado com duas linhas curtas de hachura. Acima da tela deste lado, uma pequena forma de paper de rule dobrada com dobra de canto flutua no ar e alimenta a tela por uma fina linha de nanquim. A bandeja de saída aqui contém uma pilha limpa de papéis, o do topo carregando um pequeno carimbo de floreio de marca de verificação. Sombreamento hachurado de livro técnico, nanquim sépia e cinza quente sobre papel creme, visual vintage de como as coisas funcionam, nenhum texto ou letra legível em qualquer parte da composição." src="/content/posts/2026-04-24-rules-as-project-memory/rule-vs-no-rule-output.png" caption="A rule move as convenções para fora de cada prompt e para dentro de um arquivo que o agente lê automaticamente. O chat fica mais curto; a saída fica mais estável." />
 

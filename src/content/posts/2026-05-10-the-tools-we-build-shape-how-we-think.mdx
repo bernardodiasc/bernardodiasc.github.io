@@ -22,17 +22,10 @@ There's an old idea that the tools we use shape the way we think. Marshall McLuh
 
 I've been thinking about a version of that idea for the last few months, watching what happens to my own mental shape as I've been building AI tooling around the way I work. The straightforward effect is the one everyone expects: the tools save time, work compounds, capabilities stack. That's been true for me. What I didn't expect was that, three months in, *I'd be approaching unfamiliar problems with a different mental shape than I had before*. Not because my brain changed. Because the system around my brain changed, and the way I think about problems started reflecting the system I'm thinking inside.
 
-This is a slow post. I'm not sure I'm going to land it cleanly. But I want to write it down anyway because the experience of noticing it has been one of the more genuinely interesting things to come out of this period, and I haven't seen it described in the practitioner posts I read.
 
 <ImageFigure alt="Art Nouveau composition on warm cream paper with subtle ivory paper texture, in the flowing organic line work and limited palette of an Alphonse Mucha or William Morris print — sage green, warm cream, dusty gold, and faint blush, with confident ink contours over soft watercolor washes. At the center of the page, an elliptical decorative panel holds a stylized human figure in profile with the head tilted slightly upward in contemplation, the long flowing hair rendered in characteristic Art Nouveau curling-line gestures. From the crown of the head, ornamental flowing tendrils — like flowing hair, vines, and smoke combined — curl outward and gradually resolve, within their winding paths, into recognizable but stylized symbols: one tendril knots itself into a stylized scroll-and-folder shape with ornamental edges, another twists around a leafy spanner motif, another forms a small heraldic shield wreathed in laurel, another opens into a small book bound in flowing vines. Surrounding the central elliptical panel, two decorative concentric organic loops — like Art Nouveau ribbon-banners or vine swirls — frame the composition: an inner ribbon-loop closer to the figure and an outer ribbon-loop further out, each ornamented with stylized leaves, small five-petal flowers, and subtle gold dots. The two loops connect to one another via gracefully curving arrow-flourishes that pass through the figure's head. An ornamental border of intertwined vines and small blossoms frames the entire composition. No readable text or letters anywhere in the composition." src="/content/posts/2026-05-10-the-tools-we-build-shape-how-we-think/brain-with-pathways.png" caption="Two loops, one feeding the other. The inner loop is what we usually mean when we talk about productivity. The outer loop is the slower, stranger one — and it's where the real transformation lives." />
 
-## The first loop — tools change the work
-
-This one is well-documented and easy to talk about. The tools I've built — rules, skills, subagents, the journaling integration — have made specific work cheaper. I've covered each of those in their own posts in this series. The first loop is:
-
-> Build a tool. The tool reduces friction on a recurring task. The recurring task becomes faster. You do it more reliably. The output gets steadier.
-
-That's the whole loop. It's real. It's worth doing. It's also not the interesting loop.
+The first loop is familiar: build a tool, reduce friction on a recurring task, do the task more reliably. It's real. It's worth doing. It's also not the interesting loop.
 
 ## The second loop — changed work changes how you think about work
 
@@ -70,25 +63,13 @@ In each case, a constraint or pattern I encoded in the AI tooling has migrated u
 
 ## What's actually happening, at a slightly deeper level
 
-I want to try to say what I think is going on, even though I'm not sure I have it right.
-
 When you spend a long time operating in a system with certain shapes — explicit pipelines, structured artifacts, written rules, audited reviews — those shapes become *available* to your thinking even outside the system. Cognitive scientists have a name for something like this; the practice of mental models being shaped by repeated tool use isn't novel. The new thing, for me, is watching it happen *with AI tooling specifically*, where the shapes you're internalizing aren't the shape of a calculator or a programming language, but the shape of *a structured way of breaking down problems and assigning sub-problems to specialized handlers*.
 
-The tools I've described in this series each embody a particular way of decomposing work:
-
-- Rules embody *the conventions of the project* in a form that can be loaded automatically.
-- Skills embody *recurring procedures* in a form that can be invoked by name.
-- Subagents embody *specialized roles* in a form that can be spawned for one task.
-- The journaling integration embodies *legibility across time* in a form that survives sessions.
-- The portable layout embodies *vendor independence* in a form that survives tools.
-
-Each of those is a small, concrete instance of a more general intellectual habit. *Encode the conventions. Cache the procedures. Specialize the roles. Persist the records. Decouple from the runtime.* Those five habits are not new — engineers and writers have practiced them for decades. What's new is having a system that *requires me to practice them*, every day, on every task, because the system breaks down if I don't.
+Each tool is a concrete instance of a broader habit: encode the conventions, cache the procedures, specialize the roles, persist the records, decouple from the runtime. Those habits are not new. What's new is having a system that requires me to practice them every day because the system gets worse when I don't.
 
 That requirement is the discipline. The discipline reshapes how I think.
 
 ## Why this matters beyond me
-
-I don't want to overgeneralize from a single practitioner's experience. But I think there's a broader implication worth at least naming, if not defending.
 
 If the second loop is real — if working inside well-shaped AI systems quietly reshapes the working engineer's cognitive habits — then the question of *which AI systems we build, today* is much bigger than the question of *which features ship in the next release*. The systems are formative. The habits they install in their users will outlive any specific tool.
 
@@ -100,10 +81,8 @@ The choice of which kind of system to build for yourself, and which kind to enco
 
 ## The honest closing
 
-This post might be wrong. It might be over-reading my own experience, projecting more importance onto the second loop than it deserves. Three months is a short window for claims about mental shape.
+Three months is a short window for claims about mental shape. I'd want to come back to this in a year and see whether the patterns have stabilized or whether they were the temporary novelty of a new tool.
 
-I'd want to come back to this in a year and see whether the patterns I'm describing have stabilized into something durable or whether they were the temporary novelty of a new tool. I suspect they'll stabilize. I'm not certain.
-
-What I am certain about is the noticing. Whatever's happening, something has been quietly different in how I approach problems, and I've felt it without searching for it. The first loop — tools save time — is the one everyone talks about. The second loop — changed work changes how we think about work — is the one I think will turn out to matter more, in the long run, for the people who lean into it deliberately.
+What I am certain about is the noticing. Something has been quietly different in how I approach problems, and I've felt it without searching for it. The first loop — tools save time — is the one everyone talks about. The second loop — changed work changes how we think about work — is the one I think will turn out to matter more, in the long run, for the people who lean into it deliberately.
 
 That's the whole post. The tools we build shape how we think. We've known that about hammers and pens. It's also true about AI agents, and the shaping happens whether we notice it or not. Better to notice it and shape the shaping, while we still can.

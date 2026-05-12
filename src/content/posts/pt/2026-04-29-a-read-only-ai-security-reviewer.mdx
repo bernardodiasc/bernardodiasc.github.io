@@ -65,46 +65,11 @@ Do not invent stricter requirements than the written rules.
 If the rules are silent or ambiguous, say so explicitly.
 ```
 
-Isso é tudo. Umas vinte e poucas linhas. Deixa eu passar pelo que cada parte está fazendo.
+Isso é tudo. Umas vinte e poucas linhas. As escolhas importantes são a `description`, o `readonly: true`, e a guardrail no final.
 
-## O frontmatter
+A description não é decorativa. É a superfície de disparo que o agente pai usa pra reconhecer intenção: auth, APIs, data handling, uploads, crypto, sessions, infra. A frase *"Use proactively for sensitive features"* diz ao pai que ele não precisa esperar eu pedir.
 
-```yaml
-name: org-standards-security-review
-```
-
-O `name` é o que o agente pai usa pra invocar o subagent. Também importa pra descoberta — quando o pai está decidindo se deve spawnar um subagent pra uma tarefa, ele escaneia nomes procurando match com a intenção do usuário. *"Revisa isso por segurança"* casa com `security-review` de forma limpa.
-
-```yaml
-description: >
-  Security and privacy review against the org standards in
-  standards/rules/. Use when implementing or reviewing auth,
-  APIs, data handling, uploads, crypto, sessions, or infra.
-  Use proactively for sensitive features.
-```
-
-Essa é a parte que a maioria das pessoas subestima. A description faz dois trabalhos:
-
-- **Diz ao agente pai quando usar esse subagent.** As frases *"Use when implementing or reviewing auth, APIs, data handling, uploads, crypto, sessions, or infra"* não são decorativas. São as condições de disparo. Se o pai está editando um handler de auth, a description casa e o subagent se torna um candidato.
-- **Diz ao usuário o que esperar.** Quando eu estiver lendo minha própria lista de subagents daqui a seis meses, a description tem que me lembrar o que essa coisa realmente faz, pra eu não acabar com três subagents com sabor de segurança que meio que fazem a mesma coisa.
-
-A frase *"Use proactively for sensitive features"* está fazendo mais trabalho do que parece. Diz ao agente pai que ele não precisa esperar eu pedir. Se o pai está gerando código que toca credenciais, deve considerar spawnar o subagent por conta própria.
-
-```yaml
-model: inherit
-```
-
-Herdar do pai. O padrão. Outras opções existem — você pode fixar o subagent num modelo menor e mais barato pra revisão rotineira, ou num modelo maior pra análise mais profunda — mas `inherit` mantém a superfície simples e o custo previsível.
-
-```yaml
-readonly: true
-```
-
-Essa é a linha mais importante do arquivo.
-
-Um subagent read-only não pode escrever arquivos. Pode ler, buscar, navegar, resumir — mas o resultado é puramente um relatório. Isso muda tudo no meu modelo mental. Não preciso revisar o que o subagent *vai fazer* antes de fazer; apenas reviso o que ele *encontrou*. O conjunto de tarefas que eu delego com tranquilidade pra um subagent read-only é muito maior do que o conjunto que eu delegaria pra um com permissão de escrita. Pra trabalho de revisão especificamente, read-only é o default certo.
-
-Também tem uma implicação de segurança pro próprio revisor de segurança: um subagent de revisão read-only não pode acidentalmente aplicar um "fix" que ele acha correto. O fix é decisão minha. O trabalho do subagent é mostrar o finding.
+`readonly: true` é a linha que muda como eu uso isso. Um subagent read-only pode ler, buscar, navegar e resumir, mas o resultado é puramente um relatório. Não preciso revisar o que ele *vai fazer* antes de fazer; apenas reviso o que ele *encontrou*. Pra trabalho de revisão, esse é o default certo.
 
 <ImageFigure alt="Impressão em bloco de linogravura em papel creme com tinta vermelha escura e preta, com textura de marca de cinzel característica e bordas esculpidas ligeiramente imperfeitas. Centralizado na página está um contorno retangular ousado de papel cortado em tinta preta pesada, representando um único documento. Dentro do contorno do documento, quatro faixas horizontais se empilham verticalmente, cada faixa preenchida com marcas de hachurado preto curtas sugerindo linhas de texto denso sem soletrar nada. À esquerda de cada faixa, uma linha fina de tinta preta se estende pra margem e termina num pequeno símbolo esculpido distinto: a anotação da primeira faixa termina numa pequena estrela de cinco pontas, a segunda num formato de olho, a terceira numa pequena engrenagem, e a quarta num pequeno cadeado. A anotação do cadeado é renderizada maior e impressa em tinta vermelha escura — o único vermelho na impressão — claramente enfatizada sobre as outras três anotações pretas. Trabalho de linhas de xilogravura ousado, grão de linogravura característico, impressão em duas cores em papel creme. Nenhum texto ou letras legíveis em nenhum lugar da composição." src="/content/posts/2026-04-29-a-read-only-ai-security-reviewer/annotated-agent-definition.png" caption="Vinte linhas de estrutura esculpida. Cada anotação responde uma pergunta diferente; a vermelha é a que muda como você vai usar." />
 
@@ -112,15 +77,11 @@ Também tem uma implicação de segurança pro próprio revisor de segurança: u
 
 O system prompt é curto de propósito. Quatro passos numerados, mais uma guardrail.
 
-**Passo um: inferir escopo.** O prompt do pai é a entrada. O subagent precisa descobrir quais arquivos, features ou APIs estão sendo revisados. Às vezes isso é óbvio pelo prompt; às vezes o subagent precisa se perguntar "o usuário disse 'revisa as mudanças de auth' — quais arquivos são esses?" e encontrá-los. De qualquer forma, a primeira ação é delimitar o escopo.
-
 **Passo dois: identificar quais regras se aplicam.** É aqui que o subagent mostra seu valor. O diretório de regras tem dezenas de arquivos, cada um cobrindo um tópico — CSRF, auth tokens, parameterized DB queries, tratamento de secrets, file uploads, dependency scanning, e assim por diante. O agente pai não quer carregar tudo isso. O subagent — tendo delimitado a mudança — pega os relevantes.
 
 O prompt dá exemplos pra ancorar: *"CSRF and auth tokens for state-changing HTTP; parameterized DB queries for SQL; hardcoded-secrets and sensitive-data-* for credentials and logs."* São sementes. O subagent extrapola a partir delas com base no que vê na mudança.
 
 **Passo três: ler as regras e comparar.** O subagent abre cada arquivo de regra relevante e compara a implementação. O detalhe crucial é *"Cite filenames in findings."* Todo finding que o subagent reporta tem que apontar pra uma regra específica que está citando. Essa citação é o que torna a saída verificável. Eu posso abrir a regra que o subagent referenciou, ler eu mesmo, e decidir se o finding está correto.
-
-**Passo quatro: reportar por severidade.** Critical, High, Medium, Low. O formato é fixo. Cada finding inclui a severidade, o arquivo no codebase onde o problema está, o arquivo de regra sendo citado, e uma explicação curta.
 
 A guardrail no final — *"Do not invent stricter requirements than the written rules. If the rules are silent or ambiguous, say so explicitly"* — é a linha que previne o subagent de sair dos trilhos. Sem ela, o subagent às vezes produz findings baseados no que ele geralmente acredita sobre segurança, não no que está realmente nos arquivos de regra. Isso é pior do que inútil: mina as citações e infla o relatório com afirmações que eu não consigo rastrear de volta a nada.
 
@@ -246,15 +207,7 @@ Não é mágica.
 
 ## Por que funciona como subagent especificamente
 
-Quero ser explícito sobre por que isso é um *subagent* e não uma rule, uma skill, ou uma function call.
-
-Não pode ser uma rule. Rules se acoplam a edições de arquivo e guiam a geração. Esse subagent revisa trabalho finalizado; não está gerando código. O trigger está errado.
-
-Poderia ser uma skill, mas uma skill roda no contexto do pai. Ler trinta arquivos de regra mais a mudança sendo revisada saturaria a janela do pai. Quando a revisão terminasse, o pai estaria inútil pro resto da sessão.
-
-Poderia ser uma function call pra um serviço externo, mas escrever um é um compromisso muito maior que um arquivo Markdown. E as regras já existem como documentos Markdown que o subagent lê nativamente. Envolvê-las num serviço é adicionar uma camada sem benefício.
-
-O subagent é o formato certo porque o trabalho é *isolado, pesado em leitura, especializado, e produz um retorno estruturado pequeno*. Cada uma dessas propriedades aponta pra mesma conclusão: spawne uma instância limpa com seu próprio contexto, dê um prompt focado, receba um relatório de volta.
+Isso funciona como subagent, e não como rule ou skill, porque o trabalho é isolado, pesado em leitura, especializado, e retorna um relatório estruturado pequeno. Esse era o formato do post anterior; aqui é a instância concreta.
 
 Esse é o padrão todo. A instância não é "mais inteligente que o pai." É o mesmo modelo numa configuração mais focada. A configuração é o que faz o trabalho.
 

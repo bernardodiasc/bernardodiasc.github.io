@@ -96,7 +96,7 @@ A maioria das IDEs de IA para programação — Cursor, Claude Code e outras —
 - As skills do wrapper (os checklists de phase gate).
 - Os subagents do wrapper (o revisor de segurança).
 
-Tudo sem alterar um único arquivo no projeto em si. O projeto não precisa saber que o wrapper existe. O wrapper não precisa saber qual projeto está ajudando hoje. Eles se encontram no workspace.
+Tudo sem alterar um único arquivo no projeto em si. O projeto e o wrapper se encontram no workspace.
 
 ```
 Workspace
@@ -106,7 +106,7 @@ Workspace
     └── standards/           ← submodule
 ```
 
-Quando troco entre projetos, adiciono o mesmo wrapper a cada novo workspace. Os standards viajam comigo. Não existe etapa de instalação por projeto. Não existe cópia por projeto das rules pra manter sincronizada.
+Quando troco entre projetos, adiciono o mesmo wrapper a cada novo workspace. Os standards viajam comigo.
 
 <ImageFigure alt="Composição geométrica inspirada na Bauhaus sobre fundo creme-casca-de-ovo, em cores primárias planas com formas de bordas rígidas e sem sombreamento. Centralizado na página está um contorno retangular alto desenhado com linha fina preta — a moldura do workspace. Dentro dessa moldura, dois retângulos menores de cores sólidas são empilhados um sobre o outro, separados por uma faixa de espaço creme. O retângulo superior é um plano plano amarelo-ocre e contém duas pequenas marcas geométricas internas: um pequeno triângulo vermelho e um pequeno quadrado preto. O retângulo inferior, ligeiramente maior e em azul cobalto profundo, contém três marcas geométricas internas em fila horizontal: um círculo vermelho, um quadrado amarelo e um triângulo preto. Acima e à direita da moldura do workspace flutua uma pequena figura geométrica preta — um círculo preto dentro de um pequeno quadrado preto — representando o agente. Desta figura, três linhas retas finas pretas irradiam para baixo e alcançam o retângulo azul profundo, cada linha terminando em uma das três marcas internas. Composição estritamente geométrica: blocos de cor rígidos, bordas afiadas, paleta primária (azul cobalto, amarelo-ocre, vermelho vermilion, preto), generoso fundo creme." src="/content/posts/2026-04-30-org-wide-standards-as-code/workspace-folder-setup.png" caption="Dois planos empilhados no mesmo workspace. O agente lê de ambos. O wrapper carrega os standards organizacionais para qualquer projeto que esteja à frente dele hoje." />
 
@@ -148,17 +148,13 @@ Há também uma **rule de índice always-on** que lista cada política disponív
 
 Alguns standards não funcionam melhor como guardrails. Os checklists de phase gate — design-phase, implementation-phase, testing-phase, deployment-phase — são sequências que um humano percorre deliberadamente, não restrições aplicadas automaticamente.
 
-Esses se tornam **skills** no wrapper. Cada skill é um SKILL.md curto com uma descrição como *"Execute o checklist de testing-phase antes do sign-off"* e um corpo que aponta para `standards/checklists/testing-phase.md`. O usuário (ou o agente por iniciativa própria) invoca a skill pelo nome; a skill percorre o checklist interativamente, marcando itens, fazendo perguntas quando algo não está claro.
-
-O conteúdo do checklist vive no repositório de políticas. A skill é um wrapper fino que torna o checklist invocável pelo nome e o integra ao fluxo de trabalho do agente.
+Esses se tornam **skills** no wrapper: arquivos `SKILL.md` finos que apontam para `standards/checklists/testing-phase.md` ou o checklist equivalente. O conteúdo vive no repositório de políticas; a skill só torna o checklist invocável pelo nome.
 
 #
 
 ## Subagents — os revisores pesados
 
-A terceira peça são os subagents. O principal é o revisor de segurança que apresentei no post anterior. Pode haver outros ao longo do tempo — um revisor de acessibilidade, um revisor de privacidade, um auditor de depreciação.
-
-Cada subagent é um único arquivo Markdown com um system prompt que aponta para a fatia relevante do repositório de políticas. O subagent roda isolado, consulta as políticas e retorna um relatório estruturado. As políticas que ele cita são as mesmas que as rules e skills referenciam. Uma fonte de verdade, três formas de acessá-la.
+A terceira peça são os subagents. O principal é o revisor de segurança do post anterior: um único arquivo Markdown que aponta para a fatia relevante do repositório de políticas, roda isolado e retorna um relatório estruturado. Uma fonte de verdade, três formas de acessá-la.
 
 <ImageFigure alt="Composição em tríptico horizontal inspirada na Bauhaus sobre fundo creme-casca-de-ovo, em cores primárias planas com formas de bordas rígidas e sem sombreamento. A composição se lê da esquerda para a direita em três momentos distintos. À esquerda, um plano retangular vermelho-vermilion intenso contém três marcas geométricas internas empilhadas verticalmente: um círculo amarelo, um triângulo preto e um pequeno quadrado ocre. À direita desse plano, uma seta geométrica sólida em preto se estende pelo espaço creme em direção ao centro da composição. No centro, um plano retangular azul cobalto profundo contém as mesmas três marcas geométricas internas e um sub-retângulo menor embutido no canto inferior esquerdo que repete essas três marcas em escala miniatura. Da borda direita do retângulo cobalto, três linhas retas finas pretas se abrem em leque para a direita. À direita, três retângulos menores empilhados verticalmente — um amarelo cromo, um vermelho-vermilion, um azul cobalto — cada um contendo uma única marca geométrica. Composição Bauhaus estrita: blocos de cor rígidos, bordas afiadas, paleta primária, generoso fundo creme." src="/content/posts/2026-04-30-org-wide-standards-as-code/standards-submodule-flow.png" caption="Políticas uma vez. Wrapper uma vez. Cada projeto recebe os mesmos standards ao adicionar o wrapper como pasta de workspace." />
 
@@ -178,7 +174,7 @@ git submodule update --remote --merge
 
 O primeiro comando puxa quaisquer mudanças do lado do wrapper — novos arquivos de ponteiro, novas skills, novos subagents. O segundo comando puxa as políticas mais recentes. Ambos são explícitos, ambos são reversíveis (o submodule é apenas um ponteiro git, você pode movê-lo de volta), e nenhum acontece pelas suas costas.
 
-Eu atualizo mais ou menos uma vez por semana. Se uma política muda de forma que afetaria como eu quero que o agente se comporte, percebo na próxima atualização porque algo que o agente teria gerado antes agora aciona um achado. Esse é o tipo certo de atrito. Ele evidencia a mudança de forma ruidosa em vez de silenciosa.
+Eu atualizo mais ou menos uma vez por semana. Se uma política muda de forma que afetaria como eu quero que o agente se comporte, percebo na próxima atualização porque algo que o agente teria gerado antes agora aciona um finding. Esse é o tipo certo de atrito. Ele evidencia a mudança de forma ruidosa em vez de silenciosa.
 
 ## E os standards por projeto?
 
@@ -199,16 +195,10 @@ Algumas coisas continuaram acontecendo que eu não planejei.
 
 **O wrapper virou o documento de onboarding.** Quando um novo projeto começa e alguém pergunta "quais são as expectativas de segurança aqui?", eu aponto para o wrapper. As políticas estão lá, o subagent que as aplica está lá, os checklists estão lá. Não é uma página de wiki que se desatualiza; é a fonte real que o agente de IA usa, o que significa que precisa ficar atual.
 
-**As políticas melhoraram porque estavam sendo consultadas.** Quando o subagent de revisão de segurança citava um arquivo de política em um achado, e eu lia a citação, às vezes percebia que a própria política era pouco clara. Então eu abria a política, editava, fazia o push. O ato de *usar* as políticas através de um agente de IA revelou ambiguidades que nenhuma quantidade de revisão humana havia pego. As políticas melhoraram porque a IA estava me forçando a lê-las com cuidado.
+**As políticas melhoraram porque estavam sendo consultadas.** Quando o subagent de revisão de segurança citava um arquivo de política em um finding, e eu lia a citação, às vezes percebia que a própria política era pouco clara. Então eu abria a política, editava, fazia o push. O ato de *usar* as políticas através de um agente de IA revelou ambiguidades que nenhuma quantidade de revisão humana havia pego. As políticas melhoraram porque a IA estava me forçando a lê-las com cuidado.
 
 **O wrapper me deixou menos defensivo com o output do agente.** Quando o agente gera um handler de autenticação e o revisor de segurança diz "isso está ok", eu confio mais no output do que confiaria no mesmo código sem a revisão. Não porque o agente de repente é perfeito, mas porque a política foi explicitamente verificada contra ele. A confiança vem da auditoria, não da geração original.
 
 **Consistência entre projetos deixou de ser luxo.** Eu costumava achar que "deveríamos padronizar como lidamos com X" era algo desejável que sempre perdia para a pressão de prazo. Com o wrapper, padronizar X é *um arquivo* no repositório de políticas, e cada projeto o recebe na próxima atualização. O custo da consistência caiu praticamente a zero, o que significa que a consistência acontece por padrão em vez de por esforço heroico.
 
-## Uma nota sobre o que isso é e o que não é
-
-Esse padrão não substitui ter bons standards de verdade. O wrapper é o mecanismo de entrega, não o conteúdo. Se suas políticas são ruins — vagas, contraditórias, faltando tópicos cruciais — o agente vai aplicar fielmente políticas ruins. As políticas ainda precisam ser escritas por pessoas que sabem o que estão fazendo.
-
-Também não substitui revisão humana. O subagent levanta achados; ele não aprova PRs. As skills de checklist percorrem itens; elas não liberam releases. O objetivo é remover a carga cognitiva de lembrar vinte e tantas políticas de cabeça, não remover o humano do loop.
-
-O que ele *faz* é fazer os standards chegarem a cada projeto automaticamente, evoluírem em um só lugar, e se integrarem de forma limpa com o agente de IA sem setup por projeto. Para um engenheiro individual, é algo desejável. Para um time pequeno rodando múltiplos projetos, é a diferença entre standards que existem e standards que chegam ao código.
+Esse padrão faz os standards chegarem a cada projeto automaticamente, evoluírem em um só lugar, e se integrarem de forma limpa com o agente de IA sem setup por projeto. Para um engenheiro individual, é algo desejável. Para um time pequeno rodando múltiplos projetos, é a diferença entre standards que existem e standards que chegam ao código.

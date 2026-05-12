@@ -95,7 +95,7 @@ That's it. The agent now reads:
 - The wrapper's skills (the phase-gate checklists).
 - The wrapper's subagents (the security reviewer).
 
-All without changing a single file in the project itself. The project doesn't need to know the wrapper exists. The wrapper doesn't need to know which project it's helping today. They meet in the workspace.
+All without changing a single file in the project itself. The project and wrapper meet in the workspace.
 
 ```
 Workspace
@@ -105,7 +105,7 @@ Workspace
     └── standards/           ← submodule
 ```
 
-When I switch between projects, I add the same wrapper to each new workspace. The standards travel with me. There's no per-project install step. There's no per-project copy of the rules to keep in sync.
+When I switch between projects, I add the same wrapper to each new workspace. The standards travel with me.
 
 <ImageFigure alt="Bauhaus-inspired geometric composition on a cream-eggshell background, in flat primary colors with hard-edged shapes and no shading. Centered on the page is a tall rectangular outline drawn in a thin black line — the workspace frame. Inside this frame, two smaller solid-color rectangles are stacked one above the other, separated by a band of cream space. The top rectangle is a flat ochre-yellow plane and contains two small inner geometric marks: a small red triangle and a small black square. The bottom rectangle, slightly larger and rendered in deep cobalt-blue, contains three small inner geometric marks arranged in a horizontal row: a red circle, a yellow square, and a black triangle. Above and to the right of the workspace frame floats a small black geometric figure — a black circle nested inside a small black square — representing the agent. From this figure, three thin straight black lines radiate downward and reach into the deep-blue rectangle, each line terminating at one of the three inner marks. The composition is strictly geometric: hard color blocks, sharp edges, primary palette (deep cobalt-blue, ochre-yellow, vermilion red, black), generous cream-eggshell background, no readable text or letters anywhere in the composition." src="/content/posts/2026-04-30-org-wide-standards-as-code/workspace-folder-setup.png" caption="Two stacked planes in the same workspace. The agent reads from both. The wrapper carries the org standards into whatever project is in front of it today." />
 
@@ -147,17 +147,13 @@ There's also one **always-on index rule** that lists every available policy with
 
 Some standards aren't best served as guardrails. The phase-gate checklists — design-phase, implementation-phase, testing-phase, deployment-phase — are sequences a human walks through deliberately, not constraints applied automatically.
 
-Those become **skills** in the wrapper. Each skill is a short SKILL.md with a description like *"Run the testing-phase checklist before sign-off"* and a body that points at `standards/checklists/testing-phase.md`. The user (or the agent on its own initiative) invokes the skill by name; the skill walks through the checklist interactively, ticking items off, asking questions when something's unclear.
-
-The checklist content lives in the policy repo. The skill is a thin wrapper that makes the checklist invocable by name and integrates it into the agent's workflow.
+Those become **skills** in the wrapper: thin `SKILL.md` files that point at `standards/checklists/testing-phase.md` or the equivalent checklist. The checklist content lives in the policy repo; the skill just makes it invocable by name.
 
 #
 
 ## Subagents — the heavy reviewers
 
-The third piece is the subagents. The flagship one is the security reviewer I walked through in the previous post. There may be others over time — an accessibility reviewer, a privacy reviewer, a deprecation auditor.
-
-Each subagent is a single Markdown file with a system prompt that points at the relevant slice of the policy repo. The subagent runs in isolation, consults the policies, and returns a structured report. The policies it cites are the same ones the rules and skills reference. One source of truth, three ways to access it.
+The third piece is the subagents. The flagship one is the security reviewer from the previous post: a single Markdown file that points at the relevant slice of the policy repo, runs in isolation, and returns a structured report. One source of truth, three ways to access it.
 
 <ImageFigure alt="Bauhaus-inspired horizontal triptych composition on a cream-eggshell background, in flat primary colors with hard-edged shapes and no shading. The composition reads left to right in three distinct moments. On the left, a deep vermilion rectangular plane contains three small inner geometric marks stacked vertically: a yellow circle, a black triangle, and a small ochre square. To the right of this plane, a bold solid-black geometric arrow extends across cream space toward the middle of the composition — drawn as a wide black triangle tip with a thick rectangular tail. In the middle, a deep cobalt-blue rectangular plane contains the same three small inner geometric marks (yellow circle, black triangle, ochre square) and a smaller embedded sub-rectangle in the lower left corner that repeats those three marks at miniature scale. From the right edge of the cobalt rectangle, three thin straight black lines fan outward toward the right side of the page. On the right, three smaller stacked rectangles are arranged vertically — one chrome-yellow, one vermilion-red, one deep cobalt-blue — and each contains a single small geometric mark of one of the three primitives. Strict geometric Bauhaus composition: hard color blocks, sharp edges, primary palette (deep cobalt-blue, vermilion red, chrome yellow, ochre, black), generous cream-eggshell background, no readable text or letters anywhere in the composition." src="/content/posts/2026-04-30-org-wide-standards-as-code/standards-submodule-flow.png" caption="Policies once. Wrapper once. Every project gets the same standards by adding the wrapper as a workspace folder." />
 
@@ -204,10 +200,4 @@ A few things kept happening that I didn't plan for.
 
 **Cross-project consistency stopped being a luxury.** I used to think "we should standardize how we handle X" was a nice-to-have that always lost to deadline pressure. With the wrapper, standardizing X is *one file* in the policy repo, and every project gets it on the next update. The cost of consistency dropped to almost zero, which means consistency happens by default instead of by heroic effort.
 
-## A note on what this is and isn't
-
-This pattern isn't a substitute for actually having good standards. The wrapper is the delivery mechanism, not the content. If your policies are bad — vague, contradictory, missing crucial topics — the agent will faithfully apply bad policies. The policies still need to be written by people who know what they're doing.
-
-It also isn't a substitute for human review. The subagent surfaces findings; it doesn't approve PRs. The checklist skills walk through items; they don't sign off on releases. The point is to remove the cognitive load of remembering twenty-something policies in your head, not to remove the human from the loop.
-
-What it *does* do is make the standards reach every project automatically, evolve in one place, and integrate cleanly with the AI agent without per-project setup. For a single engineer, that's a nice-to-have. For a small team running multiple projects, it's the difference between standards that exist and standards that ship.
+That pattern makes the standards reach every project automatically, evolve in one place, and integrate cleanly with the AI agent without per-project setup. For a single engineer, that's a nice-to-have. For a small team running multiple projects, it's the difference between standards that exist and standards that ship.

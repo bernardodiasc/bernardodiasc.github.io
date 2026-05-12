@@ -51,7 +51,6 @@ That's the whole shape. Three frontmatter fields, a body in Markdown, save it as
 
 Most modern AI coding agents have some version of this. Cursor calls them rules. Claude Code calls them `CLAUDE.md`. Other tools have their own names. The file format isn't standardized yet, but the underlying concept is: **per-project, per-file-pattern guidance, loaded automatically into the agent's context.**
 
-I'm going to write this post in Cursor's `.mdc` format because that's what I use. The patterns transfer. If you're on a different tool, the equivalent files will look slightly different but the thinking is the same.
 
 ## The frontmatter does the routing
 
@@ -89,7 +88,7 @@ alwaysApply: false
 
 No globs, not always-applied. This rule shows up in the agent's catalog of available rules, but it only attaches when the agent decides it's relevant — usually because the user's request matches the description. Use this for procedural rules that aren't tied to a file, like "the steps to add a new feature of type X."
 
-The three modes together let you build a rule library where each rule is loaded **only when it's useful**. That sounds obvious. It's not what most projects do. Most projects either dump everything into one giant always-on file (which costs tokens on every request and makes the agent's instructions mushy) or skip rules entirely (which leaves the agent to reinvent the project conventions every session). Routed rules are the middle path.
+The three modes together let you build a rule library where each rule is loaded **only when it's useful**. That sounds obvious. It's not what most projects do. Routed rules are the middle path between one giant always-on file and making the agent reinvent project conventions every session.
 
 <ImageFigure alt="Isometric technical illustration in confident pen-and-ink line work with cross-hatching for shading, on a warm cream paper background. A long horizontal rounded-rectangle lane runs across the middle of the composition, drawn in three-dimensional isometric perspective with subtle hatched shading beneath it — this is the active working context. To the upper left, a vertical column of six small folded paper sheets floats in the air, each sheet rendered with a corner fold and a single tiny icon stamped at its top (a quill, a small key, a gear, a brushstroke, a tag, a gauge — no two icons alike, no text on any sheet). From each sheet, a thin curving pen-line arrow descends toward the central lane: only three of the six lines actually connect to the lane and ride along its top surface; the other three fade into dotted dashes that thin out and dissolve before reaching it. Below the central lane, a small inset cross-section shows a single piece of paper being touched by a small drawn hand, indicating the file the agent is currently working on. Cross-hatched textbook shading throughout, sepia and warm grey ink on cream paper, no readable text or letters anywhere in the composition." src="/content/posts/2026-04-24-rules-as-project-memory/glob-routing-diagram.png" caption="The glob is the routing slip. The rule waits in the cabinet until the agent opens a file that matches its pattern." />
 
@@ -128,9 +127,9 @@ The rules that actually changed the agent's behavior, for me, were the short, op
 
 When a rule grows past two pages, I start asking whether it's two rules trying to be one. Most of the time it is.
 
-## Rules and skills, in one sentence
+## Rules, skills, and subagents
 
-A few people will read this and ask: how is a rule different from an "agent skill" or a "subagent"? Both of those will get their own posts. The very short version:
+The short version before the next posts go deeper:
 
 - **Rules** load automatically when files match. They steer the agent's behavior on existing tasks.
 - **Skills** are loaded on demand by name. They're more like reusable procedures or playbooks.

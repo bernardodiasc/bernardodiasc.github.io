@@ -24,7 +24,7 @@ The previous post was the story. This one is the structure.
 
 After writing about thirty skills for one project, a pattern crystallized. Each skill belongs to one of six types. Each type answers a different question, runs at a different moment, and has a different appropriate level of risk. The names follow a consistent shape: `<system>-<type>-<feature>`. The agent uses that shape to find the right skill without me having to remember exactly what I called it.
 
-This is the taxonomy I landed on. It isn't the only one that would work. It is the one that emerged from actual use, after enough mistakes that the categories felt obvious by the time I named them.
+This is the taxonomy I landed on after enough real use that the categories felt obvious by the time I named them.
 
 <ImageFigure alt="Cyanotype blueprint print on deep Prussian-blue paper with the slightly uneven, faded exposure of a real iron-salt sun print. The composition is a precise architectural-drafting layout with crisp white technical line-work. Across the center of the print sits a horizontal row of six rounded square cells, each cell bordered by drafted white lines, with measurement tick marks above the row indicating module spacing. Inside each cell rests a distinctive white abstract symbol, drafted with the precision of a blueprint detail: a small magnifying glass with a slender handle in cell one; a slim spanner crossed with calipers in cell two; a clipboard with parallel hatch-lines in cell three; a target with cross-hairs in cell four; an upward chevron arrow with bolder line weight in cell five; and an emphatic struck-through circle with the heaviest line weight in cell six. The line weight of the symbols progresses from delicate (left) to assertive (right). Around the rightmost cell, a faint hand-drawn warm-red pencil halo — characteristic of architectural revision annotations — adds the only deviation from pure white-on-blue. A thin drafted border frames the print, with cornering tick marks. Subtle paper grain and exposure variation throughout. No readable text or letters anywhere in the composition." src="/content/posts/2026-04-26-a-taxonomy-of-ai-agent-skills/skills-periodic-table.png" caption="Six cells, arranged from delicate to emphatic. The line weight of each glyph does some of the cognitive work of &quot;how cautious should I be about invoking this?&quot;" />
 
@@ -109,9 +109,7 @@ The risk profile depends on what the guide changes. The procedure itself is just
 
 **Job:** *"does this still work the way it used to?"*
 
-QA skills are tester-facing. They run a scenario, capture the output, and either compare against a known good baseline or hand the output back for human inspection. They tend to be invoked after a change, not during it.
-
-The line between `qa` and `debug` can blur. The rough rule I use: a debug skill answers *what's happening?* on live state; a QA skill answers *did the thing I changed break what was already working?* on test scenarios.
+QA skills are tester-facing. They run a scenario, capture the output, and answer one question: *did the thing I changed break what was already working?* Debug skills inspect live state; QA skills replay test scenarios.
 
 #
 
@@ -143,7 +141,6 @@ Not every skill fits the typed pattern. There's a category of skills that are pu
 
 So `ats-get-record`, `ats-search-records`, `slack-get-thread`, `slack-post-message`. The verb is the operation, not the type. These are the only skills I have that don't follow the agent-typed pattern, and they don't need to. They wrap a specific external API in a tested, opinionated way and are reused across many higher-level skills.
 
-The mental model: typed skills are *for the agent to do a thing in the project*. Integration skills are *infrastructure*. Different shapes for different purposes.
 
 ## How the types compose during a real session
 
@@ -178,7 +175,6 @@ A few that I tried and walked back.
 
 **Sub-types.** I briefly tried `debug-cache`, `debug-state`, `debug-trace` as proper sub-types with their own conventions. The benefit was small; the cognitive cost was real. I collapsed back to a flat `debug` type with descriptive feature names.
 
-**A `meta` type for skills that operate on other skills.** Sounded clever. Was solving a problem nobody had. The skills I'd been considering meta were actually `utils` (testing a skill) or `guide` (explaining how to write a new skill). Naming them properly removed the need for the type.
 
 **Forcing every skill to have a script.** Some skills genuinely don't need executable code — guides especially. Insisting on a script for every skill produced empty hello-world scripts that got in the way. Letting the body itself be the skill was simpler.
 
