@@ -17,6 +17,7 @@ tags:
   - npm
   - yarn
   - workflow
+  - human-written
 excerpt: Criando geração de sitemap.xml com Babel e Node.
 ---
 

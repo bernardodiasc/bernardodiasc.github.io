@@ -9,7 +9,7 @@ tags:
   - astro
   - ai
   - developer-experience
-  - ai-generated
+  - ai-assisted
 excerpt: O primeiro item da minha lista de funcionalidades desejadas em 2018 era internacionalização. Oito anos depois, finalmente está aqui — e cada post agora tem uma tradução em português.
 ---
 

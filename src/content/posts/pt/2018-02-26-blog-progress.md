@@ -8,6 +8,7 @@ tags:
   - design
   - css
   - markdown
+  - human-written
 excerpt: Segundo dia desenvolvendo este projeto, longo caminho pela frente.
 ---
 

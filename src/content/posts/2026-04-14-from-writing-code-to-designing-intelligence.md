@@ -16,6 +16,7 @@ tags:
   - fastapi
   - postgresql
   - pydantic
+  - ai-assisted
 excerpt: AI at work is often framed as a productivity hack or a risk — a convenient reduction of something structural. Here’s a sharper read on what’s changing, what broke when I pushed into unfamiliar territory, and why human validation still drew the line.
 ---
 

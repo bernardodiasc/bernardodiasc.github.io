@@ -8,6 +8,7 @@ tags:
   - log
   - journaling
   - hello-world
+  - human-written
 excerpt: Keeping up to date on IT can be a great challenge, having study systems comes very handy.
 ---
 

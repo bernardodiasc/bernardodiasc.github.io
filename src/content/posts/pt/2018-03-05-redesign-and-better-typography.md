@@ -7,6 +7,7 @@ tags:
   - design
   - typography
   - CSS
+  - human-written
 excerpt: Quarto dia de desenvolvimento deste site, um blog para leitura precisa ser agradável de ler.
 ---
 

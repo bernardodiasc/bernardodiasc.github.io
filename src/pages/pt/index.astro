@@ -6,7 +6,7 @@ import PostsListing from '../../components/PostsListing.astro';
 import { isPortuguesePost } from '../../i18n/utils';
 import { t } from '../../i18n/translations';
 
-const posts = await getCollection('posts', ({ id, data }) => !data.draft && isPortuguesePost(id));
+const posts = await getCollection('posts', ({ id }) => isPortuguesePost(id));
 
 const sortedPosts = posts.sort(
   (a, b) => b.data.date.getTime() - a.data.date.getTime()
@@ -23,6 +23,7 @@ const items = await Promise.all(
       date: post.data.date,
       excerpt: post.data.excerpt,
       tags: post.data.tags,
+      draft: post.data.draft,
       category: categoryEntry
         ? { id: categoryEntry.id, title: categoryEntry.data.title, icon: categoryEntry.data.icon }
         : undefined,

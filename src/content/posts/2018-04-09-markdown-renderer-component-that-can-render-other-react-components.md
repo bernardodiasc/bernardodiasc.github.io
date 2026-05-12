@@ -6,6 +6,7 @@ tags:
   - react
   - markdown
   - html
+  - human-written
 excerpt: Markdown contents just got really really better!
 ---
 

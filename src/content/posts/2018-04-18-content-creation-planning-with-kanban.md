@@ -9,6 +9,7 @@ tags:
   - github
   - trello
   - ideas
+  - human-written
 excerpt: Ideas are much faster than actions, take notes and manage them later to become great articles.
 ---
 

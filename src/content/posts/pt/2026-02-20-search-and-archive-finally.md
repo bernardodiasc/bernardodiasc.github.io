@@ -9,7 +9,7 @@ tags:
   - javascript
   - css
   - astro
-  - ai-generated
+  - ai-assisted
 excerpt: As páginas de busca e arquivo que eram placeholders desde 2018 agora são reais. Veja como foram construídas — e como é direcionar uma IA em trabalho de UI.
 thumbnail: /content/posts/2026-02-20-search-and-archive-finally/ChatGPT-Image-Feb-19-2026-10_30_59-PM.png
 ---

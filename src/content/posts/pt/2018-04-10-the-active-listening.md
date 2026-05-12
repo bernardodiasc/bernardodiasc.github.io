@@ -12,6 +12,7 @@ tags:
   - leadership
   - humans
   - communication
+  - human-written
 excerpt: Os grupos mais poderosos são feitos com pessoas que sabem a hora de falar e a hora de ouvir.
 ---
 

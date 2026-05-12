@@ -10,6 +10,7 @@ tags:
   - fetch
   - css grid
   - responsiveness
+  - human-written
 excerpt: A API do Instagram está sendo descontinuada e a partir de agora usará a API Graph do Facebook.
 ---
 

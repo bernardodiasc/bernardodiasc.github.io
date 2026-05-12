@@ -6,6 +6,7 @@ tags:
   - meteor
   - google analytics
   - seo
+  - human-written
 excerpt: Instructions about how to easily inject GA tag manager in a Meteor app.
 ---
 

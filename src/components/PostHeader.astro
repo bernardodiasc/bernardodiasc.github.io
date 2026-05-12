@@ -11,9 +11,15 @@ interface Props {
     title: string;
     icon: string;
   };
+  tags?: string[];
 }
 
-const { mode = '', title, date, excerpt, category } = Astro.props;
+const { mode = '', title, date, excerpt, category, tags = [] } = Astro.props;
+
+const AUTHORSHIP_TAGS = new Set(['human-written', 'ai-assisted', 'ai-generated']);
+
+const authorshipTags = tags.filter((t) => AUTHORSHIP_TAGS.has(t));
+const topicTags = tags.filter((t) => !AUTHORSHIP_TAGS.has(t));
 
 function formatDate(d: Date): string {
   return d.toLocaleDateString('en-US', {
@@ -53,12 +59,23 @@ function formatDate(d: Date): string {
     {excerpt && (
       <p class="post-header__excerpt">{excerpt}</p>
     )}
+    {mode === 'details' && tags.length > 0 && (
+      <ul class="post-header__tags">
+        {authorshipTags.map((tag) => (
+          <li class="post-header__tag post-header__tag--authorship">{tag}</li>
+        ))}
+        {topicTags.map((tag) => (
+          <li class="post-header__tag">#{tag}</li>
+        ))}
+      </ul>
+    )}
   </div>
 )}
 
 <style>
   .post-header {
     font-size: var(--text-size);
+    margin: 0 0 1em;
   }
 
   .post-header__title {
@@ -111,5 +128,35 @@ function formatDate(d: Date): string {
 
   .post-header__excerpt {
     color: var(--text-color);
+  }
+
+  .post-header__tags {
+    list-style: none;
+    margin: 1.2em 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4em;
+  }
+
+  .post-header__tag {
+    display: inline-block;
+    padding: 0.25em 0.7em;
+    font-size: 0.78em;
+    font-family: var(--heading-family);
+    background: #f0f0f0;
+    border: 1px solid var(--line-light);
+    border-radius: 20px;
+    color: var(--text-color);
+  }
+
+  .post-header__tag--authorship {
+    background: var(--heading-color);
+    color: white;
+    border-color: var(--heading-color);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.7em;
+    font-weight: var(--heading-weight-bold);
   }
 </style>

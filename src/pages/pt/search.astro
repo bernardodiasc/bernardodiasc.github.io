@@ -6,7 +6,7 @@ import Icon from '../../components/Icon.astro';
 import { isPortuguesePost, getPostBaseId } from '../../i18n/utils';
 import { t } from '../../i18n/translations';
 
-const posts = await getCollection('posts', ({ id, data }) => !data.draft && isPortuguesePost(id));
+const posts = await getCollection('posts', ({ id }) => isPortuguesePost(id));
 const categories = await getCollection('categories');
 
 const sortedPosts = posts.sort(
@@ -35,6 +35,7 @@ const items = await Promise.all(
       }),
       excerpt: post.data.excerpt,
       tags: post.data.tags,
+      draft: post.data.draft,
       categoryId: post.data.category,
       categoryTitle: catEntry?.data.title || '',
       categoryIcon: catEntry?.data.icon || '',
@@ -117,6 +118,9 @@ const categoriesWithCount = categories.map((cat) => ({
 </Layout>
 
 <script is:inline define:vars={{ items }}>
+  var showDrafts = window.location.hostname === 'localhost' || new URLSearchParams(window.location.search).has('draft');
+  var visibleItems = showDrafts ? items : items.filter(function (i) { return !i.draft; });
+
   const searchInput = document.getElementById('search-input');
   const resultsSection = document.getElementById('results-section');
   const resultsList = document.getElementById('results-list');
@@ -196,14 +200,14 @@ const categoriesWithCount = categories.map((cat) => ({
       return;
     }
 
-    var filtered = items;
+    var filtered = visibleItems;
     var labels = [];
 
     if (activeCategory) {
       filtered = filtered.filter(function (item) {
         return item.categoryId === activeCategory;
       });
-      var cat = items.find(function (i) { return i.categoryId === activeCategory; });
+      var cat = visibleItems.find(function (i) { return i.categoryId === activeCategory; });
       labels.push(cat ? cat.categoryTitle : activeCategory);
     }
 

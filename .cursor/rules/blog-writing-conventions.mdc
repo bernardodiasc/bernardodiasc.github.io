@@ -1,0 +1,113 @@
+---
+description: Voice, tone, content safety, and tool-agnostic framing for blog posts in this project.
+globs:
+  - "src/content/posts/**/*.md"
+  - "src/content/posts/**/*.mdx"
+alwaysApply: false
+---
+
+# Blog writing conventions
+
+Voice and tone guide for posts in `src/content/posts/`. Read this before drafting, translating, or editing any post body or excerpt.
+
+The blog is a personal site. Every post is the author writing in first person, talking directly to the reader. The published archive is the source of truth for "how the author sounds" — when in doubt, open a recent post and match its rhythm.
+
+---
+
+## Two registers
+
+Posts fall into one of two voices. Pick one per post and stay consistent.
+
+### Casual / dev-diary
+
+Used for: tutorials, "I just shipped X" posts, planning recaps, anything that walks the reader through a concrete change.
+
+- Conversational openings ("It's been a while.", "Here's the part that would've sounded like science fiction…").
+- First person ("I", "I've"). Address the reader directly as "you".
+- Short paragraphs. Frequent line breaks. Comfortable with one-sentence paragraphs for emphasis.
+- Light humor and self-deprecation are welcome.
+- Numbers and concrete details over abstractions ("37 dependencies → 4", "60 pages on the next build").
+
+### Reflective / essay
+
+Used for: posts about the philosophy of a workflow, why something matters, what changed in how the author thinks. Closer to an essay.
+
+- Longer, more measured sentences. Still first person.
+- Builds an argument across paragraphs rather than walking through steps.
+- Section headings frame ideas, not procedures ("Where iteration replaces blind reliance", "Where execution stops being the center of the work").
+- Avoid jargon when a plain phrase will do, but don't dumb down the technical content.
+- Leave room for tension and ambiguity. Don't force a tidy conclusion.
+
+---
+
+## Voice signatures (keep these)
+
+The author has a recognizable voice. These patterns recur across posts and should be preserved, not edited away:
+
+- **Conversational hedges**: "Well,", "Alright,", "Let me tell you…", "Here's the thing.", "Honestly,".
+- **Mild ESL flavor**: occasional unidiomatic word choices or sentence rhythms that read like a non-native English speaker who has lived in English for a long time. Do not "smooth out" every sentence into perfectly idiomatic American English. The unevenness is part of the voice.
+- **Self-aware framing**: the author often names what they're about to do ("Let me back up.", "There is another layer here that became impossible to ignore.").
+- **Numbers and dates as anchors**: specific quantities, years, durations. Less "many years ago", more "almost eight years".
+- **Contrasts and reframings**: "It's tempting to reduce this to productivity, but that framing doesn't hold for very long." This pattern of acknowledging the obvious read and then offering a sharper one is a signature move.
+
+---
+
+## What to avoid
+
+- Over-polished, LLM-flavored prose: "leverage", "delve into", "in today's fast-paced world", "navigate the complexities of".
+- Bullet lists where a paragraph would carry the argument better.
+- Fake enthusiasm. Hype words ("amazing", "incredible", "game-changing") read as borrowed.
+- Forced conclusions and "key takeaway" boxes. Endings can be quiet; they don't need a bow.
+- Stripping the mild ESL flavor. If a sentence reads like the author wrote it on a Tuesday at 11pm, leave it.
+
+---
+
+## Content safety (mandatory)
+
+This blog is public. The rules in `.cursor/rules/` are also public. Both must be safe to read by anyone, including former colleagues, current clients, and future employers.
+
+**Never include in posts or in this rule file:**
+
+- Internal project codenames from work repos. Refer to them generically: "an AI agent project I work on", "a recruiting tool I built", "the system at work".
+- Employer or client names. Use "the team I work with", "a client project", "a distributed team".
+- Real person names from work — colleagues, managers, clients. Use "a teammate", "the team lead", "a senior engineer on the team".
+- Internal data: real candidate or job IDs, third-party platform record IDs, channel names or IDs, customer data, anything from private journal entries, planning docs, or context files.
+- Internal architecture specifics: proprietary API endpoints, private database schemas, deployment topology, internal-only tool names. Describe patterns and concepts generically.
+
+**Safe to share:**
+
+- General patterns, architectures, and design decisions, abstracted from specifics.
+- Cursor/AI-agent rule, skill, and subagent file structures and conventions — tool configuration is not proprietary code.
+- Publicly available references (Karpathy's writing, open-source projects, public docs).
+- Personal reflections on workflow, learning, and AI usage.
+- Code snippets that illustrate a pattern without revealing internal business logic.
+
+**The guiding principle:** abstract to the pattern level — show the structure, not the data. When referencing personal work projects, describe what the system does conceptually, never the specific implementation or identifiers.
+
+When in doubt, ask before publishing.
+
+---
+
+## Tool-agnostic framing (mandatory)
+
+The blog series on AI-assisted development is about **AI coding agents as a category**, not about any single product. The concepts (rules, skills, subagents, MCP) are patterns that exist across tools (Cursor, Claude Code, VSCode + Copilot, and whatever comes next).
+
+**Titles**: Use tool-agnostic language. "AI agent skills", "subagents", "rules" — not "Cursor Skills", "Cursor subagents". Exception: when a post is specifically comparing tools or about portability across tools (e.g. the post on portable skills across coding agents), naming them is appropriate.
+
+**Body text**: The author uses Cursor and can say so as a personal choice with brief reasoning (less vendor lock-in than Claude Code, better agent features than plain VSCode, built on VSCode so familiar). But present the underlying concepts as transferable.
+
+**No advocacy**: Don't position any tool as "the best" or dismiss alternatives. The reader should walk away with the pattern, not a product recommendation.
+
+**`vibecoding` tag**: use on practical, hands-on posts about working with AI coding agents. Skip on purely philosophical or strategy posts.
+
+---
+
+## Editing checklist before publishing
+
+- Voice register chosen and consistent throughout?
+- Voice signatures preserved (not over-polished)?
+- No banned LLM phrases?
+- No internal names, IDs, or data?
+- Tool-agnostic where appropriate?
+- Excerpt rewritten in the same voice as the body, not a generic summary?
+- Title in the casual or reflective register matching the body?

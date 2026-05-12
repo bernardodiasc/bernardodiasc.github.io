@@ -1,0 +1,51 @@
+---
+description: Every post must exist in both English and Brazilian Portuguese, with parallel structure and metadata.
+globs:
+  - "src/content/posts/**/*.md"
+  - "src/content/posts/**/*.mdx"
+alwaysApply: false
+---
+
+# Blog dual-language convention
+
+Every post must exist in two languages: English (default) and Brazilian Portuguese. The site routes them as `/YYYY/MM/DD/slug` (EN) and `/pt/YYYY/MM/DD/slug` (PT) and the language switch in the header links between them.
+
+---
+
+## File layout
+
+- **English**: `src/content/posts/YYYY-MM-DD-slug.md` (or `.mdx`)
+- **Portuguese**: `src/content/posts/pt/YYYY-MM-DD-slug.md` (same filename, under `pt/`)
+
+Both files **must share**:
+
+- The same `YYYY-MM-DD-slug` filename.
+- The same `date` in frontmatter.
+- The same `category` value.
+- The same `tags` array (tags themselves stay in English — they are slugs, not labels).
+- The same `thumbnail` path (images are language-agnostic).
+- The same number, order, and `src` of `<figure>` blocks. Translate `alt` and `figcaption`.
+
+The PT file additionally requires `lang: pt`. The EN file omits `lang` (default is `en`).
+
+---
+
+## Translating
+
+The Portuguese version is a Brazilian Portuguese translation, not a paraphrase. It targets a Brazilian reader who reads the same author in their own language.
+
+- **Title and excerpt**: translate, don't transliterate. Match the register (casual vs reflective) of the EN version.
+- **Body**: translate paragraph by paragraph, preserving the structure, headings, lists, code blocks, links, and `<figure>` blocks. Keep section headings in PT, not EN.
+- **Code blocks**: never translate code, identifiers, file paths, or CLI commands. Translate only comments inside code blocks if they appear.
+- **Links**: keep absolute URLs as-is. For internal post links, point at the PT version (`/pt/2018/02/23/hello-world`) when linking to a PT post body, and at the EN version (`/2018/02/23/hello-world`) when linking from an EN post body.
+- **Voice**: preserve the author's tone in PT. Brazilian Portuguese has its own conversational register — use it. Don't over-formalize. Avoid Portugal-Portuguese constructions ("ecrã", "ficheiro", "telemóvel"). Use Brazilian forms ("tela", "arquivo", "celular").
+- **Voice signatures**: equivalents of "Well,", "Alright,", "Honestly,", "Let me tell you…" exist in PT — use them ("Bom,", "Olha,", "Sinceramente,", "Deixa eu te contar…"). Keep the conversational rhythm.
+- **Technical terms**: keep English terms when they're the working vocabulary in Brazilian dev culture (deploy, build, frontend, backend, framework, prompt, rule, skill, subagent). Don't translate these into stilted Portuguese.
+
+---
+
+## When to write in which order
+
+- Default: write EN first, then translate to PT.
+- Always commit both files in the same change. A post is not "done" until both languages exist.
+- If the EN post is edited later, propagate the change to PT in the same commit.

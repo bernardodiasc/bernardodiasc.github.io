@@ -6,6 +6,7 @@ lang: pt
 tags:
   - typography
   - content
+  - human-written
 excerpt: O conteúdo agora pode ser filtrado por categoria e o visual recebeu um polimento para melhor legibilidade.
 ---
 

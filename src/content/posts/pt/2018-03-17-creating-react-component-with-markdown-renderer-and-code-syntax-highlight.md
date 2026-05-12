@@ -8,6 +8,7 @@ tags:
   - react
   - highlight
   - html
+  - human-written
 excerpt: Dado uma string Markdown, renderizar como HTML com syntax highlight de código.
 ---
 

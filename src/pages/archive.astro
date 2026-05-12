@@ -5,7 +5,7 @@ import PageContent from '../components/PageContent.astro';
 import PostHeader from '../components/PostHeader.astro';
 import { isEnglishPost } from '../i18n/utils';
 
-const posts = await getCollection('posts', ({ id, data }) => !data.draft && isEnglishPost(id));
+const posts = await getCollection('posts', ({ id }) => isEnglishPost(id));
 
 const sortedPosts = posts.sort(
   (a, b) => b.data.date.getTime() - a.data.date.getTime()
@@ -22,6 +22,7 @@ const items = await Promise.all(
       date: post.data.date,
       excerpt: post.data.excerpt,
       tags: post.data.tags,
+      draft: post.data.draft,
       category: categoryEntry
         ? { id: categoryEntry.id, title: categoryEntry.data.title, icon: categoryEntry.data.icon }
         : undefined,
@@ -85,7 +86,7 @@ for (const year of years) {
             <h2 class="archive-year__title">{year}</h2>
             <div class="posts-listing">
               {grouped[year].map((item) => (
-                <section class="posts-listing__each" data-month={item.date.getMonth()}>
+                <section class="posts-listing__each" data-month={item.date.getMonth()} {...(item.draft ? { 'data-draft': '' } : {})}>
                   <a href={postUrl(item.id)} class="posts-listing__link">
                     <PostHeader
                       mode="listing"

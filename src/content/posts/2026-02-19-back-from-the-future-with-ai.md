@@ -9,7 +9,7 @@ tags:
   - ai
   - static-site
   - developer-experience
-  - ai-generated
+  - human-written
 excerpt: After years away, I'm reviving this blog with the help of AI — and the entire tech stack got a fresh start.
 ---
 

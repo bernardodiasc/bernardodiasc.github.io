@@ -9,6 +9,7 @@ tags:
   - log
   - journaling
   - hello-world
+  - human-written
 excerpt: Manter-se atualizado em TI pode ser um grande desafio, ter sistemas de estudo é muito útil.
 ---
 

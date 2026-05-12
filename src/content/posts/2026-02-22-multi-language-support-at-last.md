@@ -8,7 +8,7 @@ tags:
   - astro
   - ai
   - developer-experience
-  - ai-generated
+  - ai-assisted
 excerpt: The very first item on my 2018 feature wishlist was internationalization. Eight years later, it's finally here — and every post now has a Portuguese translation.
 ---
 

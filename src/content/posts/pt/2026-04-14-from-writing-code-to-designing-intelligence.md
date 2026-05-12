@@ -17,6 +17,7 @@ tags:
   - fastapi
   - postgresql
   - pydantic
+  - ai-assisted
 excerpt: Cada vez mais se enquadra o uso de IA no trabalho como atalho de produtividade ou como risco inevitável — uma redução conveniente de algo estrutural. Aqui vai uma leitura mais nítida do que está mudando, do que quebrou quando mergulhei em território desconhecido, e por que a validação humana ainda definiu o limite do que era confiável.
 ---
 

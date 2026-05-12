@@ -10,6 +10,7 @@ tags:
   - npm
   - yarn
   - create-react-app
+  - human-written
 excerpt: Às vezes pequenas mudanças podem derrubar um site inteiro, felizmente às vezes a correção é fácil!
 ---
 

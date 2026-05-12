@@ -10,6 +10,7 @@ tags:
   - github
   - trello
   - ideas
+  - human-written
 excerpt: Ideias são muito mais rápidas que ações, anote-as e gerencie depois para se tornarem ótimos artigos.
 ---
 

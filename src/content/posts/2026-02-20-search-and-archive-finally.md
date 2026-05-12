@@ -9,7 +9,7 @@ tags:
   - javascript
   - css
   - astro
-  - ai-generated
+  - ai-assisted
 excerpt: The search and archive pages that have been placeholders since 2018 are now real. Here's how they were built — and what it's like to direct an AI through UI work.
 ---
 

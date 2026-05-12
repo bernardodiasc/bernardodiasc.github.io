@@ -6,6 +6,7 @@ lang: pt
 tags:
   - disqus
   - react
+  - human-written
 excerpt: Nova funcionalidade incluída, abrindo canal para feedbacks!
 ---
 

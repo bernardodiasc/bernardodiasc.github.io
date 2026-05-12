@@ -8,6 +8,7 @@ tags:
   - isolation
   - stylelint
   - workflow
+  - human-written
 excerpt: A thoughtful way to write CSS properties.
 ---
 

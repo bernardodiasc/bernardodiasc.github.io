@@ -7,6 +7,7 @@ tags:
   - react
   - highlight
   - html
+  - human-written
 excerpt: Given a Markdown string, then render as HTML with fancy code syntax highlight.
 ---
 

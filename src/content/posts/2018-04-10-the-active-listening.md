@@ -11,6 +11,7 @@ tags:
   - leadership
   - humans
   - communication
+  - human-written
 excerpt: The most powerful groups are made with people who knows the time to talk and the time to listen.
 ---
 

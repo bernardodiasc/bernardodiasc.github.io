@@ -6,6 +6,7 @@ tags:
   - life
   - business
   - development
+  - human-written
 excerpt: For each opportunity we take, there are a ton of others we let pass.
 ---
 

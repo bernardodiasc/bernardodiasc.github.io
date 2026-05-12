@@ -11,6 +11,7 @@ tags:
   - composes
   - react
   - css-modules
+  - human-written
 excerpt: How to ensure visual consistency with UI components usages.
 ---
 

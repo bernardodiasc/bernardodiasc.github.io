@@ -6,7 +6,7 @@ import Disqus from '../../../../components/Disqus.astro';
 import { isEnglishPost } from '../../../../i18n/utils';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('posts', ({ id, data }) => !data.draft && isEnglishPost(id));
+  const posts = await getCollection('posts', ({ id }) => isEnglishPost(id));
   return posts.map((post) => {
     const [year, month, day, ...rest] = post.id.split('-');
     return {
@@ -35,11 +35,13 @@ const pageUrl = `${siteUrl}${Astro.url.pathname}`;
   title={post.data.title}
   description={post.data.excerpt}
   image={post.data.thumbnail || undefined}
+  noindex={post.data.draft}
 >
   <PostDetails
     title={post.data.title}
     date={post.data.date}
     category={category}
+    tags={post.data.tags}
     url={pageUrl}
   >
     <Content />

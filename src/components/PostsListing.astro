@@ -7,6 +7,7 @@ interface PostItem {
   title: string;
   date: Date;
   excerpt: string;
+  draft?: boolean;
   category?: {
     id: string;
     title: string;
@@ -29,7 +30,7 @@ function postUrl(id: string): string {
 
 <div class="posts-listing">
   {items.map((item) => (
-    <section class="posts-listing__each">
+    <section class="posts-listing__each" {...(item.draft ? { 'data-draft': '' } : {})}>
       <a href={postUrl(item.id)} class="posts-listing__link">
         <PostHeader
           mode="listing"

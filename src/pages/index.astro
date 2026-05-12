@@ -5,7 +5,7 @@ import PageContent from '../components/PageContent.astro';
 import PostsListing from '../components/PostsListing.astro';
 import { isEnglishPost } from '../i18n/utils';
 
-const posts = await getCollection('posts', ({ id, data }) => !data.draft && isEnglishPost(id));
+const posts = await getCollection('posts', ({ id }) => isEnglishPost(id));
 
 const sortedPosts = posts.sort(
   (a, b) => b.data.date.getTime() - a.data.date.getTime()
@@ -22,6 +22,7 @@ const items = await Promise.all(
       date: post.data.date,
       excerpt: post.data.excerpt,
       tags: post.data.tags,
+      draft: post.data.draft,
       category: categoryEntry
         ? { id: categoryEntry.id, title: categoryEntry.data.title, icon: categoryEntry.data.icon }
         : undefined,

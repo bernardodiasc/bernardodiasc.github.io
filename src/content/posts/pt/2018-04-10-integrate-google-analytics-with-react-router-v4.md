@@ -7,6 +7,7 @@ tags:
   - google analytics
   - seo
   - react router
+  - human-written
 excerpt: Aplicações single-page requerem tratamento especial para rastreamento de estatísticas em cada visualização de página.
 ---
 

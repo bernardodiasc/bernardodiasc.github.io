@@ -6,6 +6,7 @@ tags:
   - google analytics
   - seo
   - react router
+  - human-written
 excerpt: Single-page applications requires especial treatment for tracking statistics on each page view.
 ---
 

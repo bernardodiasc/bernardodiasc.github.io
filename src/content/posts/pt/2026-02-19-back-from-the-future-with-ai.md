@@ -9,7 +9,7 @@ tags:
   - ai
   - static-site
   - developer-experience
-  - ai-generated
+  - human-written
 excerpt: Depois de anos ausente, estou revivendo este blog com a ajuda de IA — e toda a stack tecnológica ganhou um recomeço.
 thumbnail: /content/posts/2026-02-19-back-from-the-future-with-ai/ChatGPT-Image-Feb-19-2026-10_51_05-PM.png
 ---

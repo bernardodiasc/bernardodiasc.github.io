@@ -7,6 +7,7 @@ tags:
   - design
   - css
   - markdown
+  - human-written
 excerpt: Second day developing this project, long road ahead.
 ---
 

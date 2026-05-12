@@ -7,6 +7,7 @@ tags:
   - yarn
   - boilerplate
   - generators
+  - human-written
 excerpt: This site have some custom made boilerplate generators that makes life easier.
 ---
 

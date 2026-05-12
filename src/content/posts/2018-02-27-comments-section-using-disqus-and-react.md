@@ -5,6 +5,7 @@ category: this-blog
 tags:
   - disqus
   - react
+  - human-written
 excerpt: New feature included, opening channel for feedbacks!
 ---
 

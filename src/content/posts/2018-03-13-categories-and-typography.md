@@ -5,6 +5,7 @@ category: this-blog
 tags:
   - typography
   - content
+  - human-written
 excerpt: Content can now be fetched by category and the visual got some polishing for better readability.
 ---
 

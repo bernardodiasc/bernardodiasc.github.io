@@ -7,6 +7,7 @@ tags:
   - life
   - business
   - development
+  - human-written
 excerpt: Para cada oportunidade que aproveitamos, há várias outras que deixamos passar.
 ---
 

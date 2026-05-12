@@ -9,6 +9,7 @@ tags:
   - npm
   - yarn
   - create-react-app
+  - human-written
 excerpt: Sometimes little changes can put down an entire website, luckily sometimes the fix is easy!
 ---
 

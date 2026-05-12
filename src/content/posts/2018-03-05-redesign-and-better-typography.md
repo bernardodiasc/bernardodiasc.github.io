@@ -6,6 +6,7 @@ tags:
   - design
   - typography
   - CSS
+  - human-written
 excerpt: Fourth day on this site's development, a blog for reading must be nice to read.
 ---
 

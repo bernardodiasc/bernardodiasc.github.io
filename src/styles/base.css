@@ -30,3 +30,11 @@ a {
 *, *::before, *::after {
   box-sizing: border-box;
 }
+
+[data-draft] {
+  display: none !important;
+}
+
+html.show-drafts [data-draft] {
+  display: revert !important;
+}

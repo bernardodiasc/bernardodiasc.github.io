@@ -15,6 +15,7 @@ tags:
   - api
   - hello-world
   - meteor
+  - human-written
 excerpt: Just a log of my GraphQL studies.
 ---
 
