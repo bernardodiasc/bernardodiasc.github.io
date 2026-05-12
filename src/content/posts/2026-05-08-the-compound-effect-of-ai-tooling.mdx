@@ -1,0 +1,119 @@
+---
+title: The compound effect of AI tooling
+date: 2026-05-08
+category: ai-work
+series: ai-philosophy
+draft: true
+thumbnail: /content/posts/2026-05-08-the-compound-effect-of-ai-tooling/layered-architecture.png
+tags:
+  - ai
+  - ai-agents
+  - strategy
+  - developer-experience
+  - systems-thinking
+  - compounding
+  - architecture
+  - workflow
+  - ai-assisted
+excerpt: Each piece — rules, skills, subagents, journaling — is small on its own. The interesting thing is what happens when they layer. The system stops feeling like a collection of tools and starts feeling like an environment that was shaped to fit me. That shift is the compound effect, and it's the part nobody talks about.
+---
+
+I have been meaning to write this post for a while. It's the one that pulls everything in this series together, and I've been putting it off because I wasn't sure what the actual claim was.
+
+Now I think the claim is this: each piece I've written about — rules, skills, subagents, the portable file layout, the journaling integration, the standards wrapper — is small on its own. None of them, individually, would be worth much fuss. The interesting thing is what happens when they layer. The system stops feeling like a collection of tools and starts feeling like *an environment shaped to fit me*. That shift is the compound effect, and it's the part nobody talks about.
+
+This is the essay version of that observation. Not a tutorial. Not a how-to. Just an honest account of what changed, slowly, while I was building this stuff and not paying attention to the cumulative effect.
+
+<ImageFigure alt="Pop-art halftone-printed composition on a cream paper background overlaid with a faint Ben-Day dot field, in the bold flat saturated palette and printing texture of 1960s Lichtenstein-era pop-art posters — sunshine yellow, fire-engine red, cobalt blue, jade green, hot pink, and bold black outlines, with characteristic halftone dot shading filling secondary areas. Five chunky horizontal slab-shaped bands are stacked vertically like a stylized layered cake cross-section, each slab outlined in thick black ink and slightly skewed off-axis for visual energy. Each band is a different saturated flat color: the bottom band fire-engine red, the second sunshine yellow, the middle cobalt blue, the fourth jade green, the top hot pink. Each band's interior surface carries a distinct halftone-dot density — finer dots on some, larger and more spaced on others. At the center of each band sits a single bold pop-art icon outlined in heavy black: bottom an anvil-and-stone shape; second a chunky wrench; middle three overlapping bubble-circles; fourth two interlocking chain-link shapes; top a small simplified notebook with a curled corner. Between consecutive bands, thin upward-pointing arrow shapes in bold black with halftone interiors connect each layer to the one above it. A subtle drop shadow sits on the right side of the stack. No readable text or letters anywhere in the composition." src="/content/posts/2026-05-08-the-compound-effect-of-ai-tooling/layered-architecture.png" caption="Five layers, each cheap on its own. The capability comes from the stacking — each layer makes the next one cheaper to build and more useful in practice." />
+
+## The pieces, recapped briefly
+
+Five components, each described in earlier posts in this series.
+
+**Rules** are small Markdown files that load automatically when the agent touches matching files. They steer behavior on the conventions of a project — voice, structure, safety, style. They cost almost nothing once written and they keep paying back across every session.
+
+**Skills** are on-demand procedures the agent invokes by name. They wrap recurring tasks — debugging, building queries, posting messages — in a tested, callable form. The agent reads the skill, runs the script, interprets the output. Each skill caches a procedure that used to live in a senior engineer's head.
+
+**Subagents** are isolated AI instances spawned for specialized work. They run in their own context, often read-only, and return structured reports. They keep heavy analytical work off the parent's plate without losing the analysis.
+
+**The portable layout** — one canonical source folder, symlinks from each tool's expected directory — means the rules, skills, and subagents work across multiple AI coding agents without forks. The library is decoupled from any specific runtime.
+
+**The journaling integration** is the system that captures progress, plans the day, generates audience-specific reports, and posts updates to chat — all from the same Markdown source. It uses the rules and skills, runs through the AI agent, and produces the legible record that lets memory, accountability, self-awareness, and communication stop being neglected.
+
+That's the inventory. Each piece, on its own, is unremarkable. Some teams have one of these. Few teams have all five integrated.
+
+## Where the compounding starts
+
+Each layer makes the layer above it cheaper.
+
+**Rules make skills better.** When a skill runs through an agent that already has the right project rules loaded, the skill's output is automatically conformant. I don't have to put style guidance in the skill body; it's already in the rule. The skill body gets shorter and more focused.
+
+**Skills make subagents better.** When a subagent is invoked, it inherits the rules and can call skills from its isolated context. The security-review subagent doesn't have to know how to query the database; it can call the relevant debug skill. Specialization stacks on top of reusable infrastructure instead of reinventing it.
+
+**The portable layout makes the rest tool-agnostic.** None of the rules, skills, or subagents are coupled to a specific AI coding agent. Switching tools — or running multiple tools on the same project — doesn't reset the work.
+
+**The journaling integration ties the loop closed.** The decisions I make using rules, skills, and subagents are captured in journal entries. The journal entries become inputs to the next day's plan. The plan informs which rules to write or which skills to add. The system produces evidence about itself, which I read, which informs my next move.
+
+The dependency graph runs from rules at the bottom to journaling at the top. Each layer takes the cost-savings of the layer below and amplifies them. None of the layers, by itself, would be impressive. All of them together produce something I genuinely could not have built without them.
+
+## What the system feels like, after a few months
+
+Some specifics about how this changes the day-to-day, that I would not have predicted at the start.
+
+**The blank-page problem mostly disappears.** When I sit down to start a session, the agent already knows the project's voice, conventions, structure, safety policies, and recent state. I'm not staring at an empty prompt trying to remember which framing to give it. The framing is preloaded.
+
+**Investigation is faster than implementation.** When something is wrong, I can usually have a structured account of what's wrong within a minute or two. Debug skills inspect live state; the journaling history surfaces context; the subagent reads policies if relevant. The agent assembles the answer faster than I could manually navigate to the relevant file.
+
+**I notice myself trusting the agent more — appropriately.** When the agent generates a piece of code under the always-on behavioral rules and the security review subagent gives it a clean bill, I trust the output more than I would have without that scaffolding. Not because the agent has gotten smarter; because the system has gotten more trustworthy. The trust is in the audit, not in the original generation.
+
+**Reports write themselves.** The Friday afternoon ritual that used to be three hours of writing is now thirty minutes. That two-and-a-half hours, every week, is freed. Some of it I use. Some of it just stops being on my plate.
+
+**The codebase stays cleaner.** With the simplicity-first rule loaded, the surgical-changes rule loaded, the security-review subagent on call, and the journaling loop catching when I drift, the diffs that get committed are tighter than what I was producing before all of this existed. Quality went up; effort went down. That's not a tradeoff; it's a compound benefit.
+
+**Switching projects is faster.** The vendor-agnostic layout means I can drop the same standards wrapper and the same skill library into a new project as a workspace folder, and within a few minutes the new project has the same scaffolding the old one did. Onboarding myself onto a fresh codebase takes far less mental effort than it used to.
+
+I don't want to oversell any single one of these. Each of them, individually, is a small change. The compound experience is what's noticeably different.
+
+## Why it took layers
+
+I want to be careful not to over-rotate on the success of the system, because the path to it was unglamorous.
+
+The first version of any of these layers was always too elaborate or too thin. The first rule file I wrote was too long; nobody (including the agent) read it carefully. The first skill I wrote was too tightly coupled to its codebase; it broke the next time I refactored. The first subagent I tried to write tried to do everything; it was useless. The first journaling integration was scheduled and ran daily without me — I hated it within a week.
+
+Each layer went through a few rewrites before settling. The current shapes — small rules, narrow skills, read-only subagents with structured output, manually-triggered journaling — are the shapes that survived contact with reality. They're not the shapes I would have predicted at the start.
+
+That's worth saying out loud, because someone reading this series might think the obvious move is *"build the same five layers I have, all at once"*. It isn't. The right move is to build one layer, use it for a while, notice where it falls short, and let the next layer emerge from the gap. Compound effects come from layering things that have each been pruned to fit. They don't come from designing the whole stack on a whiteboard.
+
+<ImageFigure alt="Pop-art halftone-printed composition on a cream paper background, in the bold flat saturated palette and printing texture of 1960s Lichtenstein-era pop-art posters — sunshine yellow, fire-engine red, cobalt blue, hot pink, and bold black outlines, with characteristic halftone dot shading. The composition shows a stepped growth curve. The background is a graph-paper grid rendered in faint cobalt-blue halftone dots. A bold black hand-drawn curve traces a step-and-rise path from the lower-left to the upper-right of the composition. The curve makes five distinct step-up moments along its length; at each step-up, a bold pop-art starburst-shape is overlaid, each starburst a different distinctive geometry — first a small dot-radiating starburst in fire-engine red, then a chevron starburst in sunshine yellow, then a diamond starburst in hot pink, then a fan starburst in red, then a zigzag starburst in yellow — every starburst with a thick black outline. After the fifth starburst, the curve continues rising in a steeper sweep upward, and the area under that final stretch is filled with denser sunshine-yellow halftone dots, indicating accumulated capacity. No readable text or letters anywhere in the composition." src="/content/posts/2026-05-08-the-compound-effect-of-ai-tooling/growth-curve-layers.png" caption="Each layer is a step. The compound is what happens between the steps." />
+
+## What this isn't
+
+Some honest disclaimers.
+
+This isn't *productivity*, in any naive sense. The work I do isn't faster than other engineers'. The cycle time on individual tasks is usually similar. What's different is that the *operating overhead* of being on top of a project — knowing its state, communicating about it, maintaining standards — has dropped dramatically. The work itself takes the time it takes.
+
+This isn't *replacement*. The agent is not doing my job. It's removing the friction around my job. There's a real difference between "AI is helping me write code" (true) and "AI is writing my code for me" (not true, in any meaningful sense). The judgment, the editorial choices, the architectural decisions, the conversations about priority — those are still on me.
+
+This isn't *finished*. The system as I described it is the snapshot from this week. Some pieces will be deleted. Others will be added. The shape will change. What I'm describing is a methodology that produces ongoing improvement, not a final product.
+
+This isn't *transferable as-is*. The specific rules and skills I've built fit my projects, my voice, my team's standards. They won't work in another context unmodified. The transferable thing is the *pattern* — small layers that compose, each pruned to fit. The content of each layer is yours to write.
+
+## A small philosophical observation
+
+There's a thing I've come to believe, watching this happen on my own work and in conversations with other people experimenting with similar setups.
+
+We tend to think of AI tools as *features* added to an existing way of working. *"Now my editor has autocomplete."* *"Now my IDE has chat."* The model behind that framing is that the tool is a discrete addition to a stable workflow.
+
+That's not what's actually happening, in the long run. What's happening is that the surrounding workflow — the rules, skills, journaling, communication — is also reshaping itself around the tool's strengths and weaknesses. The result is a co-adapted system. The human and the AI tool aren't separate components; they're parts of one workflow that has evolved to use both effectively.
+
+The compound effect is what that co-adaptation looks like once it's matured. It's not the AI getting better. It's the *system* getting better, of which the AI is one part. The other parts — the rules, the skills, the layout, the practices — were also shaped over time, and they're doing as much of the work as the model is.
+
+I think this matters for how to think about the next few years. People who treat AI tools as features they're adopting in isolation will plateau. People who treat AI tools as something the workflow co-evolves with will keep compounding.
+
+That's the whole post. Five layers. Each small. The interesting thing is the stacking. The stacking is what makes the system feel like an environment instead of a toolset.
+
+## Further reading
+
+- [From writing code to designing intelligence](/2026/04/14/from-writing-code-to-designing-intelligence)
+- [Rules as project memory](/2026/04/24/rules-as-project-memory)
+- [AI agent skills — why I wrote 33 of them](/2026/04/25/ai-agent-skills-why-i-wrote-33-of-them)

@@ -12,3 +12,22 @@ const { alt = '', src, caption } = Astro.props;
   <img alt={alt} src={src} />
   {caption && <figcaption>{caption}</figcaption>}
 </figure>
+
+<style is:global>
+  .text-block .image-figure {
+    margin: 1.5em -2em;
+    text-align: center;
+  }
+
+  .text-block .image-figure img {
+    max-width: 100%;
+  }
+
+  .text-block .image-figure figcaption {
+    font-size: var(--meta-size);
+    color: var(--meta-color);
+    font-style: italic;
+    text-align: center;
+    margin: 0.5em 3em 0;
+  }
+</style>

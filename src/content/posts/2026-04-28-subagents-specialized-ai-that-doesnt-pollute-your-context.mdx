@@ -1,0 +1,173 @@
+---
+title: Subagents — specialized AI that doesn't pollute your context
+date: 2026-04-28
+category: developer-tooling
+series: subagents
+draft: true
+thumbnail: /content/posts/2026-04-28-subagents-specialized-ai-that-doesnt-pollute-your-context/isolated-subagents.png
+tags:
+  - ai
+  - ai-agents
+  - vibecoding
+  - architecture
+  - context-management
+  - design-patterns
+  - cursor
+  - claude
+  - markdown
+  - ai-assisted
+excerpt: Asking your main AI agent to do a heavy analysis task burns context you can never get back. Subagents are how you spawn a fresh, scoped, sometimes read-only AI instance to do that work — and hand back only the answer, not the noise. Here's the model, and when to reach for it.
+---
+
+There's a particular kind of mistake I used to make with AI coding agents. Something would seem off in a part of the codebase I didn't know well. I'd ask the agent: *"can you take a look at the security implications of this auth change?"* The agent would respond enthusiastically, open ten files, read them in full, summarize each, cross-reference a rule set, and produce a thoughtful report.
+
+And then the rest of my conversation was wrecked.
+
+The agent's context was now full of those ten files, the security rules, the report, and the chain of reasoning that produced it. When I went back to working on the original task — which had nothing to do with security — the agent kept reaching for that material. The signal-to-noise ratio dropped. After a few more exchanges, I'd have to start a fresh conversation, losing all the project-specific context I'd built up earlier.
+
+This is the **context pollution problem**, and it's one of the reasons I started using subagents.
+
+<ImageFigure alt="Watercolor painting on cold-press paper with visible paper texture, in a horizontal landscape composition with generous cream-white negative space. Three large soft watercolor circles float across the page at slightly different vertical heights and slightly different sizes. Each circle is a distinct subtle hue — sage green on the left, soft cobalt-blue in the middle, dusty rose on the right — with characteristic watercolor pooling: pigment slightly darker around each circle's edge where the water dried, the centers paler from drying. Inside each circle, a small abstract symbol is painted in more concentrated pigment of the same hue: a small shield-shape silhouette inside the sage circle, a small open-book silhouette inside the cobalt circle, a small clipboard-with-tick-mark silhouette inside the rose circle. Around each circle, a subtle wet halo where water spread before the pigment settled — but the circles do not touch each other; clean negative space between them emphasizes their isolation. A larger faint pencil-line outline encircles all three after the watercolor has dried, drawn in a single soft graphite stroke. From each smaller circle, a thin pencil line reaches outward to a single small ink-stamped dot near the parent outline's edge. Soft and atmospheric watercolor pigment, cold-press paper grain, no readable text or letters anywhere in the composition." src="/content/posts/2026-04-28-subagents-specialized-ai-that-doesnt-pollute-your-context/isolated-subagents.png" caption="Three subagents, three contexts, one parent. The parent only sees what they choose to report." />
+
+## What a subagent is
+
+A subagent is a separate AI instance, spawned by your main conversation, with its own context window. The parent agent invokes it with a task description; the subagent does the work in isolation; it returns a result; the parent receives the result and the subagent vanishes.
+
+From the parent agent's perspective, calling a subagent is conceptually similar to calling a function. You don't see what happens inside. You don't inherit the work-in-progress state. You just get the return value.
+
+The implementation looks roughly like this — a Markdown file in a folder the parent agent watches:
+
+```markdown
+---
+name: org-standards-security-review
+description: >
+  Security and privacy review against the org standards.
+  Use when implementing or reviewing auth, APIs, data handling,
+  uploads, crypto, sessions, or infra. Use proactively for
+  sensitive features.
+model: inherit
+readonly: true
+---
+
+You review work against the org standards in `standards/rules/`.
+
+## When invoked
+
+1. From the parent prompt, infer scope (features, files, APIs).
+2. Identify which topics under `standards/rules/` apply.
+3. Read the relevant `standards/rules/*.md` files and compare
+   the implementation to the written rules.
+4. Report by severity (Critical / High / Medium / Low).
+   Each finding must reference a rule file.
+```
+
+That's the whole subagent definition. The frontmatter declares its name, when it should be invoked, what model to use (inherit from the parent in this case), and — crucially for this one — that it's read-only. The body is the system prompt the subagent runs with.
+
+The agent runtime handles the rest: spawning the subagent with its own context, passing in the parent's task description, capturing the response, and bringing it back.
+
+## The three properties that matter
+
+A subagent has three properties that shape when it's worth using.
+
+#
+
+## Isolation
+
+The subagent's context is its own. Whatever it reads, the parent doesn't have to read. Whatever it concludes, the parent receives as a summary, not as the raw chain of reasoning. The parent's context stays focused on the parent's actual task.
+
+This sounds like a small thing. It is not. With long-running conversations on real projects, context budget is the bottleneck. Anything that reduces what's in the parent's context is buying you more useful work later in the same session.
+
+#
+
+## Specialization
+
+Because the subagent has its own system prompt, it can be tuned for one specific job. The security-review subagent doesn't have to be good at writing code or generating tests; it has to be good at reading rules and comparing implementations against them. The narrower the specialization, the cleaner the output.
+
+A general-purpose agent doing a security review is acceptable. A subagent dedicated to that one job, with rules baked into the prompt and a reporting format defined in advance, is reliably better at it.
+
+#
+
+## Optional read-only mode
+
+Most subagents I write are flagged `readonly: true`. They can read files, run shell commands, browse the codebase — but they can't write anything. That's the right default for review and analysis work.
+
+Read-only mode does two things: it prevents accidents (a subagent that misinterprets its task can't damage anything), and it changes my mental model of what's safe to delegate. I'll happily spawn a read-only subagent for almost any analysis task. I'd think harder before spawning a writable one.
+
+<ImageFigure alt="Watercolor diptych on cold-press paper, with a thin vertical pencil line dividing the page in half. The left half shows a single large watercolor circle that has been over-painted with multiple overlapping washes in many different hues — sage, rust, navy, ochre — bleeding into one another until the pigments muddy in the center into a brownish unsettled tone. The boundaries of the circle are smeared; smaller secondary blooms drift outside the main shape, escaping into the clean paper margin like spilled ink, and faint pencil wander-lines trail away from the circle as if marking that escape. The right half is mostly clean cream paper. In its center sits a single calm cobalt-blue watercolor circle with a small concentrated pigment dot at its core. Off to the upper-right, a smaller separate watercolor circle in sage green floats on its own, fully isolated by white paper space. A thin pencil arrow descends from the small sage circle and approaches the cobalt circle, terminating in a single concentrated pigment droplet on the cobalt circle's edge — as if the smaller circle had done its work elsewhere and sent back only a distilled summary. Soft cold-press paper texture across both halves, atmospheric watercolor pooling, no readable text or letters anywhere in the composition." src="/content/posts/2026-04-28-subagents-specialized-ai-that-doesnt-pollute-your-context/with-without-subagents.png" caption="Same task, two outcomes. The polluted context never recovers; the isolated one stays focused." />
+
+## When to reach for a subagent
+
+Three patterns where subagents are clearly the right tool.
+
+**Heavy reads with a small return.** Tasks where the agent has to consume a lot of material to produce a short answer. Reviewing a change against thirty rule files. Auditing a feature against a checklist. Searching a codebase for instances of a pattern. The "consume" part is exactly what pollutes the context; the "return a short answer" part is exactly what the parent actually wants.
+
+**Specialization that doesn't fit the parent's role.** Code review, security review, dependency audits, accessibility checks, license scanning. Each of these benefits from a focused system prompt and a defined output format. Mixing them into the parent agent's general-purpose prompt dilutes both.
+
+**Parallel work.** When two independent investigations need to happen at the same time, spawning two subagents in parallel keeps each on its own track. The parent waits for both results. Each subagent's context is clean. Total wall-clock time goes down because the analyses overlap.
+
+## When *not* to reach for a subagent
+
+The temptation, once you've written one, is to use them for everything. Resist.
+
+**Don't subagent trivial work.** If the task takes one tool call and a paragraph of analysis, the subagent overhead — spawning, context-passing, summarization — is more cost than benefit. Just do the work in the parent.
+
+**Don't subagent things you'll need to follow up on.** A subagent's context evaporates after it returns. If you might want to ask "wait, why did you say X about that file?" two minutes later, the subagent isn't there to answer. Use the parent for tasks that have a likely follow-up.
+
+**Don't subagent for context you actually want polluted.** Sometimes the "pollution" is exactly the point. If you're trying to build up the parent's understanding of a system, doing the reading in the parent is correct. The subagent gives you a summary; the parent gives you fluency. Different needs.
+
+**Don't subagent to escape from a tough question.** If the parent agent is struggling with something, sending it to a subagent doesn't make the underlying problem easier. It just hides the struggle inside an opaque box.
+
+## What the parent and subagent each handle
+
+The cleanest mental model I've found:
+
+| Concern | Belongs in | Why |
+|---|---|---|
+| The user's overall goal | Parent | Parent owns the conversation arc |
+| The current edit-in-progress | Parent | Subagents are stateless across turns |
+| Reading rule files for a one-off audit | Subagent | Don't pollute parent with reference material |
+| Cross-checking a change against an external standard | Subagent | Specialized, read-heavy, narrow output |
+| Drafting code | Parent | The parent is doing the work |
+| Reviewing the drafted code against policy | Subagent | Specialized review, isolated reading |
+| Tracking project-wide context (decisions, gotchas) | Parent | This is the conversation's spine |
+
+The pattern: **specialized and read-heavy goes to the subagent. The conversation's spine stays in the parent.**
+
+<ImageFigure alt="Watercolor painting on cold-press paper, in a horizontal landscape composition with generous cream-white negative space. Three soft watercolor circles are arranged in a left-to-right sequence, separated by gentle pencil-line arrows running between them. The leftmost circle is a calm cobalt-blue with a single concentrated pigment droplet at its center. From its right edge, a thin pencil arrow descends and curves down to a smaller second circle in a contrasting sage-green hue, set slightly below the parent line to indicate vertical separation. Inside the sage circle, multiple smaller painted strokes overlap with watercolor pooling — suggesting active concentrated work — and a small ink-stamped padlock motif sits at the circle's lower corner. A second thin pencil arrow rises from the sage circle and curves up to the rightmost circle, which is the same cobalt hue as the leftmost. Inside this final cobalt circle, a small concentrated pigment cluster forms a vertical column of four pigment dots, each progressively smaller. Watercolor halos and natural pooling throughout, soft cold-press paper grain, no readable text or letters anywhere in the composition." src="/content/posts/2026-04-28-subagents-specialized-ai-that-doesnt-pollute-your-context/parent-subagent-flow.png" caption="Parent makes the request. Subagent does the heavy reading in isolation. Only the distilled summary comes back." />
+
+## A few things that surprised me
+
+**Subagents make me ask better questions.** When I have to write down — in the subagent's prompt — exactly what I want it to do, I notice the questions I'd been hand-waving in chat. The act of formalizing the task into a subagent definition often surfaces ambiguity the parent had been silently absorbing.
+
+**Read-only subagents change what I'm willing to automate.** A writable subagent makes me cautious — I want to review what it's about to do before it does it. A read-only subagent doesn't have that pressure. I'll spawn one for any "go look at this and tell me what you find" task without a second thought. The category of work I delegate expanded the moment read-only became the default.
+
+**The output format is half the value.** A subagent that returns a paragraph of free-form prose is barely better than the parent doing the same work. A subagent that returns a structured report — severity, file, rule citation, line number — is qualitatively different. The parent agent can act on the structured output, decide which findings to address first, route them to the right edits. The format is what makes the result composable.
+
+**Subagents become reusable infrastructure.** I wrote one for security review and ended up using it across every project I work on. The subagent's specialization is portable in a way that a one-off prompt isn't. Specialization compounds.
+
+## How they fit with rules and skills
+
+This is the third leg of the triangle, after rules and skills.
+
+- **Rules** load automatically when files match. They steer the parent's behavior on every edit.
+- **Skills** are on-demand procedures the parent invokes by name. They run in the parent's context.
+- **Subagents** are isolated AI instances spawned by the parent. They run in their own context.
+
+Each addresses a different need:
+
+- Rules raise the floor on the parent's behavior.
+- Skills give the parent reusable procedures.
+- Subagents give the parent reusable *colleagues* — specialized counterparts that handle the work the parent shouldn't be doing.
+
+You'll usually want all three on a non-trivial project. Rules make the parent better at the project. Skills make the parent faster at recurring tasks. Subagents take the heavy specialized work off the parent's plate.
+
+## A small piece of advice
+
+If you've never written a subagent and you're considering one, the first one I'd suggest writing is exactly the security-review pattern: read-only, narrow specialization, structured output. Tomorrow's post is a walkthrough of one I actually use. The reason I'd suggest that one first is that it gives you immediate, visible value — you ask the parent "is this change safe?" and you get back a structured report that would have taken twenty minutes to assemble manually.
+
+Once you've felt how that's different from doing the same review in the parent's context, you'll start spotting other tasks that fit the same shape. The drawer fills up the same way the skill drawer did, one specialized colleague at a time.
+
+## Further reading
+
+- [A read-only AI security reviewer](/2026/04/29/a-read-only-ai-security-reviewer)
+- [A taxonomy of AI agent skills](/2026/04/26/a-taxonomy-of-ai-agent-skills)

@@ -1,0 +1,109 @@
+---
+title: Planning 20 blog posts with an AI agent
+date: 2026-04-21
+category: ai-work
+series: blog-meta
+draft: true
+thumbnail: /content/posts/2026-04-21-planning-20-blog-posts-with-an-ai-agent/planning-board-batches.png
+tags:
+  - ai
+  - ai-agents
+  - vibecoding
+  - developer-experience
+  - workflow
+  - content-strategy
+  - planning
+  - markdown
+  - ai-assisted
+excerpt: I sat down with an AI coding agent to plan a 21-post series. I didn't expect the planning itself to be the most interesting part — but it was, and most of what I learned is about how to use these tools, not about what to write.
+---
+
+I sat down with an AI coding agent to plan a series about AI coding agents. Yes, that's recursive. No, I didn't see it coming when I started.
+
+The result was a 500-line plan file with 21 posts grouped into 6 thematic batches, with categories assigned, dates scheduled, image briefs written, and a content-safety policy attached to it. But the plan itself isn't what surprised me. What surprised me is how much the *planning session* taught me about how to work with these tools — and how much of that is now showing up across the rest of my workflow.
+
+This post is about that. Not the plan, but the planning.
+
+<ImageFigure alt="Mixed-media collage photographed from straight above, in a planning-artifact style. The composition spans a worn cream desk surface and is built from layered torn-paper grounds: six distinct horizontal bands run across the page, each in a different paper color and texture — pale newsprint, warm kraft, cool blue-grey, faded peach, cream lined notebook page, soft mint cardstock — so the bands visually read as six grouped rows without any label. Scattered across the bands are small rounded paper cards, each card cut from a different material (envelope scraps, lined paper, colored cardstock), affixed with short strips of pastel washi tape, rubber-stamp dots, or masking-tape tabs. Each card carries only abstract pencil scribbles where text would be — looping squiggles, small dot-and-dash patterns, no readable letters. Curving graphite pencil arrows wander between cards and across the bands, with several over-drawn corrections, eraser smudges, and re-pinned tape edges. In one corner, a stubby pencil rests beside a soft eraser and a faint coffee-cup ring stains the kraft band. Slightly raked natural daylight, deep shadow at the card edges, palpable paper texture; warm, handmade, slightly weathered, no readable text anywhere in the composition." src="/content/posts/2026-04-21-planning-20-blog-posts-with-an-ai-agent/planning-board-batches.png" caption="Six bands of paper, many cards, several rounds of moving things around. The plan as a working artifact, not a finished document." />
+
+## Plan mode is the right place to think
+
+Most AI coding tools have something they call **plan mode**, **ask mode**, or some equivalent. Read-only. No file edits. Often runs on a smaller, cheaper model. The agent can browse the codebase, read files, ask questions, propose changes — but it physically can't write anything to disk.
+
+For a long time I treated plan mode as a worse version of "real" agent mode. Less power, less throughput, less satisfying. So I'd skip it. Open agent mode straight away, dump my idea, and watch the agent start editing files within seconds. Sometimes that's fine. For anything bigger than a one-line change, it's a small disaster.
+
+Here's what I missed: in agent mode, the model wants to *do something*. It's biased toward producing diffs. Ask a vague question and it will start "fixing" things. By the time you realize you didn't actually want that, you've got a half-implemented design baked into the tree.
+
+Plan mode removes that pressure. The agent can't act, so all it can do is think out loud with you. Cheaper model, lower stakes, no diffs to clean up. You separate the thinking from the doing, and the thinking gets better because nobody's rushing to a commit.
+
+I started this blog series in plan mode. I should have been doing that for everything bigger than "rename this variable" all along.
+
+<ImageFigure alt="Mixed-media collage diptych on a single landscape sheet, split down the middle by an irregular torn-paper seam, in a planning-artifact style. The left half is built on cool tones — pale slate-blue paper grounds, cream tracing-paper overlays — with a soft graphite sketch of a laptop seen in three-quarter view; the screen area is a translucent vellum panel pasted on, behind which floats a small ink-stamped padlock motif at one corner. Around the laptop sit exploratory pencil gestures: open loops, dashes, a few question-mark curls, thin uncertain lines that read as 'thinking' without forming any letters. The right half is built on warm tones — burnt-orange kraft, rust newsprint, brick-red cardstock — with a more confident ink-stamped laptop silhouette; the screen area is blocked out as a stack of solid colored bars in coral, ochre, and teal stacked like a histogram, suggesting written code without using any letters. Around it, hand-stamped asterisks, small arrows, and confident dot patterns punch outward. A single strip of pale-yellow washi tape runs vertically across the seam, holding the two halves together. A loose dashed pencil arrow curves from the left side into the right side. Visible paper edges, glue residue, slight bowing of the layers; no readable text anywhere in the composition." src="/content/posts/2026-04-21-planning-20-blog-posts-with-an-ai-agent/plan-mode-vs-agent-mode.png" caption="Same agent, two different jobs. The cool half is for figuring out what the work is. The warm half is for finishing it." />
+
+## Multiple-choice beats "what do you think?"
+
+The other thing I changed mid-session was how I asked questions.
+
+When you say "what do you think about how to organize the categories?", the model gives you a thoughtful paragraph. You read it, you mostly agree, you nod, and you've moved exactly one inch. Then it asks you a follow-up, and you give a paragraph back, and after thirty minutes of this you realize you've had a nice conversation and made three actual decisions.
+
+What worked better — for me, on this kind of task — is asking the agent to give me **structured choices**. Three or four options, each with a one-line rationale, and a recommendation. Then I pick. Sometimes I'd ask for a second round once it had more context.
+
+That style does something I didn't expect. It forces the agent to commit to alternatives instead of hedging. And it forces *me* to actually decide instead of nodding along to whichever framing came out first. A "what do you think" loop is biased toward the first plausible answer. A multiple-choice loop is biased toward picking. Picking is the bottleneck, so anything that speeds it up speeds the whole session up.
+
+By the end I was asking for option lists almost reflexively. "Give me four ways to handle dates across this series, name the tradeoffs, recommend one." The plan moved a lot faster after that.
+
+## The plan was rewritten about ten times
+
+Alright, here's the part that's a little embarrassing. I thought I was going to brainstorm for an hour and walk out with a clean plan. What actually happened is I wrote a first version, read it back, hated half of it, asked the agent to refactor a section, hated something else, asked again. The plan file went through something like ten substantial rewrites before it stabilized.
+
+What changed each time wasn't the *amount* of content — that grew steadily — but the *constraints* around it. Each pass added a constraint I hadn't thought of when I started:
+
+- **Content safety**: the rule files I'd be writing for the blog will be checked into a public repo. So they can't contain any internal project names from my work, any client names, any colleague names, any data. That added a whole section to the writing-conventions rule and changed how I wrote the post topics themselves.
+- **Vendor neutrality**: I almost titled half the series "Cursor Skills", "Cursor subagents", etc. Then I noticed I was effectively writing marketing copy for one product. The series is about **AI coding agents** as a category — Cursor, Claude Code, Copilot, whatever's next. I made the agent go back and rewrite every title to reflect that. (One exception: a post specifically about portability across tools.)
+- **Image conventions**: at first the posts had a mix of "needs a diagram", "maybe an image here", and nothing at all. I made it explicit: every post gets at least three images, every `<figure>` block has an `alt` good enough to be an image-generation prompt, every `figcaption` adds something the alt doesn't.
+- **Dates and chronology**: posts on the blog are listed by date. If I just gave them all today's date, the order would collapse into noise. So we backdated them — one per day, ending today, starting three weeks ago — to give each post a clean URL and a readable position in the archive.
+- **Categories**: I started with five categories and a vague rule of thumb. By the end there were six (the new one is "developer-tooling") and an actual decision tree for which post lands where.
+
+None of that was visible at the start. Each constraint surfaced because I tried to apply the plan to a specific post and something didn't fit.
+
+<ImageFigure alt="Mixed-media collage in a planning-artifact style, showing the iterative reshaping of an idea. On the far left, a small cream-paper smudge stands in for a rough first idea — a slightly torn ovoid shape with a single pencil dot at its center. From it, six fine pieces of colored embroidery thread (red, navy, ochre, sage, plum, charcoal) sweep rightward in gentle parabolas to a loose vertical column of six small cards arranged top to bottom. Each card is a different paper substrate — pale newsprint, blueprint-blue cyanotype paper, kraft, lined notebook page, faded yellow legal-pad scrap, coffee-stained cream cardstock — and each card carries a distinct hand-drawn icon at its center instead of any text: a small padlock, a tiny clock face, a tiny picture-frame outline, a small calendar grid, a set of nested concentric circles, and a folder shape. Looping red-ink threads curl back from lower cards to earlier ones, snaking in feedback loops; a few crossed-out arrows, eraser smudges, and re-pinned tape strips suggest revision. Plenty of cream paper showing through, soft daylight from the upper left, slight three-dimensional depth at every card edge. Restrained palette, tactile, hand-built, no readable text anywhere in the composition." src="/content/posts/2026-04-21-planning-20-blog-posts-with-an-ai-agent/constraints-emerging-iteratively.png" caption="Constraints didn't arrive at the start. They surfaced when the plan met its first concrete post and refused to fit, then looped back to reshape earlier decisions." />
+
+## The agent caught things I would have missed
+
+Here's the part I want to be honest about: this is not a story where the AI did the writing for me. It's not even a story where the AI organized my pre-existing thoughts. The agent caught real blind spots — questions I hadn't asked myself yet — and asking those questions earlier saved me from publishing things I'd regret.
+
+Two examples.
+
+When I described one of the posts about a debug skill I built, I started typing the actual project name. The agent paused on it and asked, in effect: "is this name safe to publish?" It wasn't. The project sits inside a private repo, the name has meaning to people inside the team I work with, and dropping it into a public post would be a small leak. I didn't notice until I was asked. That conversation became the content-safety section of the writing-conventions rule.
+
+The second one is smaller. I was about to title a post "Cursor skills are amazing" or something equivalently breathless, and the agent flagged that the rest of the series was talking about "AI coding agents" as a generic category. The mismatch would read like an inconsistency. We changed the title and added the tool-agnostic framing rule. That same rule kept me honest across the next twenty titles.
+
+Neither of those moves was creative writing. They were the agent doing what humans do for each other when we review work: noticing the thing the author has stopped seeing.
+
+## Plan everything, then write in batches
+
+The other thing I didn't expect was how much money and time I'd save by planning all 21 posts up front instead of writing one, then planning the next, and so on.
+
+When you plan in batches, the agent can see the shape of the whole series. It can suggest cross-references — "this post should link to that one for further reading" — that would be impossible if the future posts didn't exist yet. It can balance the topic distribution so the series doesn't collapse into one category. It can spot when two posts overlap and merge them, or when one post is doing too much and split it.
+
+It also lets you switch into agent mode for the actual writing with a much tighter prompt. Instead of "write a blog post about journaling", it becomes "write the journaling-overview post, batch 5, here's the spec, here's the tone, here are the further-reading links, here are the existing posts to match the voice of." That kind of prompt produces output you can use. The other kind produces a generic essay.
+
+So: plan once, plan everything, then execute in themed batches. Cheaper, more coherent, less rework.
+
+## What I'd do differently next time
+
+A few things would have saved me a couple of hours if I'd known them at the start.
+
+- **Decide the categories before anything else.** I changed the category list partway through and had to revisit every post topic. The category set is the cheap thing to fix early.
+- **Write the safety policy first.** Same logic. If I'd written "no internal names, no client names, no real IDs" in the very first message, the topic ideas would have arrived already abstracted.
+- **Pick a voice register per post explicitly.** Some posts are casual, some are reflective. I was leaving it implicit, and the drafts came back in a kind of LLM-neutral gray. Naming the register up front fixes that immediately.
+- **Don't title things in plan mode.** Titles are the most opinionated part of a post. The agent's first pass at a title is usually too generic; mine is usually too clever. I should have left titles for last.
+
+Honestly, the biggest takeaway is just: **the planning session is the work.** Once the plan exists, the writing is mostly transcription with style notes. The hard part — what to say, in what order, with what omissions — happens before any post is written. That's true of normal writing too, but with an AI in the loop the bottleneck moves so far upstream that you can almost watch it happen.
+
+Anyway. Twenty more posts queued up after this one. Let's see how that goes.
+
+## Further reading
+
+- [Teaching AI how to write like me](/2026/04/22/teaching-ai-how-to-write-like-me)
+- [From writing code to designing intelligence](/2026/04/14/from-writing-code-to-designing-intelligence)

@@ -1,0 +1,169 @@
+---
+title: From daily notes to stakeholder reports
+date: 2026-05-07
+category: strategy
+series: engineering-journal
+draft: true
+thumbnail: /content/posts/2026-05-07-from-daily-notes-to-stakeholder-reports/four-audiences-split.png
+tags:
+  - productivity
+  - workflow
+  - communication
+  - leadership
+  - reporting
+  - markdown
+  - slack
+  - remote-work
+  - learning
+  - ai-assisted
+excerpt: One week's worth of journal entries serves four audiences, with four different lenses. The manager wants outcomes and risks. The team wants what's in flight. The reviewer wants edge cases. You want patterns. Here's why one source plus four lenses works better than four separate trackers.
+---
+
+A senior engineer once told me that good communication is a multiplier on every other professional skill. I didn't believe her at first. I thought communication was the soft layer on top of the real work — the part that mattered when the work was done.
+
+She was right. I was wrong.
+
+A few jobs in, I noticed the engineers I most respected weren't necessarily the strongest coders, and they were all unusually good at telling different audiences different things in ways those audiences could act on. They didn't write the same status update for everyone. They wrote a manager update for their manager, a team update for their team, a self-review for themselves, and — when the work needed it — something specifically for QA or the client. Same week. Different audiences. Different lenses.
+
+This post is about that practice and the small, deliberate way I now run it. The journal you keep daily becomes the input. The output is multiple reports, each shaped for one audience.
+
+<ImageFigure alt="Saul Bass-inspired poster composition on a warm cream paper background with subtle paper grain, in a strict 3-color limited palette of mustard yellow, deep red, charcoal black, plus the cream of the paper itself. The composition uses bold flat silhouettes with hand-cut paper-like edges and the geometric simplicity of mid-twentieth-century film-poster design. On the left side of the page, a single bold black silhouette of a stepped stack of papers sits centered — drawn as five overlapping rectangles with curled corners and a slightly off-axis tilt, suggesting a journal stack. From the right edge of this stack, four straight bold flat-color lines fan outward at distinct angles toward four bold persona silhouettes arranged in a vertical column on the right side of the page. Each silhouette is a different distinctive shape rendered entirely in flat charcoal black: the topmost a person in profile with a clipboard held to the chest; the second a tightly overlapping cluster of three heads close together as a group; the third a single profile face caught between two mirrored silhouettes echoing each other; the fourth a single profile with an exaggerated magnifying-glass shape replacing the eye. The four fanning lines are each a different flat color — mustard yellow, deep red, charcoal, and warm rust — to suggest four distinct lenses. No readable text or letters anywhere in the composition." src="/content/posts/2026-05-07-from-daily-notes-to-stakeholder-reports/four-audiences-split.png" caption="One source, four silhouettes. Same week, four different stories — each one accurate, each one shaped for who's reading." />
+
+## Four audiences, four different things they need
+
+Before getting into how the workflow runs, I want to lay out the four audiences and what each of them actually wants. These aren't the only four, but they cover most of what working engineers in distributed teams need to communicate.
+
+#
+
+## The manager
+
+What the manager needs from you is mostly a small set of things, repeated reliably:
+
+- **Outcomes**, expressed in business or product language, not implementation language.
+- **Risks**, surfaced early and clearly. The manager would rather hear about a problem two weeks before it lands than the day it lands.
+- **Asks**, if any. *"I need this decision from you", "I'd like to bring in this person."*
+- **Confidence calibration**. *"On track" vs. "at risk" vs. "blocked"*, applied honestly.
+
+The manager doesn't usually want — and often actively doesn't want — implementation details, technical justifications, or a recap of every meeting. The bar for inclusion is *would my manager regret me leaving this out, given what they need to do this week?*
+
+#
+
+## The team
+
+What the team needs is closer to the work itself, but it's also not a transcript:
+
+- **What's in flight**, so the team can avoid duplicate work and spot integration points.
+- **Where you're stuck or ambiguous**, so they can help.
+- **What's about to land**, so they can prepare for review or downstream work.
+- **What you noticed**, so the team's collective knowledge grows.
+
+The team is the audience that benefits most from candor about the messy middle. *"Spent two days chasing the wrong cause of the auth bug; turned out to be X."* That sentence is more valuable to the team than a polished postmortem, because it tells them *the same trap is there next time*.
+
+#
+
+## Yourself
+
+What you need from your own writing is the most personal of the four:
+
+- **Patterns**, surfaced from a longer view than a single day.
+- **Friction**, identified and named so it doesn't stay invisible.
+- **Decisions you made and the reasoning at the time**, so future-you can recover not just *what* but *why*.
+- **Honest evaluations** of your own week — what you did well, what you'd do differently.
+
+The self-audience is the one most prone to skipping. It feels self-indulgent. It isn't. It's how you compound, and skipping it is why some engineers learn fast and some plateau.
+
+#
+
+## The reviewer (when applicable)
+
+When work is going to be checked by someone else — QA, a security reviewer, a customer — the reviewer wants:
+
+- **What changed and why**, including the corner cases you considered.
+- **What you tested**, and what you couldn't or didn't.
+- **Known gaps**. *"This works for cases A and B; C is not yet handled."*
+- **Reproduction instructions**, written for someone who doesn't have your context.
+
+The reviewer audience is the most demanding for clarity, because the consequence of unclear writing is rework or worse.
+
+## Why one source, four lenses, beats four separate trackers
+
+I used to think the right answer was four parallel notebooks — one for each audience. Day one, write four entries; day two, write four more. By the end of the week, four threads of writing.
+
+That collapsed within a month. The cost of writing four parallel entries is too high; one of them always gets dropped, which means *that* audience starts getting nothing, which means the entire system feels broken.
+
+The thing that worked, after a few iterations, is *one source, four lenses*.
+
+The source is the daily journal — captured the same way every day, in the same place, regardless of audience. The lenses are derived from the source on demand, weekly or whenever an audience asks. The lenses are different views of the same week.
+
+Same source. Different selection, ordering, and emphasis.
+
+This works because the *information* is invariant — what I did this week is what I did this week. What changes by audience is *which subset matters and how it's framed*. Selection and framing are what you should be doing for each audience anyway. Doing them on demand from a single source is the cheap version of the same work.
+
+## What the lenses actually do
+
+Concretely, when I generate a report for one of the four audiences from a week of journal entries, the output is shaped differently in five visible ways.
+
+**Selection.** Different bullets get included. The manager report includes the three most consequential outcomes; the team report includes the in-flight items even when they're not yet shippable; the self-report includes the friction even when it's not yet resolved.
+
+**Ordering.** Manager reports lead with outcomes; team reports lead with in-flight work; self-reports lead with patterns; reviewer reports lead with what changed. The lead is the ordering signal — what the audience reads first sets the tone.
+
+**Vocabulary.** Manager reports translate technical work into product language ("we cut the authentication failure rate by half" rather than "fixed the JWT expiration handler"). Team reports use the technical vocabulary the team already shares. Self-reports use whatever vocabulary feels honest. Reviewer reports use the vocabulary of the artifact being reviewed.
+
+**Detail level.** Manager reports are dense — every sentence has to earn its place. Team reports are looser, with room for the texture that helps colleagues. Self-reports are the most thorough; this is the only audience where being long-winded is sometimes the right move. Reviewer reports are surgical: precise, with no decoration.
+
+**Closing.** Manager reports close with risks and asks. Team reports close with what's about to land. Self-reports close with what to do differently next week. Reviewer reports close with known gaps.
+
+Five dimensions, four audiences. The same input produces twenty distinct framing decisions. Made by hand each week, that's a couple of hours. Made with the help of an AI assistant that's been told what each lens emphasizes, it's twenty minutes total — and the resulting reports are arguably better, because the deliberate framing rules don't drift session to session.
+
+## The cadence question
+
+Different audiences have different natural cadences.
+
+- **Manager reports** are weekly for me. Some teams do bi-weekly or in async standups; the principle's the same.
+- **Team updates** are daily-to-weekly, depending on how chatty the team is. I personally prefer a short daily update plus a weekly summary.
+- **Self-reports** are weekly with a monthly retrospective. The weekly version is for course-correcting; the monthly is for noticing patterns the weekly version misses.
+- **Reviewer reports** are per-artifact. Whenever something is being handed off for review, a reviewer report is part of the artifact.
+
+If you stack all four cadences, you can end up writing a *lot* of reports. That sounds expensive. It used to be. With the source-and-lens model and an AI assistant doing the lens application, the total time per week is closer to thirty minutes than four hours.
+
+## What I do not delegate
+
+The lens application — translating from journal entries to audience-shaped output — can be largely delegated to an AI assistant. The framing rules are stable; the input is text; the transformation is reasonably mechanical.
+
+What I do not delegate is the editorial pass after the lens is applied.
+
+A manager report drafted by the assistant is competent. It will sometimes pick the wrong outcome to lead with. It will sometimes hedge a problem too softly because it's been trained on corporate-polite phrasing. It will sometimes call something "on track" when I know it isn't.
+
+The five-minute editorial pass — *I read what the assistant produced and rewrite the parts that aren't quite right* — is the part that has to be mine. Not because the assistant can't get close; it can. Because the *closeness* matters. A manager report that's 90% right and 10% slightly wrong about the wrong things is worse than a report that's 80% as polished but accurate everywhere.
+
+This is the same point I made in the previous post: the assistant lowers the friction; the judgment stays mine.
+
+## A small note on tone
+
+One thing about communicating to multiple audiences that I underestimated for a long time: **the tone of each report is part of the message**.
+
+A manager report in casual chat-speak signals "this isn't important enough to think about carefully." A team report in stiff corporate-speak signals "I don't actually want to talk about this with you." A self-report in performative language signals (to yourself) that you're not being honest. A reviewer report in vague prose signals "I haven't done my homework."
+
+The vocabulary and the tone are doing work the bullet points alone can't do. When I review my own drafts, that tone check is the last thing I run before sending. Does this *feel* right for who's reading it? If not, what specifically reads off?
+
+<ImageFigure alt="Saul Bass-inspired poster diptych on a warm cream paper background with subtle paper grain, in a strict 3-color limited palette of mustard yellow, deep red, charcoal black, plus the cream of the paper itself. The two panels are stacked side by side with a thin cream margin between them and share the same vertical proportions. The left panel has a bold mustard-yellow rectangle as its background, on which a black silhouette of a hand offers a curling chart-paper outward. At the top of the panel, a thin charcoal horizontal bar suggests a header. Below the header, three short charcoal bars are stacked vertically with the topmost bar drawn slightly thicker and longer than the others — the lead. Two small charcoal punctuation dots float in the margin. The right panel has a bold deep-red rectangle as its background, on which a black silhouette of a single side-profile face holds up a small handheld mirror, the mirror catching a smaller reflected silhouette of the same face. At the top of this panel, a thin charcoal horizontal bar suggests a header. Below it, three short charcoal bars are stacked vertically with the topmost bar lightly circled by a pencil-like charcoal line — the emphasized lead. A single small charcoal margin mark sits beside it. Both panels share the same Saul Bass visual language: bold flat shapes, hand-cut paper-like edges, strictly limited palette, geometric simplicity. No readable text or letters anywhere in the composition." src="/content/posts/2026-05-07-from-daily-notes-to-stakeholder-reports/manager-vs-self-reports.png" caption="Same week, different lens. The opening line is the lens — the manager wants outcomes, you want patterns." />
+
+## What this looks like in practice
+
+A typical Friday for me, end of day, runs roughly like this.
+
+- Open the week's journal entries (five files, one per workday).
+- Ask the AI assistant to produce four drafts: manager update, team update, self-summary, and any pending reviewer notes.
+- For each draft, do a five-minute editorial pass. Cut what doesn't earn its place. Reframe anything that hedges where I want to be direct, or directs where I want to hedge.
+- Post each report to the appropriate channel: manager update to a private DM thread, team update to the team channel, self-summary stays in my own folder, reviewer notes attached to whatever artifact they go with.
+
+Total time: thirty to forty minutes for the whole week. Without the source-and-lens model, the same set of reports used to take me two-plus hours and frequently got skipped.
+
+The thirty-minute version isn't lower quality. In some ways it's higher, because the framing rules don't drift across reports — the manager always gets outcome-led reports, the team always gets in-flight-led reports, the format is consistent enough that the audience knows what to look for. The communication compounds, the way good communication does.
+
+That's the whole pitch. Communicate often, communicate differently to different audiences, and let the source be one and the lenses be many. Same engineering work, much more legible to the people who need to see it.
+
+## Further reading
+
+- [Why every engineer should keep a journal](/2026/05/03/why-every-engineer-should-keep-a-journal)
+- [The active listening](/2018/04/10/the-active-listening)

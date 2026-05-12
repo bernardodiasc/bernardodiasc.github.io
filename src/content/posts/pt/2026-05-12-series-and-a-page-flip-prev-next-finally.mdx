@@ -1,0 +1,108 @@
+---
+title: Séries e um prev/next em page-flip, finalmente
+date: 2026-05-12
+category: this-blog
+lang: pt
+draft: true
+thumbnail: /content/posts/2026-05-12-series-and-a-page-flip-prev-next-finally/series-and-page-flip-cover.png
+tags:
+  - astro
+  - css
+  - ux
+  - information-architecture
+  - navigation
+  - typescript
+  - ai-assisted
+excerpt: Vinte e um drafts acumulados no batch e o arquivo ainda parecia uma lista achatada. Aí adicionei um campo `series`, uma listinha flutuante que diz "você está no post 2 de 4" e um par de setas tipo virar-de-página nas laterais do card. Aqui está o que elas fazem e o que eu tive que brigar para resolver no caminho.
+---
+
+<ImageFigure alt="Uma ilustração horizontal larga em técnica mista sobre papel creme. No centro, um livro aberto desenhado em lápis suave e tinta, com as duas páginas curvando levemente como se estivessem no meio de uma virada. A borda da página esquerda se afasta da lombada com uma seta chevron desenhada à mão apontando para a esquerda, gravada de leve na margem; a página direita se levanta em direção ao leitor com uma chevron correspondente apontando para a direita na margem. Acima e atrás do livro, uma coluna vertical de quatro pequenos cartões numerados está colada na superfície creme com tiras de washi tape pastel, o segundo cartão destacado com uma fina borda colorida para marcar a posição atual. A imagem inteira tem um ar quieto, feito à mão — rabiscos de lápis como marcas de corte, uma marca de café desbotada num canto, luz natural de leve no plano inclinado, textura de papel forte, nenhum texto legível no livro ou nos cartões." src="/content/posts/2026-05-12-series-and-a-page-flip-prev-next-finally/series-and-page-flip-cover.png" caption="Uma listinha flutuante na lateral, um pequeno levantar na borda da página. Duas adições pequenas que mudam como o arquivo se lê." />
+
+Vinte e um drafts acumulados antes de eu notar o óbvio.
+
+Boa parte deles não são posts isolados. São sequências. Rules, depois skills, depois uma taxonomia de skills, depois um deep dive em debug skills. Subagents, depois um subagent específico, depois standards como código. E por aí vai. Se você caísse no terceiro post de um arco de quatro, não teria como saber que os outros três existiam — quanto mais que era pra serem lidos numa ordem.
+
+E — separado disso — aqueles links de prev/next cronológicos que a maioria dos blogs tem na página do post simplesmente não existiam. Cada post era um beco sem saída. Pra achar o próximo no tempo, você tinha que voltar pro index e rolar.
+
+Então hoje à noite eu sentei pra resolver os dois, e acabei com algumas pequenas features que juntas fazem o arquivo parecer menos uma lista achatada e mais alguma coisa pela qual dá pra ler em sequência.
+
+## O que é "series" na prática
+
+Adicionei um campo `series` no schema do post. É só uma string opcional em kebab-case minúsculo:
+
+```yaml
+---
+title: A taxonomy of AI agent skills
+date: 2026-04-26
+category: developer-tooling
+series: ai-rules-and-skills
+---
+```
+
+Se dois ou mais posts compartilham essa string, eles estão numa série. A ordem dentro da série é a que `date` te dá. Um post solo pode ter `series` preenchido, mas se não existir irmão, nada é renderizado. O default é string vazia.
+
+`series` não é categoria. Categoria é o balde temático — "isso é sobre developer tooling". Series é o arco narrativo — "este é o terceiro post do walkthrough de rules para skills". Eles se cruzam de propósito. O arco de quatro posts de AI-philosophy que fecha esse batch atravessa duas categorias e um deles está num mês diferente. O arco continua se sustentando.
+
+Quase coloquei series dentro do array de `tags` (`series:ai-rules-and-skills` como tag). Desisti porque tags são achatadas, sem ordem, e servem como chips visuais nas listagens. Uma série é ordenada, hierárquica, e só faz sentido em dois lugares: dentro do corpo do post e como pista sobre ordem de leitura. Merece o próprio campo.
+
+## A listinha flutuante
+
+Dentro de cada post de uma série, um painel pequeno flutua à direita do texto. O título é o próprio nome da série, formatado a partir do slug kebab-case — `ai-rules-and-skills` vira "AI Rules And Skills":
+
+```
+┌────────────────────────┐
+│ AI RULES AND SKILLS    │
+│                        │
+│ 1. Rules as…           │
+│ 2. AI agent…           │
+│ 3. **A taxonomy…**     │
+│ 4. Building…           │
+└────────────────────────┘
+```
+
+Três coisas que eu queria desse box.
+
+Um — ele não pode empurrar o texto pra baixo. Se eu coloco um parágrafo acima do artigo, todo post em série vira de repente um post com banner. Não quero isso. `float: right` mantém o box na lateral e deixa o texto contornar ao redor. Tem um porém: uma imagem posicionada logo antes do box da série acaba sendo empurrada pra baixo dele. Então, em posts com série, o conteúdo abre com texto primeiro e a imagem vem um pouco mais abaixo. Vale a troca — o float é mais útil do que ter a imagem no topo absoluto.
+
+Dois — o post que você está lendo aparece na lista como texto puro, não como link. E em negrito. Fiquei indo e vindo nisso. A pista de "você está aqui" tinha que ser óbvia sem ser barulhenta, e tinha que ser o tipo certo de óbvio: não um botão, não um badge de "esta é a página atual", só o peso visual do texto dizendo *eu sou a coisa que você abriu agora*.
+
+Três — no mobile o float some. Abaixo de 1024px o box deixa de flutuar e empilha como bloco normal acima do texto. Sem toggle esperto. É uma listinha — deixa ela ali. O usuário já rolou até aqui, dá pra dedicar três linhas.
+
+O componente em si é meio bobo de propósito. Recebe um `currentPostId`, um `seriesName` e um idioma. Faz query na collection, filtra por idioma e id de série, ordena por data ascendente. Se houver menos de dois posts na série, não renderiza nada. Esse último check importa — significa que um id de série pode ficar num frontmatter sem produzir barulho visual se em algum momento ele acabar sendo o único post do arco.
+
+## A barra de prev/next
+
+A segunda parte é uma barra fixa no rodapé para navegar entre posts cronologicamente. Prev à esquerda, next à direita, cada um com uma labelzinha ("Post anterior" / "Próximo post") e o título do alvo embaixo. Os tap targets têm pelo menos 44px de altura, e tem um `padding-bottom: 4em` no body pra barra nunca cobrir o último parágrafo nem o thread do Disqus.
+
+Originalmente eu construí setas laterais nas bordas esquerda e direita do card — a affordance clássica de virar página. Na maquete ficava legal, mas quando testei em viewports reais não funcionou: os ícones não centralizavam direito, o formato ficava estranho em larguras menores, e em qualquer coisa abaixo de desktop elas só duplicavam a bottom bar. Então desisti delas. A bottom bar funciona em todo tamanho, fica fora do caminho, e os leitores já conhecem o padrão. Às vezes a versão mais simples é a versão certa.
+
+O prev/next em si são calculados em build time. A página do post pede todos os posts no idioma dela, ordena cronologicamente, acha a si mesma e passa os vizinhos pro componente de nav. Drafts entram na cronologia mas vêm marcados com `data-draft=""` nos links da nav, então em produção eles somem pelo mesmo CSS que esconde drafts nas listagens. Enquanto o batch inteiro está em draft, dá pra ler a cadeia localmente; quando publicar, a nav reflete o que o leitor consegue alcançar de verdade.
+
+## O que isso muda
+
+Antes, cada post era uma ilha. Você terminava de ler, rolava o thread do Disqus, e a resposta implícita pra "e agora?" era "sei lá, botão de voltar do navegador acho".
+
+Agora, três coisas acontecem.
+
+Se o post é parte de uma sequência, o box lateral te avisa de leve. Você vê o nome da série, quantos posts compõem o arco, onde você está nele, o que vem antes e depois, e dá pra pular pra qualquer um. A decisão de continuar lendo a série é sua, mas você tem a informação pra decidir.
+
+Se você termina o post e quer seguir, a barra de navegação está ali. Você não volta pro index. Você toca em next e continua lendo.
+
+E na página de busca, um novo filtro de Séries aparece entre Categorias e Tags. Cada série aparece como um chip clicável com a contagem de posts. Dá pra combinar com categoria, tag e texto — clica "AI Rules And Skills" e "developer-tooling" e vê só os posts naquela interseção. É mais uma forma de surfar os arcos que sempre estiveram ali mas eram invisíveis.
+
+É uma coisa pequena e levou uma noite. Mas o arquivo parece diferente agora — menos uma lista achatada de arquivos e mais um livro pelo qual dá pra navegar.
+
+## O que ainda quero ajustar
+
+Algumas coisas que deixei como compromisso e provavelmente vou revisitar:
+
+- O box da série só renderiza se houver pelo menos dois posts. Isso significa que se eu crio uma série com um post pretendendo adicionar irmão depois, o box fica invisível até eu commitar o segundo. Tudo bem na prática; um dia talvez valha um placeholder "isto vai ser uma série".
+- O filtro de séries na página de busca mostra o mesmo nome formatado do box no post. Mas a formatação é duplicada — uma no componente Astro, outra no frontmatter da página de busca. Vale extrair pra uma utilidade compartilhada em algum momento.
+- Considerei mostrar a série na `PostsListing` também — um badge minúsculo ao lado de cada título na página inicial. A página de busca já cobre o caso de descoberta agora, mas a listagem do index poderia se beneficiar. Talvez depois.
+
+Pra todo o resto, o arquivo de regra (`blog-post-structure.mdc`) agora documenta `series` como campo de frontmatter, incluindo quando usar e quando deixar vazio. Da próxima vez que eu sentar pra rascunhar uma sequência, o agent que pegar o trabalho vai saber.
+
+## Leitura complementar
+
+- [Páginas de busca e arquivo, finalmente](/pt/2026/02/20/search-and-archive-finally)
+- [Suporte multi-idioma, finalmente](/pt/2026/02/22/multi-language-support-at-last)

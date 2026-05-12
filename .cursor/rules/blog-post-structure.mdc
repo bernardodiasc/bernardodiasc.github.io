@@ -8,7 +8,7 @@ alwaysApply: false
 
 # Blog post structure
 
-Mechanical conventions for every post in `src/content/posts/`. For voice and tone, see `blog-writing-conventions.mdc`. For dual-language requirements, see `blog-dual-language.mdc`.
+Conventions for every post in `src/content/posts/`. For voice and tone, see `blog-writing-conventions.mdc`. For dual-language requirements, see `blog-dual-language.mdc`.
 
 ---
 
@@ -21,6 +21,7 @@ All fields validated by `src/content.config.ts`:
 title: Post title in sentence case
 date: YYYY-MM-DD
 category: <category-id>            # one of the files in src/content/categories/
+series: <series-id>                # optional; kebab-case grouping shared with sibling posts
 tags:                              # array of lowercase kebab-case strings
   - tag-one
   - tag-two
@@ -31,25 +32,25 @@ draft: false                       # optional; defaults to false
 ---
 ```
 
-- `title` — sentence case, no trailing period. Subtitles allowed with an em dash: "Title — subtitle".
-- `excerpt` — written in the voice of the post (not a generic AI-style summary). Used as `<meta description>` and on listings.
-- `category` — required. Must match an existing file id under `src/content/categories/` (e.g. `this-blog`, `developer-tooling`, `strategy`, `ai-work`, `frontend`, `integrations`).
+- `title` — sentence case, no trailing period.
+- `excerpt` — written in the voice of the post. Used as `<meta description>` and on listings.
+- `category` — required. Must match an id under `src/content/categories/`.
+- `series` — optional. Kebab-case id shared across posts meant to be read as a sequence (≥2 posts). Same value in EN and PT versions.
 
 ---
 
 ## Filename and naming
 
-- Format: `YYYY-MM-DD-kebab-case-title.md` (or `.mdx` if the post embeds Astro components).
-- Slug should be readable and stable; once published, treat the URL as permanent.
-- The same slug is used for both the EN file (`src/content/posts/<slug>.md`) and the PT file (`src/content/posts/pt/<slug>.md`).
+- Format: `YYYY-MM-DD-kebab-case-title.mdx` (or `.md` for legacy posts without Astro components).
+- Same slug for EN (`src/content/posts/<slug>.mdx`) and PT (`src/content/posts/pt/<slug>.mdx`).
+- Once published, treat the URL as permanent.
 
 ---
 
 ## Date sequencing
 
-- Posts are listed chronologically by `date`.
-- A new post's date must be **after the latest existing post**. Don't backdate.
-- For a series of posts written together, use **consecutive daily dates** with the last post dated to the day of writing. This keeps the chronology readable and lets each post in the series have its own clean URL.
+- Posts are listed chronologically by `date`. New post dates must be after the latest existing post.
+- For a series written together, use consecutive daily dates.
 
 ---
 
@@ -58,85 +59,62 @@ draft: false                       # optional; defaults to false
 | Category id | When to use |
 |---|---|
 | `this-blog` | Features, infrastructure, or meta-posts about *this specific site* |
-| `developer-tooling` | Practical posts about building tools, rules, skills, agents, subagents, dev systems |
-| `strategy` | Workflow philosophy, communication, leadership, planning — concept-first, tool-agnostic |
-| `integrations` | Wiring third-party services and APIs (Slack, Bullhorn, Google, etc.) |
+| `developer-tooling` | Practical posts about building tools, rules, skills, agents, dev systems |
+| `strategy` | Workflow philosophy, communication, leadership, planning |
+| `integrations` | Wiring third-party services and APIs (Slack, Bullhorn, etc.) |
 | `ai-work` | Reflective or philosophical posts on AI changing how we think and work |
 | `frontend` | Frontend architecture patterns, CSS, visualizations |
 
-Pick the category that best fits the **primary frame** of the post. If a post about a Slack-connected agent is mostly about why journaling matters, it goes in `strategy`, not `integrations`.
+Pick the category that best fits the **primary frame** of the post.
+
+---
+
+## Series
+
+`series` groups posts that read better as a sequence. It is **not** the same as category — a series is a narrative arc that can cut across categories.
+
+- Use when ≥2 posts genuinely build on each other. Don't invent a series for a one-off post.
+- The id is lowercase kebab-case, shared verbatim across all posts in the series and across languages.
+- Ordering is automatic by `date`.
+- The first post in a new series sets the id; subsequent posts reuse it.
 
 ---
 
 ## Tags
 
-Tags are free-form lowercase kebab-case strings. Use them generously — the search page treats them as filter chips, so more tags means better discoverability.
+Lowercase kebab-case. Use generously — the search page treats them as filter chips.
 
-**Required: authorship tag.** Every post must include exactly one of:
+**Required authorship tag** (exactly one per post): `human-written`, `ai-assisted`, or `ai-generated`.
 
-- `human-written` — the author wrote the post entirely themselves.
-- `ai-assisted` — AI helped generate parts of the content; the author directed and edited.
-- `ai-generated` — substantially produced by AI.
-
-**Topic tags** should be thorough and specific. If the post mentions a technology, tool, platform, language, framework, or AI model, tag it. Examples: `python`, `langgraph`, `fastapi`, `slack`, `postgresql`, `pydantic`, `openai`, `claude`, `gpt-4`, `astro`, `vibecoding`, `mcp`, `cursor`, `ai-agents`, `prompt-engineering`.
-
-Aim for **6–15 relevant tags per post**. New tags can be created freely based on content. Keep them in lowercase kebab-case.
-
-The `vibecoding` tag is reserved for practical, hands-on posts about working with AI coding agents — not for purely philosophical or strategy posts.
+**Topic tags**: tag every technology, tool, platform, language, or AI model mentioned. Aim for 6–15 per post.
 
 ---
 
 ## Images
 
-**Every post must:**
+Every post must reference a `thumbnail` in frontmatter and include a lead `<ImageFigure>` with the same `src`.
 
-- Reference a `thumbnail` path in frontmatter.
-- Open the body with a `<figure>` block whose `src` is the **same path** as the `thumbnail`, before any prose. This is the lead image — it visually opens the post and is what shows up on listings.
-- Optionally include additional inline `<figure>` blocks lower in the body when extra visuals genuinely help the argument. The lead figure is mandatory; further figures are content decisions, not a structural rule.
-
-**Storage**: `public/content/posts/<slug>/<image-name>.png`. The path served at runtime is `/content/posts/<slug>/<image-name>.png`. Filenames are kebab-case and descriptive.
-
-**Inline figure pattern** (use raw HTML, not Markdown image syntax):
+**ImageFigure component** (requires `.mdx`):
 
 ```html
-<figure>
-  <img alt="Descriptive text good enough to be an image-generation prompt" src="/content/posts/<slug>/<image-name>.png" />
-  <figcaption>Editorial caption that adds context, not a repeat of the alt.</figcaption>
-</figure>
+<ImageFigure alt="Descriptive prompt-ready text" src="/content/posts/<slug>/<image>.png" caption="Optional editorial caption." />
 ```
 
-- `alt` must be detailed enough to use directly as an image generation prompt. Describe subjects, layout, style, colors, mood. The author generates images separately from this text.
-- `figcaption` adds editorial commentary or framing for the image. It is read by humans; the alt is read by screen readers and image generators. They should not be identical.
+- `alt` — detailed enough to use as an image-generation prompt.
+- `caption` — optional; adds editorial context (not a repeat of alt).
 
-**Lead figure placement**: the lead `<figure>` block goes **immediately after the closing `---` of the frontmatter**, with no prose between the frontmatter and the figure. The first paragraph of the post follows the figure.
+**Lead image placement**:
 
-**Image generation workflow**: The author writes the post with `<figure>` blocks pointing at `src` paths that don't yet exist. After the post draft is approved, the author generates images from the `alt` text and saves them at the suggested paths. The post text is the source for the prompts.
+- **Posts without `series`**: `<ImageFigure>` goes immediately after frontmatter, before any prose.
+- **Posts with `series`**: `<ImageFigure>` must come **after the first 2–3 paragraphs**, not at the top. The `SeriesList` component floats right at the top of the text block; an image placed before text gets pushed below the series box and breaks the layout. Always start with prose first.
+
+**Storage**: `public/content/posts/<slug>/<image-name>.png` → served at `/content/posts/<slug>/<image-name>.png`.
 
 ---
 
-## Required closing section: Further reading
-
-Every post must end with a **`## Further reading`** section that links to 1–3 other posts on the blog. The purpose is to weave the archive into a connected web rather than a flat list of posts.
-
-- Recommendations must be **genuinely relevant** to the post's topic, not random or filler.
-- It's fine to link both to older posts (2018-era) and to newer posts in the same series.
-- Use Markdown links with the canonical post path:
-  - EN: `[Post title](/YYYY/MM/DD/slug)`
-  - PT: `[Título](/pt/YYYY/MM/DD/slug)`
-- The PT version of a post links to PT versions of the recommended posts.
-
-Format:
-
-```markdown
 ## Further reading
 
-- [Why every engineer should keep a journal](/2026/05/03/why-every-engineer-should-keep-a-journal)
-- [From writing code to designing intelligence](/2026/04/14/from-writing-code-to-designing-intelligence)
-```
+Every post ends with `## Further reading` linking to 1–3 other posts on the blog.
 
----
-
-## MDX vs MD
-
-- Use `.md` by default.
-- Use `.mdx` only when the post embeds Astro components (e.g. `<SankeyChart />`, `<Codepen />`, `<Animation />`). Don't reach for `.mdx` for plain `<figure>` blocks — those work in `.md` already.
+- Links must be genuinely relevant. EN links use `[Title](/YYYY/MM/DD/slug)`, PT uses `[Título](/pt/YYYY/MM/DD/slug)`.
+- PT version links to PT versions of the recommended posts.

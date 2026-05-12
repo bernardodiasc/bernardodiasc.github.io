@@ -19,6 +19,17 @@ function postUrl(id: string): string {
   return `/pt/${year}/${month}/${day}/${rest.join('-')}`;
 }
 
+const UPPER_WORDS = new Set(['ai', 'api', 'css', 'ui', 'ux']);
+function formatSeriesName(slug: string): string {
+  return slug
+    .replace(/-/g, ' ')
+    .replace(/\b\w+/g, (w) =>
+      UPPER_WORDS.has(w.toLowerCase())
+        ? w.toUpperCase()
+        : w.charAt(0).toUpperCase() + w.slice(1)
+    );
+}
+
 const items = await Promise.all(
   sortedPosts.map(async (post) => {
     const catEntry = post.data.category
@@ -39,6 +50,7 @@ const items = await Promise.all(
       categoryId: post.data.category,
       categoryTitle: catEntry?.data.title || '',
       categoryIcon: catEntry?.data.icon || '',
+      series: post.data.series || '',
     };
   })
 );
@@ -51,6 +63,13 @@ const categoriesWithCount = categories.map((cat) => ({
   icon: cat.data.icon,
   count: posts.filter((p) => p.data.category === cat.id).length,
 })).filter((c) => c.count > 0);
+
+const allSeriesIds = [...new Set(posts.map((p) => p.data.series).filter(Boolean))].sort();
+const seriesWithCount = allSeriesIds.map((id) => ({
+  id,
+  title: formatSeriesName(id),
+  count: posts.filter((p) => p.data.series === id).length,
+}));
 ---
 
 <Layout title={t('pt', 'search.title')} description="Busque e filtre posts por texto, categoria ou tag.">
@@ -89,6 +108,23 @@ const categoriesWithCount = categories.map((cat) => ({
           ))}
         </div>
       </details>
+
+      {seriesWithCount.length > 0 && (
+        <details class="collapsible" id="series-panel" open>
+          <summary class="collapsible__header">
+            <h2 class="section-title">{t('pt', 'search.series')}</h2>
+            <span class="collapsible__selection" id="series-selection"></span>
+            <span class="collapsible__chevron"></span>
+          </summary>
+          <div class="tags-cloud">
+            {seriesWithCount.map((s) => (
+              <button class="series-chip" data-series={s.id} data-title={s.title} type="button">
+                {s.title} <span class="series-chip__count">({s.count})</span>
+              </button>
+            ))}
+          </div>
+        </details>
+      )}
 
       <details class="collapsible" id="tags-panel" open>
         <summary class="collapsible__header">
@@ -129,14 +165,17 @@ const categoriesWithCount = categories.map((cat) => ({
   const clearButton = document.getElementById('clear-filters');
   const categoryCards = document.querySelectorAll('.category-card');
   const tagChips = document.querySelectorAll('.tag-chip');
+  const seriesChips = document.querySelectorAll('.series-chip');
 
   var categoriesPanel = document.getElementById('categories-panel');
   var tagsPanel = document.getElementById('tags-panel');
   var categoriesSelection = document.getElementById('categories-selection');
   var tagsSelection = document.getElementById('tags-selection');
+  var seriesSelection = document.getElementById('series-selection');
 
   let activeCategory = null;
   let activeTag = null;
+  let activeSeries = null;
 
   function updateSelectionBadges() {
     if (activeCategory) {
@@ -151,6 +190,16 @@ const categoriesWithCount = categories.map((cat) => ({
       tagsSelection.innerHTML = '<span class="selection-badge">' + activeTag + '</span>';
     } else {
       tagsSelection.innerHTML = '';
+    }
+
+    if (seriesSelection) {
+      if (activeSeries) {
+        var chip = document.querySelector('.series-chip[data-series="' + activeSeries + '"]');
+        var sTitle = chip ? chip.getAttribute('data-title') : activeSeries;
+        seriesSelection.innerHTML = '<span class="selection-badge">' + sTitle + '</span>';
+      } else {
+        seriesSelection.innerHTML = '';
+      }
     }
   }
 
@@ -184,16 +233,18 @@ const categoriesWithCount = categories.map((cat) => ({
   function clearAll() {
     activeCategory = null;
     activeTag = null;
+    activeSeries = null;
     searchInput.value = '';
     resultsSection.style.display = 'none';
     categoryCards.forEach(function (c) { c.classList.remove('category-card--active'); });
     tagChips.forEach(function (t) { t.classList.remove('tag-chip--active'); });
+    seriesChips.forEach(function (s) { s.classList.remove('series-chip--active'); });
     updateSelectionBadges();
   }
 
   function applyFilters() {
     var query = searchInput.value.trim().toLowerCase();
-    var hasFilter = query || activeCategory || activeTag;
+    var hasFilter = query || activeCategory || activeTag || activeSeries;
 
     if (!hasFilter) {
       resultsSection.style.display = 'none';
@@ -209,6 +260,14 @@ const categoriesWithCount = categories.map((cat) => ({
       });
       var cat = visibleItems.find(function (i) { return i.categoryId === activeCategory; });
       labels.push(cat ? cat.categoryTitle : activeCategory);
+    }
+
+    if (activeSeries) {
+      filtered = filtered.filter(function (item) {
+        return item.series === activeSeries;
+      });
+      var sChip = document.querySelector('.series-chip[data-series="' + activeSeries + '"]');
+      labels.push(sChip ? sChip.getAttribute('data-title') : activeSeries);
     }
 
     if (activeTag) {
@@ -262,6 +321,22 @@ const categoriesWithCount = categories.map((cat) => ({
         activeTag = tag;
         tagChips.forEach(function (t) { t.classList.remove('tag-chip--active'); });
         chip.classList.add('tag-chip--active');
+      }
+      updateSelectionBadges();
+      applyFilters();
+    });
+  });
+
+  seriesChips.forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      var id = chip.getAttribute('data-series');
+      if (activeSeries === id) {
+        activeSeries = null;
+        chip.classList.remove('series-chip--active');
+      } else {
+        activeSeries = id;
+        seriesChips.forEach(function (s) { s.classList.remove('series-chip--active'); });
+        chip.classList.add('series-chip--active');
       }
       updateSelectionBadges();
       applyFilters();
@@ -449,6 +524,37 @@ const categoriesWithCount = categories.map((cat) => ({
     background: var(--heading-color);
     color: white;
     border-color: var(--heading-color);
+  }
+
+  .series-chip {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.3em;
+    padding: 0.35em 0.85em;
+    font-size: 0.85em;
+    font-family: var(--heading-family);
+    background: #f0f0f0;
+    border: 1px solid var(--line-light);
+    border-radius: 20px;
+    cursor: pointer;
+    color: var(--text-color);
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+
+  .series-chip:hover {
+    background: #e0e0e0;
+    border-color: var(--meta-color);
+  }
+
+  .series-chip--active {
+    background: var(--heading-color);
+    color: white;
+    border-color: var(--heading-color);
+  }
+
+  .series-chip__count {
+    font-size: 0.85em;
+    opacity: 0.7;
   }
 
   .results-section {

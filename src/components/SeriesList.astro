@@ -1,0 +1,134 @@
+---
+import { getCollection } from 'astro:content';
+import { getPostUrl, isEnglishPost, isPortuguesePost } from '../i18n/utils';
+
+interface Props {
+  currentPostId: string;
+  seriesName: string;
+  lang?: 'en' | 'pt';
+}
+
+const { currentPostId, seriesName, lang = 'en' } = Astro.props;
+
+const filter = lang === 'pt' ? isPortuguesePost : isEnglishPost;
+
+const seriesPosts = seriesName
+  ? await getCollection(
+      'posts',
+      (post) => filter(post.id) && post.data.series === seriesName
+    )
+  : [];
+
+const sorted = seriesPosts.sort(
+  (a, b) => a.data.date.getTime() - b.data.date.getTime()
+);
+
+const shouldRender = !!seriesName && sorted.length >= 2;
+
+const UPPER_WORDS = new Set(['ai', 'api', 'css', 'ui', 'ux']);
+
+const displayName = seriesName
+  .replace(/-/g, ' ')
+  .replace(/\b\w+/g, (w) =>
+    UPPER_WORDS.has(w.toLowerCase())
+      ? w.toUpperCase()
+      : w.charAt(0).toUpperCase() + w.slice(1)
+  );
+
+const ariaLabel = lang === 'pt' ? `Série: ${displayName}` : `Series: ${displayName}`;
+---
+
+{shouldRender && (
+  <aside class="series-list" aria-label={ariaLabel}>
+    <p class="series-list__heading">{displayName}</p>
+    <ol class="series-list__items">
+      {sorted.map((post) => {
+        const isCurrent = post.id === currentPostId;
+        return (
+          <li
+            class:list={[
+              'series-list__item',
+              isCurrent && 'series-list__item--current',
+            ]}
+            {...(post.data.draft ? { 'data-draft': '' } : {})}
+          >
+            {isCurrent ? (
+              <span class="series-list__current">{post.data.title}</span>
+            ) : (
+              <a class="series-list__link" href={getPostUrl(post.id)}>
+                {post.data.title}
+              </a>
+            )}
+          </li>
+        );
+      })}
+    </ol>
+  </aside>
+)}
+
+<style is:global>
+  .series-list {
+    float: right;
+    max-width: 40%;
+    margin: 0 0 0 1.5em;
+    padding: 0.9em 1em 1em;
+    background: #fafafa;
+    border-left: 3px solid var(--heading-color);
+    border-radius: 0 4px 4px 0;
+    font-size: 0.85em;
+    box-sizing: border-box;
+  }
+
+  .series-list__heading {
+    font-family: var(--heading-family);
+    font-weight: var(--heading-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--heading-color);
+    font-size: 0.85em;
+    margin: 0 0 0.6em;
+  }
+
+  .series-list__items {
+    list-style: decimal inside;
+    margin: 0;
+    padding: 0;
+  }
+
+  .series-list__item {
+    margin: 0.25em 0;
+    line-height: 1.4;
+  }
+
+  .series-list__item--current {
+    font-weight: var(--heading-weight-bold);
+  }
+
+  .series-list__current {
+    color: var(--text-color);
+  }
+
+  .series-list__link {
+    color: var(--text-color);
+    background-image: none;
+    background-size: auto;
+    background-position: initial;
+    transition: color 0.2s ease;
+    text-decoration: underline;
+    text-decoration-color: var(--line-light);
+    text-underline-offset: 2px;
+  }
+
+  .series-list__link:hover {
+    color: var(--text-color);
+    text-decoration: none;
+  }
+
+  @media only screen and (max-width: 1023px) {
+    .series-list {
+      float: none;
+      max-width: 100%;
+      margin: 0 0 1.5em;
+    }
+  }
+</style>

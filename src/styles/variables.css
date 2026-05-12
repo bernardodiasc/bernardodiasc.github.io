@@ -1,6 +1,7 @@
 :root {
   --main-background: #104493;
   --content-background: #fff;
+  --content-background-hover: #f0f0f0;
 
   --text-family: 'IBM Plex Serif', serif;
   --text-color: #2f2f2f;
@@ -47,4 +48,5 @@
   --pre-background: #2d2d2d;
   --code-color: #000;
   --code-background: #cacaca;
+  --strong-color: #000;
 }

@@ -1,0 +1,147 @@
+---
+import { getPostUrl } from '../i18n/utils';
+
+interface NavTarget {
+  id: string;
+  title: string;
+  draft?: boolean;
+}
+
+interface Props {
+  prev?: NavTarget | null;
+  next?: NavTarget | null;
+  lang?: 'en' | 'pt';
+}
+
+const { prev = null, next = null, lang = 'en' } = Astro.props;
+
+const labels =
+  lang === 'pt'
+    ? { prev: 'Post anterior', next: 'Próximo post' }
+    : { prev: 'Previous post', next: 'Next post' };
+---
+
+{(prev || next) && (
+  <nav class="postnav-bar" aria-label="Post navigation">
+    {prev ? (
+      <a
+        href={getPostUrl(prev.id)}
+        class="postnav-bar__link postnav-bar__link--prev"
+        aria-label={`${labels.prev}: ${prev.title}`}
+        {...(prev.draft ? { 'data-draft': '' } : {})}
+      >
+        <span class="postnav-bar__text">
+          <span class="postnav-bar__label">
+            <svg class="postnav-bar__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+            {labels.prev}
+          </span>
+          <span class="postnav-bar__title">{prev.title}</span>
+        </span>
+      </a>
+    ) : (
+      <span class="postnav-bar__spacer" />
+    )}
+    {next ? (
+      <a
+        href={getPostUrl(next.id)}
+        class="postnav-bar__link postnav-bar__link--next"
+        aria-label={`${labels.next}: ${next.title}`}
+        {...(next.draft ? { 'data-draft': '' } : {})}
+      >
+        <span class="postnav-bar__text">
+          <span class="postnav-bar__label">
+            {labels.next}
+            <svg class="postnav-bar__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.59 16.59 10 18l6-6-6-6-1.41 1.41L13.17 12z"/></svg>
+          </span>
+          <span class="postnav-bar__title">{next.title}</span>
+        </span>
+      </a>
+    ) : (
+      <span class="postnav-bar__spacer" />
+    )}
+  </nav>
+)}
+
+<style is:global>
+  .postnav-bar {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    background: var(--content-background);
+    border-top: 1px solid var(--line-light);
+    box-shadow: 0 -2px 6px rgba(45, 45, 45, 0.12);
+  }
+
+  .postnav-bar__link,
+  .postnav-bar__spacer {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    padding: 0.5em 0.8em;
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 0.9em;
+  }
+
+  .postnav-bar__link--prev {
+    justify-content: flex-start;
+    border-right: 1px solid var(--line-light);
+  }
+
+  .postnav-bar__link--next {
+    justify-content: flex-end;
+    text-align: right;
+  }
+
+  .postnav-bar__link:hover,
+  .postnav-bar__link:active {
+    background: var(--content-background-hover);
+  }
+
+  .postnav-bar__arrow {
+    width: 1.3em;
+    height: 1.3em;
+    fill: var(--heading-color);
+    flex-shrink: 0;
+    margin-bottom: -3px;
+  }
+
+  .postnav-bar__link--prev .postnav-bar__arrow {
+    margin-right: 0.4em;
+  }
+
+  .postnav-bar__link--next .postnav-bar__arrow {
+    margin-left: 0.4em;
+  }
+
+  .postnav-bar__text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .postnav-bar__label {
+    font-family: var(--heading-family);
+    font-size: 0.7em;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--meta-color);
+    line-height: 1;
+  }
+
+  .postnav-bar__title {
+    font-family: var(--text-family);
+    color: var(--text-color);
+    font-size: 0.95em;
+    line-height: 1.2;
+    margin-top: 0.35em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+</style>

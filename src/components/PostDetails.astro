@@ -1,9 +1,11 @@
 ---
 import PostHeader from './PostHeader.astro';
 import TextBlock from './TextBlock.astro';
+import SeriesList from './SeriesList.astro';
 import Share from './Share.astro';
 
 interface Props {
+  id: string;
   title: string;
   date: Date;
   category?: {
@@ -13,9 +15,20 @@ interface Props {
   };
   tags?: string[];
   url: string;
+  series?: string;
+  lang?: 'en' | 'pt';
 }
 
-const { title, date, category, tags = [], url } = Astro.props;
+const {
+  id,
+  title,
+  date,
+  category,
+  tags = [],
+  url,
+  series = '',
+  lang = 'en',
+} = Astro.props;
 ---
 
 <div class="post-details">
@@ -27,6 +40,9 @@ const { title, date, category, tags = [], url } = Astro.props;
     tags={tags}
   />
   <TextBlock>
+    {series && (
+      <SeriesList currentPostId={id} seriesName={series} lang={lang} />
+    )}
     <slot />
   </TextBlock>
 </div>
@@ -34,6 +50,12 @@ const { title, date, category, tags = [], url } = Astro.props;
 <style>
   .post-details {
     font-size: var(--text-size);
-    padding: 2em 2em 4em;
+    padding: 2em 1em 4em;
+  }
+
+  @media only screen and (min-width: 1024px) {
+    .post-details {
+      padding: 2em 2em 4em;
+    }
   }
 </style>

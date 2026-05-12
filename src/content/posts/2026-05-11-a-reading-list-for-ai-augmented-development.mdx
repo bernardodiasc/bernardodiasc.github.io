@@ -1,0 +1,144 @@
+---
+title: A reading list for AI-augmented development
+date: 2026-05-11
+category: ai-work
+series: ai-philosophy
+draft: true
+thumbnail: /content/posts/2026-05-11-a-reading-list-for-ai-augmented-development/curated-bookshelf.png
+tags:
+  - ai
+  - learning
+  - community
+  - resources
+  - karpathy
+  - langgraph
+  - cursor
+  - claude
+  - openai
+  - anthropic
+  - prompt-engineering
+  - mcp
+  - human-written
+excerpt: A small, opinionated reading list for engineers who want to go deeper into AI-augmented development. Annotated with personal notes on why each one matters and where to start. Not exhaustive — just the things I'd recommend to someone asking me where to begin.
+---
+
+This is the last post in the series. It's a reading list. Not a comprehensive one — there's no shortage of those — but a small, opinionated one with personal notes on why each item is on it.
+
+Most of the items below are things I've genuinely come back to. A few are things I haven't yet finished but feel sure enough about to recommend. I've grouped them roughly, with short annotations explaining what each one taught me and when I'd point someone toward it.
+
+This post is tagged `human-written`. The list is mine. The notes are mine. I'd rather a short honest list than a long polished one.
+
+<ImageFigure alt="Dutch Golden Age-style still life oil painting of a small section of a personal library, viewed straight-on at intimate scale, lit dramatically by a single warm candle just out of frame. Three rows of leather-bound books crowd a heavy aged wooden shelf, the bindings in deep oxblood, forest green, warm tan, midnight blue, mustard, and faded burgundy. Some spines bear ornate gold tooling and decorative scrollwork — abstract filigree, ornamental rosettes, and raised band detailing — without any readable letters. Other spines show worn blank leather with faint scuffs and creases. Small details rest among the books: a bronze candleholder with a single guttering candle whose flame casts warm chiaroscuro light from one side; a polished brass astrolabe-like instrument leaning against one stack; a small ceramic ink-well with a quill resting in it; a pair of round wire spectacles folded on top of a leaning book; a faded silk ribbon bookmark trailing from one volume. On top of the upper row, a small cluster of three books lies horizontally with a small dried laurel sprig pressed between them. The wood of the shelf shows aged grain with subtle scratches and a faint ring-stain. The lighting is side-lit and warm, with deep velvety umber shadows in the recesses behind the books and a luminous golden glow along the book spines and gilded tooling. Rich oil-paint texture, visible brushwork in the highlights, soft sfumato in the shadows, deep umber background. No readable text or letters anywhere — only abstract gold tooling and ornamental scroll patterns on a few spines." src="/content/posts/2026-05-11-a-reading-list-for-ai-augmented-development/curated-bookshelf.png" caption="Not exhaustive. Just the volumes I keep coming back to." />
+
+## Foundations — why language models do what they do
+
+If you're working with AI coding agents seriously, having even a rough mental model of *what's actually inside* the model pays back across every other thing you do.
+
+**Andrej Karpathy — *Intro to Large Language Models* and *State of GPT* talks.** The single best concise grounding I've found. Karpathy's pedagogy is unusually clear; he builds the intuition layer by layer. If you've never sat through a talk that explains what a transformer is, what training does, and what an instruction-tuned model is doing differently from a base model, start here. The talks are on YouTube. Two hours total. Worth it.
+
+**Andrej Karpathy — *Deep Dive into LLMs Like ChatGPT*.** A more recent, longer version of the same idea, with more depth on RLHF, instruction tuning, and the shape of modern model capabilities. If you only watch one Karpathy talk, watch this one.
+
+**Andrej Karpathy on X / Twitter.** I check his feed when I want to know which observations about working with LLMs are about to become consensus. The behavioral guidelines I encoded in my own rules — surface assumptions, push back, simplify, define success — were sharpened by watching his observations on common LLM coding pitfalls. He posts intermittently and most of what he posts is worth reading.
+
+**Stephen Wolfram — *What Is ChatGPT Doing… and Why Does It Work?***. Long-form, slightly idiosyncratic, but it gives you a different angle on the same content. Worth reading once if Karpathy left you wanting more depth on the math.
+
+## Practitioners writing about working with AI tools
+
+This is the genre that's hardest to do well. Most posts about AI tooling are either breathless hype or generic. The writers below consistently land in the useful middle.
+
+**Simon Willison — *Simon Willison's Weblog*.** Probably the single most useful working resource I have for staying current. He posts almost daily, with hands-on observations about tools, models, and patterns. His tag pages — *prompt engineering*, *llm*, *agents* — are dense with concrete, replicable examples. When a new model or tool comes out, his post about it is usually the one that tells you whether it's actually different.
+
+**Geoffrey Litt — essays at *geoffreylitt.com*.** Thoughtful pieces about AI as a creative collaborator, often grounded in specific projects. His writing on end-user programming and personal software in the AI age has shaped how I think about the small tools I build for myself.
+
+**Maggie Appleton — essays and graphics on AI and computing.** Visual, thoughtful, with a slower cadence and a longer time horizon. Her piece on the *expanding dark forest* and *language models as people-shaped tools* helped me think about the subtler costs and opportunities of these systems.
+
+**Subbu Allamaraju — writing on AI in working engineering teams.** Practical, gentle, written from inside a real engineering organization. Useful when I want to think about how this stuff scales beyond a single practitioner.
+
+## Tooling docs that are actually worth reading
+
+Some tool documentation is reference material you only read when something breaks. The following are worth reading proactively, even when nothing's broken.
+
+**Cursor docs** — particularly the rules, agent skills (formerly slash commands), and subagents pages. The conceptual model in those docs is what I built most of this blog series around. If you use Cursor and you've never read the rules section end-to-end, do.
+
+**Claude Code documentation** — particularly the sections on `CLAUDE.md`, project-level vs user-level configuration, and tool integrations. Even if you don't use Claude Code, the framing is clear and complementary to Cursor's.
+
+**Anthropic — *Building with Claude* and the *Prompt Engineering* documentation.** Anthropic's prompt-engineering docs are unusually high-signal for a vendor's own documentation. The *prompt engineering interactive tutorial* in particular is worth working through.
+
+**OpenAI — *Prompt Engineering Guide* and the *Cookbook*.** Same recommendation in a different flavor. The Cookbook in particular has many small worked examples that are good for building intuition, even if you end up using a different provider.
+
+**LangGraph documentation.** I admitted in the previous post that my mental model of LangGraph is fuzzier than it should be. The official docs are denser than they look on first read; a slow second pass is where I started to actually understand the runtime. Particular sections worth focused time: the *checkpointing*, *streaming*, and *human-in-the-loop* pages.
+
+**Model Context Protocol (MCP) specification.** The MCP spec at modelcontextprotocol.io is short and worth reading even if you don't plan to write a server today. Knowing what tools, resources, and prompts are at the protocol level changes how you think about agent capabilities.
+
+## Prompt engineering, beyond the basics
+
+Beyond the introductory tutorials, a few resources have taught me things I didn't expect.
+
+**OpenAI — *GPT-5 Prompting Guide* (and the equivalent for whatever's current).** The model-specific prompting guides are worth reading because each generation has small but real shifts in what works. Reading the guide for the model you're actually using catches model-specific quirks that would otherwise take weeks to discover.
+
+**Anthropic — *Constitutional AI* and *Claude's Constitution* posts.** Background reading on how the model was trained to push back, prefer honesty over flattery, and acknowledge limits. Useful context for understanding why some prompt patterns work better than others on Claude specifically.
+
+**Lilian Weng — essays at *lilianweng.github.io*.** Long-form, technical, thorough. Her posts on prompt engineering, agent patterns, and LLM hallucinations are reference-quality. Slow reads, lots of citations, dense.
+
+## Books worth a slow read
+
+I'm picky about books in this space. Most are out of date by the time they print. The ones below have something more durable to offer than their currency.
+
+**Ethan Mollick — *Co-Intelligence***. The single most readable book on what working with AI is like for non-engineers and engineers alike. Mollick writes about how AI changes how we work, with real classroom and workplace data behind his observations. Light on tooling, strong on the human side.
+
+**Cal Newport — *Deep Work* and *A World Without Email***. Not about AI directly, but the framing of attention as a scarce resource is more relevant than ever. Newport's separation of *deep work* from *shallow work* maps cleanly onto what AI delegates well versus what it doesn't.
+
+**Sönke Ahrens — *How to Take Smart Notes***. The book that actually changed how I journal and how I structure long-running notes. The *zettelkasten* method it describes is something AI systems can amplify dramatically, but the underlying discipline is what matters.
+
+**Andy Clark — *Surfing Uncertainty* or *The Experience Machine***. Cognitive science books on how the mind works as a prediction engine. They give you a different angle on what language models are and aren't. Long, dense, optional but rewarding.
+
+## Papers and longer-form research
+
+Not exhaustive at all. Just the few I keep returning to.
+
+**Anthropic — *Sleeper Agents* paper (2024).** A sobering read on the limits of safety training. Worth it not for the immediate practical advice but for calibrating how much trust to place in any single mitigation.
+
+**OpenAI / Anthropic — *Faithful chain-of-thought reasoning* literature.** A growing body of work on whether the explanations models produce actually reflect their internal reasoning. The honest summary is "sometimes, conditionally, less than you'd hope." Worth reading for calibration even if the technical details are above the bar you need day-to-day.
+
+**The various *agent benchmark* papers.** I don't keep a strong opinion on any single benchmark, but reading a few helps you see what kind of failures the field is actually struggling with. SWE-bench, GAIA, and similar agent benchmarks are good entry points.
+
+## Communities and ongoing conversations
+
+Reading lists are static. The conversation isn't. A few places where I check in:
+
+**Hacker News.** Erratic quality, occasional gold. The `whoishiring` threads, the launches of new AI tools, and the long discussions on agent-related papers are usually where I see new entrants get debated honestly.
+
+**Latent Space podcast.** Probably the best long-form interview show on AI engineering specifically. Long episodes, strong guests, the host actually understands the technical content. I listen at half-speed.
+
+**Twitter/X — the AI engineering corner.** Despite the platform's general decline, the AI-engineering-specific conversation is still active. Karpathy, Simon Willison, the Anthropic and OpenAI teams, and a long tail of sharp practitioners. You'll have to curate aggressively.
+
+**Specific Discord and Slack communities.** These move faster than I want to mention them in a blog post that ages — links rot. Ask around. The good ones exist.
+
+## How to read this list
+
+A couple of suggestions if you want to actually use this rather than admire it.
+
+**Don't read it linearly.** Pick the section that maps to the gap you're feeling right now. If you're shaky on what models are, start with Karpathy. If your prompts aren't working, start with the prompt engineering section. If you're trying to figure out the agent-tooling landscape, start with the practitioners. The list is structured for sampling, not for sequencing.
+
+**Read at the cadence the source asks for.** Karpathy's talks are slow watches. Simon Willison's blog is daily skim. Lilian Weng's posts are weekend deep-dives. Books are months. Don't try to match all of these to the same speed; respect the cadence each one wants.
+
+**Keep your own notes.** This is the meta-recommendation that ties to the journaling posts in this series. Reading without writing is mostly entertainment. The point of a reading list is to seed your own working notes — *what stuck, what surprised me, what I want to try*. The notes are where the reading turns into capability.
+
+**Update it.** This list will be partially wrong in six months. Some of the resources will have rotated; new ones will deserve to be on it. Maintain your own version. Mine will be out of date by next year, and I'll be glad of it — that means the field has kept moving.
+
+<ImageFigure alt="Dutch Golden Age-style still life oil painting of a single open leather-bound book lying flat on a heavy aged wooden desk, seen from a slight angle from above and lit dramatically from one side by a warm candle just out of frame. The book is worn at its corners, with cream-colored aged pages and a soft natural curve at the spine. Both visible pages are filled with abstract printed lines — closely-spaced horizontal pencil-thin gray strokes that suggest blocks of dense text without forming any readable letters. Several of the abstract text-lines on the right-hand page are underlined in soft pencil with confident strokes; in the margins next to the underlined passages, abstract handwritten loops in pencil — looping cursive-shaped marks that suggest careful annotation but resolve into no actual words. A small folded paper bookmark pokes out from the top edge of the book showing only abstract pencil scribbles on its visible flap. Beside the book on the desk: a wooden pencil with a worn graphite tip resting half on the page; a small brass paperweight catching a warm highlight; a half-empty ceramic teacup with a faded ring-stain on the wood beneath it; a single dried oak leaf curled at the edges; and the closed top edge of a second leather-bound notebook just within the frame, its spine bearing only abstract gold ornament. The lighting is warm and side-lit, with deep amber highlights along the page edges and velvety umber shadows in the gutter of the book. Rich oil-paint texture, soft sfumato in the shadows, warm umber and burnt-sienna palette. No readable letters or words anywhere on the page — only the abstract printed lines and abstract pencil annotation marks." src="/content/posts/2026-05-11-a-reading-list-for-ai-augmented-development/annotated-reading.png" caption="Reading without writing is mostly entertainment. The point of a list like this is to seed your own notes." />
+
+## A small thank-you
+
+This is the last post in this series. Twenty-one posts across three weeks. If you've made it here, thank you — I underestimated what an ask this was, and the fact that you read any of it (let alone several) means something to me.
+
+The series was an experiment in two directions. *Could I plan and write twenty-one posts in batches, with an AI agent helping at every layer, without losing the voice?* That answer turned out to be: mostly yes, with effort. The voice work was real; the planning work was real; the AI did the heavy lifting on draft generation but never the editorial work. The tag on each post — `human-written` or `ai-assisted` — is my best honest declaration of who did what.
+
+The other direction was: *can a series like this be useful to someone else trying to figure out the same stuff?* I don't know yet. If it has been, I'd be glad to hear so. The contact channels are at the bottom of the site. The comment threads under each post are open.
+
+Either way, I'm going back to writing one post at a time, at whatever pace the work suggests, with no series tag. Thank you for reading.
+
+## Further reading
+
+- [What I haven't learned yet](/2026/05/09/what-i-havent-learned-yet)
+- [Behavioral guardrails for AI coding assistants](/2026/05/01/behavioral-guardrails-for-ai-coding-assistants)

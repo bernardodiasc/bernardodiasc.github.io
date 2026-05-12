@@ -2,8 +2,9 @@
 import { getCollection, getEntry, render } from 'astro:content';
 import Layout from '../../../../layouts/Layout.astro';
 import PostDetails from '../../../../components/PostDetails.astro';
+import PostNav from '../../../../components/PostNav.astro';
 import Disqus from '../../../../components/Disqus.astro';
-import { isEnglishPost } from '../../../../i18n/utils';
+import { isEnglishPost, computePrevNext } from '../../../../i18n/utils';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts', ({ id }) => isEnglishPost(id));
@@ -29,6 +30,9 @@ const category = categoryEntry
 
 const siteUrl = 'https://bernardodiasdacruz.com';
 const pageUrl = `${siteUrl}${Astro.url.pathname}`;
+
+const allPosts = await getCollection('posts', ({ id }) => isEnglishPost(id));
+const { prev, next } = computePrevNext(allPosts, post.id);
 ---
 
 <Layout
@@ -38,11 +42,14 @@ const pageUrl = `${siteUrl}${Astro.url.pathname}`;
   noindex={post.data.draft}
 >
   <PostDetails
+    id={post.id}
     title={post.data.title}
     date={post.data.date}
     category={category}
     tags={post.data.tags}
     url={pageUrl}
+    series={post.data.series}
+    lang="en"
   >
     <Content />
   </PostDetails>
@@ -51,4 +58,5 @@ const pageUrl = `${siteUrl}${Astro.url.pathname}`;
     title={post.data.title}
     url={pageUrl}
   />
+  <PostNav prev={prev} next={next} lang="en" />
 </Layout>

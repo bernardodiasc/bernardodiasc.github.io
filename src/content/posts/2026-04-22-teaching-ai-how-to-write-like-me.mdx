@@ -1,0 +1,193 @@
+---
+title: Teaching AI how to write like me
+date: 2026-04-22
+category: this-blog
+series: blog-meta
+draft: true
+thumbnail: /content/posts/2026-04-22-teaching-ai-how-to-write-like-me/voice-rule-side-by-side.png
+tags:
+  - ai
+  - ai-agents
+  - vibecoding
+  - developer-experience
+  - natural-language-processing
+  - i18n
+  - markdown
+  - astro
+  - content-strategy
+  - ai-assisted
+excerpt: My blog has a voice. The AI doesn't, by default — it has the voice of the entire internet averaged together. So I wrote three rule files that teach the agent how I sound, what to avoid, and what counts as "done."
+---
+
+When I started letting an AI help me draft posts for this blog, the output had a problem. Not a grammar problem. The grammar was perfect. The problem was that **it didn't sound like me**.
+
+It sounded like a competent generic blog post on the internet. Confident. Smooth. Clean transitions. None of the small unevenness that makes writing feel like a person wrote it. After a few drafts I realized the model wasn't going to learn my voice by osmosis just because we'd spent a few hours together.
+
+<ImageFigure alt="Sumi-e ink-wash painting on bone-white rice paper with naturally deckled edges, in a horizontal landscape composition. Two abstract brush-mark forms drift toward each other across the page. The form on the left is taller and more characterful — built from confident wet ink strokes of varied weight, with a few looser flourishes, occasional ink splashes, and a distinctive drying-pull at one stroke's end. The form on the right begins as a more uniform stack of cooler greyscale brush marks, but as the marks curl inward they gradually pick up the rhythm and weight variation of the left form, until in the central area their strokes overlap and become indistinguishable. The whole composition has the rhythm of writing without forming any letters or characters; it reads as gesture, breath, and pause. A single small red square seal-stamp accents the lower-right area like a painter's signature. Generous negative space, soft cream paper texture, slightly raked light, no readable text or letters anywhere in the composition." src="/content/posts/2026-04-22-teaching-ai-how-to-write-like-me/voice-rule-side-by-side.png" caption="The voice on the left is mine. The voice on the right is the agent learning to share its rhythm." />
+
+So I wrote three rule files. The agent reads them whenever it touches a post. They're short, opinionated, and they describe the voice the way I'd describe it to another human writer. This post is a walkthrough of those files, with the actual content I ended up using.
+
+## What rules even are
+
+Rules are small Markdown files with YAML frontmatter that an AI coding agent loads when it's working in a project. Most modern agent tools have some version of this — Cursor calls them rules, Claude Code calls them `CLAUDE.md`, others have their own name. The shape is the same: a description, a glob pattern that says "load this file when working on these paths", and a body of guidance.
+
+I'll show what mine look like for the blog.
+
+```yaml
+---
+description: Voice, tone, content safety, and tool-agnostic framing for blog posts in this project.
+globs:
+  - "src/content/posts/**/*.md"
+  - "src/content/posts/**/*.mdx"
+alwaysApply: false
+---
+
+# Blog writing conventions
+
+Voice and tone guide for posts in `src/content/posts/`. Read this before
+drafting, translating, or editing any post body or excerpt.
+```
+
+That's the top of the file the agent loads any time I'm editing a post. The glob pattern matters — it means the writing rule only attaches when I'm in a post file, not when I'm tweaking a component or a config. Other rules attach to other globs. The agent assembles the right context per file, automatically.
+
+<ImageFigure alt="Sumi-e ink-wash composition on cream rice paper. On the left side rests a small ink-stamped seal — a precise blocky shape in deep red and black, like a brush artist's signature mark. From it, a single tendril of grey ink wash curls rightward across the paper like a wisp of incense and reaches toward an irregular scatter of small blank paper rectangles arranged like floating leaves. The tendril only lands on two of the rectangles, embracing them in a soft greyscale halo and turning their paper a faintly warmer cream; the other rectangles sit untouched and dry, their edges crisp. The two embraced pieces sit at slightly different heights, as if singled out from a larger drift. Soft brush texture on the tendril, dry-brush variation in the seal, hand-deckled paper edges, a great deal of negative space, no readable text or characters anywhere in the composition." src="/content/posts/2026-04-22-teaching-ai-how-to-write-like-me/rule-and-draft-side-by-side.png" caption="The rule attaches itself to the right files and stays out of the wrong ones. The agent assembles the right context per file, automatically." />
+
+## Rule one: the voice itself
+
+The first rule is the longest. It describes the voice in three blocks: the **two registers** I use, the **signature patterns** I want to keep, and the **stuff to avoid**.
+
+The two registers part looks like this:
+
+```markdown
+## Two registers
+
+#
+
+## Casual / dev-diary
+Used for: tutorials, "I just shipped X" posts, planning recaps.
+- Conversational openings ("It's been a while.", "Here's the part…").
+- First person. Address the reader directly as "you".
+- Short paragraphs. Frequent line breaks.
+- Numbers and concrete details over abstractions.
+
+#
+
+## Reflective / essay
+Used for: posts about workflow philosophy, why something matters.
+- Longer, more measured sentences. Still first person.
+- Builds an argument across paragraphs rather than walking through steps.
+- Avoid jargon when a plain phrase will do.
+- Leave room for tension and ambiguity. Don't force a tidy conclusion.
+```
+
+That snippet alone changed the output noticeably. Before, every post was the same medium-tempo voice — neither casual nor reflective, just generic-blog. After, I could tell the agent "this is a casual one, like the Friday dev-diary posts" and it would land in the right register, mostly.
+
+The next part is a small inventory of **what to keep**. I read through ten of my older posts and pulled out the recurring patterns. Conversational hedges I use a lot ("Well,", "Alright,", "Honestly,"). The mild ESL flavor — I'm Brazilian, I've lived in English for a long time, but my sentences sometimes don't sound like a native's, and that's part of the voice. Self-aware framing where I name what I'm about to do ("Let me back up.", "Here's the thing."). Specific numbers and dates instead of vague quantities.
+
+That last one matters more than I expected. I wrote "many years ago" once and the agent left it. I corrected it to "almost eight years ago" and put a note in the rule: **prefer specific quantities**. The output got more grounded immediately.
+
+The "what to avoid" list is shorter and meaner:
+
+```markdown
+- LLM-flavored phrases: "leverage", "delve into", "in today's
+  fast-paced world", "navigate the complexities of".
+- Bullet lists where a paragraph would carry the argument better.
+- Fake enthusiasm. Hype words like "amazing", "incredible",
+  "game-changing" read as borrowed.
+- Forced "key takeaway" boxes. Endings can be quiet.
+- Stripping the mild ESL flavor. If a sentence reads like the
+  author wrote it on a Tuesday at 11pm, leave it.
+```
+
+That last bullet is the one I had to be most explicit about. The model wants to smooth every sentence into perfect idiomatic American English. That's a regression for me — it removes the thing that makes the writing feel local.
+
+## Rule two: dual language
+
+This one's mechanical but important. Every post on this blog exists in two languages: English at `src/content/posts/<slug>.md` and Brazilian Portuguese at `src/content/posts/pt/<slug>.md`. Same filename, same date, same tags, translated body.
+
+The rule file makes that contract explicit:
+
+```markdown
+Both files must share:
+- The same `YYYY-MM-DD-slug` filename.
+- The same `date` in frontmatter.
+- The same `category` value.
+- The same `tags` array (tags are slugs, not labels).
+- The same `thumbnail` path (images are language-agnostic).
+- The same number, order, and `src` of `<figure>` blocks.
+  Translate `alt` and `figcaption`.
+
+The PT file additionally requires `lang: pt`.
+```
+
+Without that, every translation drifted slightly. Different tag sets between EN and PT, slightly different image filenames, a missing date field. With the rule, I just say "translate this post to PT" and the agent produces a parallel file with the right shape.
+
+There's a translation-quality section too. Brazilian Portuguese, not Portugal Portuguese. Keep working English vocabulary that Brazilian devs actually use ("deploy", "build", "frontend"). Don't over-formalize the casual register. The signature phrases have equivalents — "Bom,", "Olha,", "Sinceramente,", "Deixa eu te contar…" — and they should appear in the PT version too, not be smoothed away.
+
+## Rule three: the structure
+
+The third rule is the boring one but it's where most of the bugs used to live. Frontmatter schema. Filename convention. Date sequencing. Image conventions. Tag conventions. The required closing section.
+
+The image part is the bit that most changed how I work:
+
+```markdown
+Every post must have at least 3 images:
+- 1 hero/thumbnail image, referenced in `frontmatter.thumbnail`.
+- 2 or more inline images in the post body.
+
+Inline image pattern (use raw HTML, not Markdown):
+
+<ImageFigure alt="..." src="/content/posts/<slug>/<image-name>.png" caption="Editorial caption that adds context." />
+
+- alt must be detailed enough to use as an image-generation prompt.
+- figcaption adds editorial context, not a repeat of the alt.
+```
+
+The reason that matters: the agent now writes posts with `<figure>` blocks pointing at image paths that don't exist yet. The `alt` is detailed enough for me to feed it directly into an image model. The `figcaption` is editorial. I generate the images in a separate pass, save them at the suggested paths, and the post is suddenly illustrated. The rule keeps the workflow consistent across every post.
+
+The required closing section is a small thing that compounds across the archive:
+
+```markdown
+Every post must end with a `
+
+## Further reading` section that links
+to 1–3 other posts on the blog. Genuinely relevant, not filler.
+Use the canonical post path:
+- EN: [Title](/YYYY/MM/DD/slug)
+- PT: [Título](/pt/YYYY/MM/DD/slug)
+```
+
+Three months from now, when posts in this series are scattered across the archive, the further-reading blocks turn the archive into a graph instead of a flat list. Small commitment now, big compounding effect later.
+
+<ImageFigure alt="Sumi-e ink-wash composition on cream rice paper, with two parallel horizontal bands stacked vertically and separated by generous negative space. The upper band is built from a sequence of short, loose, energetic brush gestures with varied lengths and irregular spacing — quick wet strokes, occasional ink splashes, deliberate gaps between them — capturing the rhythm of conversational, broken-line writing. The lower band is built from longer, more measured, smoother brush gestures with even spacing and steadier weight, capturing the cadence of slower, building prose. The two bands share the same brush-and-ink language but have visibly different temperaments — one staccato, one legato. A faint vertical tonal shift in the paper between the two bands reads as a quiet boundary. A small red square seal-stamp accents one corner. No letters, no characters, no readable text anywhere — purely gestural rhythm." src="/content/posts/2026-04-22-teaching-ai-how-to-write-like-me/two-registers-diagram.png" caption="Two registers, one author. The brushstrokes share a hand but breathe at different tempos." />
+
+## What changed in the output
+
+A few things, after I committed those three files.
+
+The drafts started arriving in the right register without me prompting for it. If I said "write the post about journaling", the agent picked the reflective register for that one because the rule file ties topic types to registers. I almost never had to correct register anymore.
+
+The signature phrases came back. Not slavishly — the model didn't shove "Alright" into every paragraph — but a "Honestly," would show up where I'd actually use one, and the rhythm felt right.
+
+LLM filler dropped almost to zero. "Leverage", "delve", "in today's fast-paced world" — gone. Once that vocabulary is named in the rule as off-limits, the model doesn't reach for it.
+
+And the dual-language sync stopped being a chore. I write the EN post, ask for PT, and what comes back is structurally parallel without me having to check the YAML.
+
+## What didn't work
+
+The voice rule is not a substitute for editing.
+
+The model still occasionally writes a sentence that's *technically* in my register but reads like a parody of it. Too many "Honestly,"s in a row. A "Well," that's just filler. Sentences that lean too hard on the ESL signal until they read like a stage accent. I cut those when I see them. The rule biases the output; it doesn't perform the final read-through.
+
+The other thing it doesn't fix is **what to say**. Voice rules govern *how* something is said. The argument, the order, the omissions — that part is still on me. A perfectly-voiced post about nothing is still a post about nothing.
+
+## Why this is worth doing once
+
+Writing these three rule files took maybe an hour. Editing them as I went was another hour spread across a few sessions. They live in `.cursor/rules/` and they work for every post I'll ever write here. The cost is upfront and small. The benefit compounds across every draft, every translation, every quick fix.
+
+That's the pattern, more or less. Don't try to coach the agent voice in the chat window for every post. Write the coaching down once. Let the agent reread it on every file. Edit the rules when you spot a recurring failure. The conversation gets shorter and the output gets steadier.
+
+## Further reading
+
+- [Rules as project memory](/2026/04/24/rules-as-project-memory)
+- [Multi-language support, at last](/2026/02/22/multi-language-support-at-last)
